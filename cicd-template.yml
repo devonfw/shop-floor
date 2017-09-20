@@ -48,7 +48,7 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: default
-# Pipeline
+# Jenkins
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -642,7 +642,7 @@ objects:
           resources:
             requests:
               cpu: 500m
-              memory: 1Gi
+              memory: 512Mi
             limits:
               cpu: 2
               memory: 2Gi
@@ -655,7 +655,7 @@ objects:
     triggers:
     - type: ConfigChange
     - imageChangeParams:
-        automatic: true
+        automatic: false
         containerNames:
         - sonarqube
         from:
