@@ -6,7 +6,7 @@ Scripts, tools etc to create and manage OpenShift based DevOps/CI/CD/Test enviro
 3. See your environment in the Openshift Dashboard
 4. Manually deploy the **Nexus** service
 
-## How to install Red Hat Enterprise linux (RHEL)
+## How to install RHEL - **RECOMMENDED**
 
 In order to install RHEL, your must follow all steps defined in the following [link](https://developers.redhat.com/products/rhel/hello-world/#fndtn-bare-metal)
 
