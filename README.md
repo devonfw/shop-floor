@@ -82,3 +82,4 @@ $ minishift start
  - edX course: 
 [Fundamentals of Containers, Kubernetes, and Red Hat OpenShift](https://courses.edx.org/courses/course-v1:RedHat+DO081x+2T2017/course/)
  - [oc cluster wrapper](https://github.com/openshift-evangelists/oc-cluster-wrapper)
+ - [minishift demo](https://github.com/nearform/minishift-demo)
