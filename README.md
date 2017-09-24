@@ -75,3 +75,10 @@ $ su
 # exit
 $ minishift start
 ```
+
+## Resources
+
+ - [Openshift books](https://developers.openshift.com/overview/books.html)
+ - edX course: 
+[Fundamentals of Containers, Kubernetes, and Red Hat OpenShift](https://courses.edx.org/courses/course-v1:RedHat+DO081x+2T2017/course/)
+ - [oc cluster wrapper](https://github.com/openshift-evangelists/oc-cluster-wrapper)
