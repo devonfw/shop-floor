@@ -1,0 +1,11 @@
+.vertical-magin-20{
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+.menu-img{
+    height: 100px;
+    width: 100px;
+    max-width: 100%;
+    max-height: 100%;
+}
