@@ -11,6 +11,8 @@ import { appRoutes } from './app.routes';
 import { AppComponent } from './app.component';
 import { MenuServicesComponent } from './menu-services/menu-services.component';
 
+import { ServiceService } from './menu-services/shared/service.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +28,7 @@ import { MenuServicesComponent } from './menu-services/menu-services.component';
     CovalentDataTableModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [ServiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

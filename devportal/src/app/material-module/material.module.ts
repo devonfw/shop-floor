@@ -24,7 +24,7 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
-    MatGridListModule
+    MatGridListModule,
   ],
   exports: [
     MatButtonModule,

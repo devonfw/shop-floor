@@ -8,10 +8,18 @@ $accent:  mat-palette($mat-orange, 800);
 
 $warn:    mat-palette($mat-red, 600);
 
+$wololo: mat-palette($mat-blue, 700);
+
 $theme: mat-light-theme($primary, $accent, $warn);
 
 $foreground: map-get($theme, foreground);
 $background: map-get($theme, background);
+
+:root{
+    --primary-color: mat-color($primary);
+    --accent-color: mat-color($accent);
+    --warn-color: mat-color($warn);
+}
 
 @include angular-material-theme($theme);
 @include covalent-theme($theme);
