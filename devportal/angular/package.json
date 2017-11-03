@@ -5,10 +5,22 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "test": "ng test",
+    "test:ci": "ng test --browsers ChromeHeadless --single-run",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "serve": "ng serve --open --environment=dev",
+    "serve:aot": "ng serve --open --environment=dev --aot",
+    "serve:prod": "ng serve --open --environment=prod",
+    "serve:prod:aot": "ng serve --open --environment=prod --aot",
+    "serve:prodcompose": "ng serve --open --environment=prodcompose",
+    "serve:prodcompose:aot": "ng serve --open --environment=prodcompose --aot",
+    "serve:node": "ng serve --open --environment=node",
+    "serve:node:aot": "ng serve --open --environment=node --aot",
+    "build": "ng build --environment=dev --aot",
+    "build:prod": "ng build --environment=prod --aot",
+    "build:prodnoaot": "ng build --environment=prod",
+    "build:prodcompose": "ng build --environment=prodcompose --aot"
   },
   "private": true,
   "dependencies": {
