@@ -40,7 +40,9 @@ That's all !
 
 #### Build All
 
-Use script `build.sh` to automatically install and build all image streams. The script also creates a project 'My Thai Star' and deploys the reference application.
+Use script `build.sh` to automatically install and build all DevonFW image streams.
+
+# TO DO: Use script `build-mythaistar.sh` to automatically creates a project 'My Thai Star' and deploys the reference application.
 
 ### Further documentation
 
