@@ -41,7 +41,7 @@
                 {
                     "description": "Git source URI for application",
                     "name": "GIT_URI",
-                    "value": "https://github.com/Jorge-Dacal/prueba.git"
+                    "value": "https://Jorge-Dacal:Igui23@gNelu@github.com/Jorge-Dacal/devonfw-shop-floor.git"
                 },
                 {
                     "description": "Git branch/tag reference",
@@ -51,7 +51,7 @@
                 {
                     "description": "Git Directory",
                     "name": "CONTEXT_DIR",
-                    "value": "/angular"
+                    "value": "/devportal/angular"
                 },
                 {
                     "description": "Github trigger secret",

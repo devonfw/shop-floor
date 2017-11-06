@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e
+
+# Sources to build will be here
+LOCAL_SOURCE_DIR=/tmp/src
+
+# The location of the final application
+TARGET_SOURCE_DIR=/opt/app-root/src
+
+# Build the angular frontend
+
+cd $LOCAL_SOURCE_DIR
+
+echo "---> Configure sources ..."
+TARGET_ENV_FILE="src/environments/environment.$BUILD_TARGET.ts"
+sed -i "s|$REST_ENDPOINT_PATTERN|$REST_ENDPOINT_URL|" $TARGET_ENV_FILE
+
+echo "---> Building sources ..."
+export npm_config_tmp=/tmp
+yarn install
+yarn build:$BUILD_TARGET
+
+echo "---> Moving sources ..."
+cp -ad $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/* $TARGET_SOURCE_DIR
+
+# Apply a custom nginx configuration if available
+if [ -d ./nginx-cfg ]; then
+  echo "---> Copying nginx configuration files ..."
+  if [ "$(ls -A ./nginx-cfg/*.conf)" ]; then
+    cp -v ./nginx-cfg/*.conf "${NGINX_CONFIGURATION_PATH}"
+    rm -rf ./nginx-cfg
+  fi
+fi
+
+if [ -d ./nginx-default-cfg ]; then
+  echo "---> Copying nginx default server configuration files ..."
+  if [ "$(ls -A ./nginx-default-cfg/*.conf)" ]; then
+    cp -v ./nginx-default-cfg/*.conf "${NGINX_DEFAULT_CONF_PATH}"
+    rm -rf ./nginx-default-cfg
+  fi
+fi
+
+echo "---> Cleaning up ..."
+rm -rf /usr/lib/node_modules/*
+rm -rf $LOCAL_SOURCE_DIR
+
+# Success
+exit 0
