@@ -1,0 +1,78 @@
+{
+  "kind": "List",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "s2i-devonfw-angular"
+  },
+  "items": [
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "s2i-devonfw-angular"
+      },
+      "spec": {
+        "triggers": [
+          {
+            "type": "GitHub",
+            "github": {
+              "secret": "secret"
+            }
+          },
+          {
+            "type": "Generic",
+            "generic": {
+              "secret": "secret"
+            }
+          },
+          {
+            "type": "ImageChange",
+            "imageChange": {}
+          }
+        ],
+        "source": {
+          "type": "Git",
+          "git": {
+            "uri": "https://github.com/mickuehl/s2i-oasp.git",
+            "ref": "master"
+          }
+        },
+        "strategy": {
+          "type": "Docker",
+          "dockerStrategy": {
+            "dockerfilePath": "s2i/angular/Dockerfile"
+          }
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "s2i-devonfw-angular:latest"
+          }
+        },
+        "resources": {}
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "s2i-devonfw-angular"
+      },
+      "spec": {
+        "tags": [
+          {
+            "name": "latest",
+            "annotations": {
+              "description": "The DevonFW for Angular S2I image",
+              "iconClass": "icon-nodejs",
+              "tags": "builder,devonfw,microservices,javascript,angular",
+              "supports": "oasp:2.4",
+              "sampleRepo": "https://github.com/devonfw/devonfw-shop-floor.git",
+              "version": "1.0"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

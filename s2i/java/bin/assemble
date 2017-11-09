@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# 
+. $(dirname $0)/functions
+
+HOME=/opt/app-root/src
+MAVEN_HOME=/usr/local/maven
+
+LOCAL_SOURCE_DIR=${HOME}/source
+DEPLOY_DIR=/opt/openshift
+
+echo "---> Configure sources ..."
+
+# we will move any code provided by s2i to here
+mkdir -p $LOCAL_SOURCE_DIR
+
+# Copy the source for compilation
+cp -ad /tmp/src/* $LOCAL_SOURCE_DIR
+cp -ad /tmp/src/.* $LOCAL_SOURCE_DIR
+
+# src provides its own mvn configuration
+if [ -d $LOCAL_SOURCE_DIR/configuration ]; then
+  echo "Copying config files from project..."
+
+  if [ -f $LOCAL_SOURCE_DIR/configuration/settings.xml ]; then
+    mkdir -p $HOME/.m2
+    mv $LOCAL_SOURCE_DIR/configuration/settings.xml $HOME/.m2
+  fi
+
+  # We move the rest of the configuration, if provided to the place where the app will run
+  cp -v $LOCAL_SOURCE_DIR/configuration/* $DEPLOY_DIR
+fi
+
+configure_proxy
+configure_mirrors
+
+echo "---> Building sources ..."
+
+# If a pom.xml is present, this is a normal build scenario so run maven.
+if [ -f "$LOCAL_SOURCE_DIR/pom.xml" ]; then
+
+  # the subdirectory within LOCAL_SOURCE_DIR from where we should copy build
+  # artifacts (*.war, *.jar)
+  ARTIFACT_DIR=${ARTIFACT_DIR:-target}
+
+  pushd $LOCAL_SOURCE_DIR &> /dev/null
+
+  PROFILE=""
+  if [ -n "$MAVEN_PROFILE" ]; then
+    PROFILE="--activate-profiles=${MAVEN_PROFILE}"
+  fi
+
+  # Always force IPv4 (CLOUD-188)
+  # Append user-supplied arguments (CLOUD-412)
+  MAVEN_ARGS="$MAVEN_GOALS $MAVEN_ARGS ${PROFILE} -Djava.net.preferIPv4Stack=true ${MAVEN_ARGS_APPEND}"
+
+  echo "Found pom.xml... attempting to build with 'mvn ${MAVEN_ARGS}'"
+  echo "Using $(mvn --version)"
+
+  # Execute the actual build
+  mvn $MAVEN_ARGS
+
+  ERR=$?
+  if [ $ERR -ne 0 ]; then
+    echo "Aborting due to error code $ERR from Maven build"
+    exit $ERR
+  fi
+
+  echo "---> Moving sources ..."
+
+  cp -rfv $LOCAL_SOURCE_DIR/$ARTIFACT_DIR/*${APP_SUFFIX}.war $DEPLOY_DIR/app.war 2> /dev/null
+  echo "[INFO] Application war file is located in ${DEPLOY_DIR}/app.war"
+
+  popd &> /dev/null
+
+else
+  echo "[ERROR] No pom.xml file found in '$LOCAL_SOURCE_DIR'"
+  exit 1
+fi
+
+echo "---> Cleaning up ..."
+rm -rf ${HOME}/.m2/repository/*
+
+# Success
+exit 0
