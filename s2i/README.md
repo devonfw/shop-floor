@@ -25,10 +25,13 @@ First, create a dedicated `devonfw` project.
 
     oadm new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
-Now add the builder image configuration and start their build.
+Now add the builder image configuration.
+Note: this files are private on github, to share it, you must enter in Git with a valid user and press RAW Button to generate a valid token
 
-    $ oc create -f https://raw.githubusercontent.com/mickuehl/s2i-oasp/master/s2i/java/s2i-oasp-java-imagestream.json --namespace=oasp
-    $ oc create -f https://raw.githubusercontent.com/mickuehl/s2i-oasp/master/s2i/angular/s2i-oasp-angular-imagestream.json --namespace=oasp
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/s2i/java/s2i-devonfw-java-imagestream.json?token= --namespace=devonfw
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/s2i/angular/s2i-devonfw-angular-imagestream.json?token= --namespace=devonfw
+
+Then we can start their build
     $ oc start-build s2i-devonfw-java --namespace=devonfw
     $ oc start-build s2i-devonfw-angular --namespace=devonfw
     

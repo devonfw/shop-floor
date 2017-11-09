@@ -33,7 +33,7 @@
         "source": {
           "type": "Git",
           "git": {
-            "uri": "https://github.com/Jorge-Dacal/devonfw-shop-floor.git",
+            "uri": "https://github.com/mickuehl/s2i-oasp.git",
             "ref": "master"
           }
         },
@@ -67,7 +67,7 @@
               "iconClass": "icon-nodejs",
               "tags": "builder,devonfw,microservices,javascript,angular",
               "supports": "oasp:2.4",
-              "sampleRepo": "https://github.com/Jorge-Dacal/devonfw-shop-floor.git",
+              "sampleRepo": "https://github.com/devonfw/devonfw-shop-floor.git",
               "version": "1.0"
             }
           }

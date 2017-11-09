@@ -4,7 +4,7 @@
 oc new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
 # Create base-images and add them to DevonFW project
-# for this files are private, to share it, you must enter in Git with a valid user and press RAW Button to generate a valid token
+# this files are private, to share it, you must enter in Git with a valid user and press RAW Button to generate a valid token
 oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/s2i/java/s2i-devonfw-java-imagestream.json?token=AfL84JdanagHUMCYJ3NFr7UxDf4z_xAQks5aCYOBwA%3D%3D --namespace=devonfw
 oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/s2i/angular/s2i-devonfw-angular-imagestream.json?token=AfL84CSy0zE01pC9qdcCkOTO1j4aRkPyks5aCYNUwA%3D%3D --namespace=devonfw
 

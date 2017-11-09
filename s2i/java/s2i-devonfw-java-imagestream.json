@@ -33,7 +33,7 @@
         "source": {
           "type": "Git",
           "git": {
-            "uri": "https://github.com/Jorge-Dacal/devonfw-shop-floor.git",
+            "uri": "https://github.com/mickuehl/s2i-oasp.git",
             "ref": "master"
           }
         },
