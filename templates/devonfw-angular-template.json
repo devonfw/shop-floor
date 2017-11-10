@@ -9,7 +9,7 @@
             "kind": "Template",
             "apiVersion": "v1",
             "metadata": {
-                "name": "devonfw-devportal-angular-sample",
+                "name": "devonfw-angular-sample",
                 "annotations": {
                     "description": "Dev Portal sample application (angular/front-end)",
                     "iconClass": "icon-nodejs",
@@ -17,14 +17,14 @@
                 }
             },
             "labels": {
-                "application": "devportal-angular",
-                "createdBy": "devonfw-devportal-angular-template"
+                "application": "devonfw-angular",
+                "createdBy": "devonfw-angular-template"
             },
             "parameters": [
                 {
                     "description": "The name for the application.",
                     "name": "APPLICATION_NAME",
-                    "value": "devportal-angular",
+                    "value": "app Name",
                     "displayName": "Application name",
                     "required": true
                 },
@@ -41,7 +41,7 @@
                 {
                     "description": "Git source URI for application",
                     "name": "GIT_URI",
-                    "value": "https://github.com/devonfw/devonfw-shop-floor.git"
+                    "value": "Git uri"
                 },
                 {
                     "description": "Git branch/tag reference",
@@ -51,7 +51,7 @@
                 {
                     "description": "Git Directory",
                     "name": "CONTEXT_DIR",
-                    "value": "/devportal/angular"
+                    "value": "/context"
                 },
                 {
                     "description": "Github trigger secret",
