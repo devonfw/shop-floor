@@ -11,6 +11,7 @@ Te parametres that you must override are the followin
 		CONTEXT_DIR=/context
 		
 The following parametres are opcional
+
 	$ oc process -f my-rails-postgresql \
 		APPLICATION_HOSTNAME=Custom hostname for service routes. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>,
 		REST_ENDPOINT_URL=The URL of the backend's REST API endpoint. This can be declarated after,
