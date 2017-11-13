@@ -1,125 +1,127 @@
 version: "2"
 
-###############################
-# devonfw-shop-floor 4 Docker #
-###############################
-
-#######################
-#   8080: Jenkins     #
-#   8081: Nexus       #
-#   8082: GitLab      #
-#   8083: SonarQube   #
-#   8084: Mattermost  #
-#######################
+#   8080: Jenkins
+#   8081: Nexus
+#   8082: GitLab
+#   8083: SonarQube
+#   8084: Mattermost
 
 services:
-
-  # #############
-  # #  JENKINS  #
-  # #############
+  # jenkins
   jenkins:
     image: jenkins
+    networks:
+      - devonfwshopfloor
     volumes:
-      - ./jenkins/volumes/jenkins_home:/var/jenkins_home
+      - devonfw_shop_floor_jenkins_home:/var/jenkins_home
     ports:
       - "8080:8080"
 
-  # ###########
-  # #  NEXUS  #
-  # ###########
+  # nexus
   nexus:
     image: sonatype/nexus
+    networks:
+      - devonfwshopfloor
     volumes:
-      - ./nexus/volumes/nexus-data:/sonatype-work
+      - devonfw_shop_floor_nexus_data:/sonatype-work
     ports:
       - "8081:8081"
 
-  # ############
-  # #  GITLAB  #
-  # ############
-  gitlab_web:
-    image: 'gitlab/gitlab-ce:latest'
-    restart: always
-    hostname: 'gitlab.example.com'
-    environment:
-      GITLAB_OMNIBUS_CONFIG:
-        external_url 'https://gitlab.example.com'
-        # Add any other gitlab.rb configuration here, each on its own line
-    ports:
-      - '8082:80'
-      - '443:443'
-      - '22:22'
-    volumes:
-      - './mnt/e/gitlab/etc:/etc/gitlab'
-      - './mnt/e/gitlab/opt:/var/opt/gitlab'
-      - './mnt/e/gitlab/log:/var/log/gitlab'
-
-  ###############
-  #  SONARQUBE  #
-  ###############
+  # sonarqube
   sonarqube:
     image: sonarqube
     ports:
-      - "8083:9000"
-    # networks:
-    #   - sonarnet
+      - "8082:9000"
+    networks:
+      - devonfwshopfloor
     environment:
       - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
     volumes:
-      - ./sonarqube/volumes/sonarqube_conf:/opt/sonarqube/conf
-      - ./sonarqube/volumes/sonarqube_data:/opt/sonarqube/data
-      - ./sonarqube/volumes/sonarqube_extensions:/opt/sonarqube/extensions
-      - ./sonarqube/volumes/sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-  sonarqube_db:
+      - devonfw_shop_floor_sonarqube_conf:/opt/sonarqube/conf
+      - devonfw_shop_floor_sonarqube_data:/opt/sonarqube/data
+      - devonfw_shop_floor_sonarqube_extensions:/opt/sonarqube/extensions
+      - devonfw_shop_floor_sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+  db:
     image: postgres
-    # networks:
-    #   - sonarnet
+    networks:
+      - devonfwshopfloor
     environment:
-      - POSTGRES_USER=devonfw_user
-      - POSTGRES_PASSWORD=devonfw_password
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
     volumes:
-      - ./sonarqube/volumes/postgresql:/var/lib/postgresql
-      - ./sonarqube/volumes/postgresql_data:/var/lib/postgresql/data
+      - devonfw_shop_floor_sonarqube_postgresql:/var/lib/postgresql
+      - devonfw_shop_floor_sonarqube_postgresql_data:/var/lib/postgresql/data
 
-  ################
-  #  MATTERMOST  #
-  ################
-  # mattermost_db:
-  #   build: mattermost
-  #     context: ./db
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./mattermost/volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
-  #     - /etc/localtime:/etc/localtime:ro
+  # gitlab
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    ports:
+      - "8083:80"
+    networks:
+      - devonfwshopfloor
+    restart: always
+    volumes:
+      - devonfw_shop_floor_gilab_config:/etc/gitlab
+      - devonfw_shop_floor_gilab_logs:/var/log/gitlab
+      - devonfw_shop_floor_gilab_data:/var/opt/gitlab
+      - devonfw_shop_floor_gilab_backups:/var/opt/gitlab/backups
 
-  #   environment:
-  #     - POSTGRES_USER=devonfw_user
-  #     - POSTGRES_PASSWORD=devonfw_password
-  #     - POSTGRES_DB=devonfw_mattermost
-  # mattermost_app:
-  #   build:
-  #     context: ./mattermost/app
-  #     args:
-  #       - edition=team
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./mattermost/volumes/app/mattermost/config:/mattermost/config:rw
-  #     - ./mattermost/volumes/app/mattermost/data:/mattermost/data:rw
-  #     - ./mattermost/volumes/app/mattermost/logs:/mattermost/logs:rw
-  #     - /etc/localtime:/etc/localtime:ro      
-  #   environment:
-  #     - MM_USERNAME=devonfw_user
-  #     - MM_PASSWORD=devonfw_password
-  #     - MM_DBNAME=devonfw_mattermost
-  # mattermost_web:
-  #   build: mattermost
-  #     context: ./web
-  #   ports:
-  #     - "8084:80"
-  #     - "443:443"
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./mattermost/volumes/web/cert:/cert:ro
-  #     - /etc/localtime:/etc/localtime:ro
+  # mattermost
+  mattermostdb:
+    build: mattermostdb
+    restart: unless-stopped
+    volumes:
+      - devonfw_shop_floor_mattermost_postgresql_data:/var/lib/postgresql/data
+      - devonfw_shop_floor_mattermost_localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - POSTGRES_DB=mattermost
+  mattermostapp:
+    build:
+      context: mattermostapp
+      args:
+        - edition=team
+    restart: unless-stopped
+    volumes:
+      - devonfw_shop_floor_mattermost_config:/mattermost/config:rw
+      - devonfw_shop_floor_mattermost_data:/mattermost/data:rw
+      - devonfw_shop_floor_mattermost_logs:/mattermost/logs:rw
+      - devonfw_shop_floor_mattermost_localtime:/etc/localtime:ro
+    environment:
+      - MM_USERNAME=mmuser
+      - MM_PASSWORD=mmuser_password
+      - MM_DBNAME=mattermost
+  mattermostweb:
+    build: mattermostweb
+    ports:
+      - "8084:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      - devonfw_shop_floor_mattermost_cert:/cert:ro
+      - devonfw_shop_floor_mattermost_localtime:/etc/localtime:ro
 
-  
+networks:
+  devonfwshopfloor:
+    driver: bridge
+
+volumes:
+  devonfw_shop_floor_jenkins_home:
+  devonfw_shop_floor_nexus_data:
+  devonfw_shop_floor_sonarqube_conf:
+  devonfw_shop_floor_sonarqube_data:
+  devonfw_shop_floor_sonarqube_extensions:
+  devonfw_shop_floor_sonarqube_bundled-plugins:
+  devonfw_shop_floor_sonarqube_postgresql:
+  devonfw_shop_floor_sonarqube_postgresql_data:
+  devonfw_shop_floor_gilab_config:
+  devonfw_shop_floor_gilab_logs:
+  devonfw_shop_floor_gilab_data:
+  devonfw_shop_floor_gilab_backups:
+  devonfw_shop_floor_mattermost_postgresql_data:
+  devonfw_shop_floor_mattermost_config:
+  devonfw_shop_floor_mattermost_data:
+  devonfw_shop_floor_mattermost_logs:
+  devonfw_shop_floor_mattermost_cert:
+  devonfw_shop_floor_mattermost_localtime:
