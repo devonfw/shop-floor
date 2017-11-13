@@ -9,16 +9,16 @@
             "kind": "Template",
             "apiVersion": "v1",
             "metadata": {
-                "name": "devonfw-angular-sample",
+                "name": "devonfw-java-sample",
                 "annotations": {
-                    "description": "DevonFW sample application (angular/front-end)",
-                    "iconClass": "icon-nodejs",
-                    "tags": "instant-app,devonfw,javascript,angular"
+                    "description": "DevonFW sample application (java/backend)",
+                    "iconClass": "icon-openjdk",
+                    "tags": "instant-app,devonfw,springboot,maven,java"
                 }
             },
             "labels": {
-                "application": "devonfw-angular",
-                "createdBy": "devonfw-angular-template"
+                "application": "devonfw-java",
+                "createdBy": "devonfw-java-server-template"
             },
             "parameters": [
                 {
@@ -34,11 +34,6 @@
                     "displayName": "Application hostname"
                 },
                 {
-                    "description": "The URL of the backend's REST API endpoint",
-                    "name": "REST_ENDPOINT_URL",
-                    "displayName": "REST Endpoint URL"
-                },
-                {
                     "description": "Git source URI for application",
                     "name": "GIT_URI",
                     "value": "Git uri"
@@ -52,6 +47,10 @@
                     "description": "Git Directory",
                     "name": "CONTEXT_DIR",
                     "value": "/context"
+                },
+                {
+                    "description": "Application options. These options will be passed to the Spring Boot command line",
+                    "name": "APP_OPTIONS"
                 },
                 {
                     "description": "Github trigger secret",
@@ -106,24 +105,36 @@
                                 "from": {
                                     "kind": "ImageStreamTag",
                                     "namespace": "devonfw",
-                                    "name": "s2i-devonfw-angular:latest"
+                                    "name": "s2i-devonfw-java:latest"
                                 },
                                 "env": [
                                     {
-                                        "name": "REST_ENDPOINT_URL",
-                                        "value": "${REST_ENDPOINT_URL}"
+                                        "name": "MAVEN_GOALS",
+                                        "value": "clean install package"
                                     },
                                     {
-                                        "name": "REST_ENDPOINT_PATTERN",
-                                        "value": "http://localhost:8081"
+                                        "name": "MAVEN_ARGS",
+                                        "value": "-DskipTests -B"
                                     },
                                     {
-                                        "name": "BUILD_TARGET",
-                                        "value": "prod"
+                                        "name": "MAVEN_OPTS",
+                                        "value": "-Xmx1024m -Xms1024m"
+                                    },
+                                    {
+                                        "name": "MAVEN_PROFILE",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "MAVEN_MIRROR_URL",
+                                        "value": ""
+                                    },
+                                    {
+                                        "name": "APP_SUFFIX",
+                                        "value": "bootified"
                                     },
                                     {
                                         "name": "ARTIFACT_DIR",
-                                        "value": "dist"
+                                        "value": "server/target"
                                     }
                                 ]
                             }
@@ -246,7 +257,7 @@
                         "ports": [
                             {
                                 "name": "${APPLICATION_NAME}-http",
-                                "port": 8091,
+                                "port": 8080,
                                 "targetPort": 8080
                             }
                         ],
