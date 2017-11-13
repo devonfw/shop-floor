@@ -5,7 +5,7 @@
 to use this templates in all openshift projects, you should create it in a openshift namespace. To do that, you must log in as an admin.
 
     $ oc login -u system:admin
-    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/templates/devonfw-angular-template.json?token=AfL84CPmK46d7hDwcM67niYj59iY8YVZks5aDr3KwA%3D%3D --namespace=openshift
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/templates/devonfw-angular-template.json?token= --namespace=openshift
 	$ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/templates/devonfw-java-template.json?token= --namespace=openshift
 
 if you have a problem to load the templates, it could be because this files are private and you are using a bad token, to access, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token 
