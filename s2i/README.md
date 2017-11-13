@@ -32,6 +32,7 @@ Note: this files are private on github, to share it, you must enter in Git with 
     $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/s2i/angular/s2i-devonfw-angular-imagestream.json?token= --namespace=devonfw
 
 Then we can start their build
+
     $ oc start-build s2i-devonfw-java --namespace=devonfw
     $ oc start-build s2i-devonfw-angular --namespace=devonfw
     
