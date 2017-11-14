@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { CovalentDataTableModule, CovalentLayoutModule } from '@covalent/core';
 import { MaterialModule } from './material-module/material.module';
+import { MatTabsModule, MatTooltipModule } from '@angular/material';
 
 import { appRoutes } from './app.routes';
 
@@ -26,7 +27,9 @@ import { ServiceService } from './menu-services/shared/service.service';
     HttpModule,
     CovalentLayoutModule,
     CovalentDataTableModule,
-    MaterialModule
+    MaterialModule,
+    MatTabsModule,
+    MatTooltipModule
   ],
   providers: [ServiceService],
   bootstrap: [AppComponent]

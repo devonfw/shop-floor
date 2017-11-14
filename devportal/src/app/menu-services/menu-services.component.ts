@@ -14,15 +14,21 @@ import { NgForOf } from '@angular/common';
 })
 export class MenuServicesComponent implements OnInit {
   servicesList: Service[];
+  myservicesList: Service[];
 
-  constructor(private serviceService: ServiceService) { }
+  constructor(private service: ServiceService) { }
 
   ngOnInit() {
     this.getServices();
+    this.getMyServices();
   }
 
   getServices(): void {
-    this.serviceService.getServices().then(services => this.servicesList = services);
+    this.service.getServices().then(services => this.servicesList = services);
+  }
+
+  getMyServices(): void {
+    this.service.getMyServices().then(services => this.myservicesList = services);
   }
 
   navigateTo(url: string): void {
