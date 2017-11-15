@@ -11,19 +11,21 @@ In order to clone submodules alongside this parent repo, let's clone it like thi
 This option is the "fastest" one. Suitable to ramp up a complete **CI/2CD/COMS** environment. That means having all this available in your remote server:
 
 - Jenkins       
-    - http://${HOST_IP}:8080
-- Nexus
-    - (http://${HOST_IP}:8081/nexus)
-- SonarQube
-    - (http://${HOST_IP}:8082)
-- GitLab
-    - (http://${HOST_IP}:8083)
-- Mattermost
-    - (http://${HOST_IP}:80)
+    `http://${HOST_IP}:8080`
+- Nexus     
+    `http://${HOST_IP}:8081/nexus`
+- SonarQube     
+    `http://${HOST_IP}:8082`
+- GitLab        
+    `http://${HOST_IP}:8083`
+- Mattermost        
+    `http://${HOST_IP}:80`
 
 Try running the `dsf4docker.sh` script located in `/devonfw-shop-floor/dsf4docker/`:
 
-    ./dsf4docker.sh
+```
+./dsf4docker.sh
+```
 
 Both `docker-compose.yml`(s) are using a `version: "2"` of Docker Compose, so that means a minimum version of Docker (`v1.10.0+`) is mandatory.
 
