@@ -1,3 +1,6 @@
 [submodule "mattermost"]
 	path = dsf4docker/mattermost-docker
 	url = https://github.com/mattermost/mattermost-docker.git
+[submodule "wiki"]
+	path = wiki/devonfw-shop-floor.wiki
+	url = https://github.com/devonfw/devonfw-shop-floor.wiki.git
