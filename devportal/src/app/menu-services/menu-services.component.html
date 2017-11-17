@@ -1,60 +1,17 @@
 <td-layout>
-<div class="mainMenu">
-    <!--
-      <li *ngFor="let hero of heroes">
-      <span class="badge">{{service.name}}</span> {{service.image}}
-    </li>
-  -->
-
-    <!-- <h3 style="color:#64B5F6; text-align:center">CICD Services</h3> -->
-
-    <mat-tab-group>
-      <mat-tab label="CICD Services"><br>
-        <div class="menu-sizeAndMargin">
-          <mat-grid-list cols="3" rowHeight="12em">
-            <mat-grid-tile *ngFor="let service of servicesList">
-              <mat-card class="menu-card">
-                <mat-card-content>
-                  <img class="menu-img" mat-card-image src={{service.image}} alt={{service.name}}>
-                  <mat-card-header>
-                  <mat-card-title>
-                    {{service.name}}
-                  </mat-card-title>
-                  </mat-card-header>
-                </mat-card-content>
-              </mat-card>
-            </mat-grid-tile>
-          </mat-grid-list>
-        </div>
-      </mat-tab>
-      <mat-tab label="My Deployed Apps" style="height:100%">
-        <div class="menu-sizeAndMargin">
-          <div style="text-align:center">
-            <button mat-fab color=primary style="color:#fff" matTooltip="Deploy new App" matTooltipPosition="above">+</button>
-          </div>
-          <mat-grid-list cols="3">
-            <mat-grid-tile *ngFor="let service of myservicesList">
-              <mat-card class="menu-card">
-                <mat-card-content>
-                  <mat-card-header>
-                  <mat-card-title>
-                    {{service.name}}
-                  </mat-card-title>
-                  </mat-card-header>
-                </mat-card-content>
-              </mat-card>
-            </mat-grid-tile>
-          </mat-grid-list>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-
-    <!-- <br>
-    <div style="text-align:center">
-      <h3 style="color:#64B5F6;">My Deployed Apps</h3>
-      <button mat-mini-fab color=primary style="color:#fff">+</button>
-    </div> -->
-
-</div>
+  <div class="mainMenu">
+      <mat-tab-group>
+        <mat-tab label="CICD Services">
+          <cicd-services></cicd-services>
+          <!-- <div class="menu-sizeAndMargin">
+          </div> -->
+        </mat-tab>
+        <mat-tab label="My Deployed Apps">
+          <my-services></my-services>
+          <!-- <div class="menu-sizeAndMargin">
+          </div> -->
+        </mat-tab>
+      </mat-tab-group>
+  </div>
 </td-layout>
 h

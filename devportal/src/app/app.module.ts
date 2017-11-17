@@ -13,11 +13,16 @@ import { AppComponent } from './app.component';
 import { MenuServicesComponent } from './menu-services/menu-services.component';
 
 import { ServiceService } from './menu-services/shared/service.service';
+import { CicdServicesComponent } from './menu-services/cicd-services/cicd-services.component';
+import { MyServicesComponent } from './menu-services/my-services/my-services.component';
+import { OpenShiftService } from './menu-services/shared/openshift.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuServicesComponent
+    MenuServicesComponent,
+    CicdServicesComponent,
+    MyServicesComponent
   ],
   imports: [
     FormsModule,
@@ -31,7 +36,10 @@ import { ServiceService } from './menu-services/shared/service.service';
     MatTabsModule,
     MatTooltipModule
   ],
-  providers: [ServiceService],
+  providers: [
+    ServiceService,
+    OpenShiftService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

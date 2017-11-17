@@ -2,15 +2,31 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { API } from './api'
 import { Observable } from 'rxjs/Observable';
+import { Service } from './service';
+import { SERVICESLIST, MYSERVICES } from './mock-services';
 
 // Service to call Cluster's REST API operations
 // based on https://docs.google.com/spreadsheets/d/1Cv6nfMDH3TqGRUjyCdZZ6k4W4trFAD8tk_5HXskC6BQ/edit?usp=sharing
 
 @Injectable()
-export class ServiceService {
+export class OpenShiftService {
 
     API: API = new API();
-    constructor(private http: Http) { }
+    constructor(
+        private http: Http,
+    ) { }
+
+    // SERVICES
+
+    getCICDservices(): Promise<Service[]> {
+        return Promise.resolve(SERVICESLIST);
+        // return Observable<Service[]>
+    }
+
+    getMYservices(): Promise<Service[]> {
+        return Promise.resolve(MYSERVICES);
+        // return Observable<Service[]>
+    }
 
     // GET
 
@@ -32,8 +48,13 @@ export class ServiceService {
 
     // POST
 
-    createProject(data: any): Observable<any> {
-        return this.http.post(this.API.CREATE_PROJECT, {'data': data});
+    createProject(name: string, namespace: string, description: string, displayname: string): Observable<any> {
+        return this.http.post(this.API.CREATE_PROJECT, {
+            "name": name,
+            "namespace": namespace,
+            "description": description,
+            "displayname": displayname
+        });
     }
 
     createApp(data: any): Observable<any> {
