@@ -1,0 +1,292 @@
+swagger: "2.0"
+info:
+  description: "Documentation about openshift API REST."
+  version: "1.0.0"
+  title: "Openshift API REST"
+  termsOfService: "TODO"
+  contact:
+    email: "jorge.dacal-cantos@capgemini.com"
+  license:
+    name: "TODO"
+    url: "http://www.no-url.uri"
+host: "10.0.75.2:8443"
+basePath: "/"
+tags:
+- name: "Login"
+  description: "Access to Openshift Cluster"
+- name: "Projects"
+  description: "Everything about Projects"
+  externalDocs:
+    description: "Find out more about Projects"
+    url: "https://docs.openshift.org/latest/rest_api/apis-project.openshift.io/v1.Project.html"
+- name: "Route"
+  description: "Everything about Routes"
+  externalDocs:
+    description: "Find out more about Routes"
+    url: "https://docs.openshift.org/latest/rest_api/apis-route.openshift.io/v1.Route.html"
+- name: "Secrets"
+  description: "Everything about Secrets"
+  externalDocs:
+    description: "Find out more about Secrets"
+    url: "https://docs.openshift.org/latest/rest_api/api/v1.Secret.html"
+schemes:
+- "http"
+- "https"
+paths:
+# LOGIN
+  /oauth/token/request:
+    get:
+      tags:
+      - "Login"
+      summary: "Get Bearer Token"
+      description: "Obtain the Bearer Token to communicate with the cluster.\n This metod return the bearer token inside the HTML response, it's into the <code></code> tag"
+      operationId: "getToken"
+      produces:
+      - "html"
+      responses:
+        200:
+          description: "OK\n HTML \n ... \n < code > your bearer token < /code > \n ..."
+      security:
+      - basicAuth: []
+# PROJECT
+  /apis/project.openshift.io/v1/projects:
+    get:
+      tags:
+      - "Projects"
+      summary: "List or watch objects of kind Project"
+      description: "obtain a list with the projects of the user"
+      operationId: "getProjects"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      - "application/json;stream=watch"
+      - "application/vnd.kubernetes.protobuf;stream=watch"
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /apis/project.openshift.io/v1/projectrequests:
+    post:
+      tags:
+      - "Projects"
+      summary: "Create a new Project"
+      description: "User create a new Project into the Openshift Cluster"
+      operationId: "newProject"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "body"
+        name: "project"
+        description: "project object that needs to be created into the cluster"
+        required: true
+        schema:
+          $ref: "#/definitions/ProjectRequest"
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+# ROUTES
+  /apis/route.openshift.io/v1/namespaces/{NAMESPACE}/routes:
+    get:
+      tags:
+      - "Route"
+      summary: "List or watch objects of kind Project"
+      description: ""
+      operationId: "getRoutesFromNamespace"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+# SECRETS
+  /api/v1/namespaces/{NAMESPACE}/secrets:
+    post:
+      tags:
+      - "Secrets"
+      summary: "Create a new Secret in namespace"
+      description: "User create a new Secret into the specific namespace"
+      operationId: "newSecretInNamespace"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "body"
+        name: "secret"
+        description: "secret object that needs to be created into the namespace"
+        required: true
+        schema:
+          $ref: "#/definitions/Secret"
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /api/v1/namespaces/{NAMESPACE}/serviceaccounts/{NAME}:
+    patch:
+      tags:
+      - "Secrets"
+      summary: "add a Secret into Builder Service Account"
+      description: "mark the secret to can be used by the OpenShift project builder service account run"
+      operationId: "addSecretToBuilderSA"
+      consumes:
+      - "application/json-patch+json"
+      - "application/merge-patch+json"
+      - "application/strategic-merge-patch+json"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the service account, in this case must be builder"
+        default: "builder"
+        required: true
+      - in: "body"
+        name: "secret"
+        description: "this must be Content-Type application/json-patch+json and have the information about where must add the secret into the service account. \n example: [ { \"op\": \"add\", \"path\": \"/secrets/-\", \"value\": { \"name\": \"secret-name\" } } ]"
+        required: true
+        schema:
+          $ref: "#/definitions/SecretToBuilderSA"
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+securityDefinitions:
+  basicAuth:
+    type: basic
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  ProjectRequest:
+    type: "object"
+    properties:
+      displayName:
+        type: "string"
+      description:
+        type: "string"
+      kind:
+        type: "string"
+        description: "kind of schema for Openshift API, the value is the name of the object -> ProjectRequest"
+        default: "ProjectRequest"
+      metadata:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+          namespace:
+            type: "string"
+  Secret:
+    type: "object"
+    properties:
+      kind:
+        type: "string"
+        description: "kind of schema for Openshift API, the value is the name of the object -> Secret"
+        default: "Secret"
+      metadata:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+      type:
+        type: "string"
+        description: "Type of secret, the value is for ssh is -> kubernetes.io/ssh-auth"
+        default: "kubernetes.io/ssh-auth"
+      data:
+        type: "object"
+        properties:
+          ssh-privatekey:
+            type: "string"
+            description: "the key in base64"
+  SecretToBuilderSA:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        op:
+          type: "string"
+          description: "it's the operation and in this case is add"
+          default: "add"
+        path:
+          type: "string"
+          description: "it's the path where the secret is add. In this case is /secrets/-"
+          default: "/secrets/-"
+        value:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              description: "it's the name of the secret."
+      
+       
+      
+    
+    
+      
+      
+            
+#  Route:
+#    type: "object"
+#    properties:
+#      metadata:
+#        type: "object"
+#        properties:
+#          name: 
+#            type: "string"
+#          namespace: 
+#            type: "string"
+externalDocs:
+  description: "Find out more about Openshift Origin API REST"
+  url: "https://docs.openshift.org/latest/rest_api/examples.html"
