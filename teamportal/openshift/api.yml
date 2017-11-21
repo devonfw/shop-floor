@@ -29,6 +29,8 @@ tags:
   externalDocs:
     description: "Find out more about Secrets"
     url: "https://docs.openshift.org/latest/rest_api/api/v1.Secret.html"
+- name: "New-App"
+  description: "Everything about New-App"
 schemes:
 - "http"
 - "https"
@@ -123,13 +125,46 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
+# New-APP
+  /oapi/v1/namespaces/{NAMESPACE}/templates/{NAME}:
+    get:
+      tags:
+      - "New-App"
+      summary: "Read the specified Template"
+      description: "STEP 1 of new app. User obtains the specified template to create te new-app"
+      operationId: "getTemplate"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project where the template is. For templates about devonfw is \"openshift"
+        required: true
+        default: "openshift"
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the template"
+        default: "builder"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
 # SECRETS
   /api/v1/namespaces/{NAMESPACE}/secrets:
     post:
       tags:
       - "Secrets"
+      - "New-App"
       summary: "Create a new Secret in namespace"
-      description: "User create a new Secret into the specific namespace"
+      description: "STEP 4 of new app. User create a new Secret into the specific namespace"
       operationId: "newSecretInNamespace"
       produces:
       - "application/json"
@@ -162,8 +197,9 @@ paths:
     patch:
       tags:
       - "Secrets"
+      - "New-App"
       summary: "add a Secret into Builder Service Account"
-      description: "mark the secret to can be used by the OpenShift project builder service account run"
+      description: "STEP 5 of new app. User mark the secret to can be used by the OpenShift project builder service account run"
       operationId: "addSecretToBuilderSA"
       consumes:
       - "application/json-patch+json"
@@ -186,8 +222,8 @@ paths:
         default: "builder"
         required: true
       - in: "body"
-        name: "secret"
-        description: "this must be Content-Type application/json-patch+json and have the information about where must add the secret into the service account. \n example: [ { \"op\": \"add\", \"path\": \"/secrets/-\", \"value\": { \"name\": \"secret-name\" } } ]"
+        name: "namesecret"
+        description: "this must be Content-Type application/json-patch+json and have the information about where must add the name of the secret into the service account. \n example: [ { \"op\": \"add\", \"path\": \"/secrets/-\", \"value\": { \"name\": \"namesecret\" } } ]"
         required: true
         schema:
           $ref: "#/definitions/SecretToBuilderSA"
@@ -202,6 +238,52 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/buildconfigs/{NAME}:
+    patch:
+      tags:
+      - "Secrets"
+      - "New-App"
+      summary: "Set build-secret to app"
+      description: "STEP 6 of new app. User add the name of the repository secret into the buildconfig of the app"
+      operationId: "addSecretToBuildconfig"
+      consumes:
+      - "application/json-patch+json"
+      - "application/merge-patch+json"
+      - "application/strategic-merge-patch+json"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the buildconfig. It should be the name of the app."
+        default: "builder"
+        required: true
+      - in: "body"
+        name: "namesecret"
+        description: "this must be Content-Type application/json-patch+json and have the information about where must add the name of the secret into the buildconfig. \n example: [ { \"op\": \"add\", \"path\": \"/spec/source/sourceSecret\", \"value\": { \"name\": \"namesecret\" } } ]"
+        required: true
+        schema:
+          $ref: "#/definitions/SecretToBuildconfig"
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+#Security Definitions
 securityDefinitions:
   basicAuth:
     type: basic
@@ -259,10 +341,37 @@ definitions:
           type: "string"
           description: "it's the operation and in this case is add"
           default: "add"
+          enum:
+          - "add"
+          - "replace"
+          - "remove"
         path:
           type: "string"
           description: "it's the path where the secret is add. In this case is /secrets/-"
           default: "/secrets/-"
+        value:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              description: "it's the name of the secret."
+  SecretToBuildconfig:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        op:
+          type: "string"
+          description: "it's the operation and in this case is add"
+          default: "add"
+          enum:
+          - "add"
+          - "replace"
+          - "remove"
+        path:
+          type: "string"
+          description: "it's the path where the namesecret is add. In this case is /spec/source/sourceSecret"
+          default: "/spec/source/sourceSecret"
         value:
           type: "object"
           properties:

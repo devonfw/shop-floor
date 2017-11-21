@@ -9,16 +9,16 @@
             "kind": "Template",
             "apiVersion": "v1",
             "metadata": {
-                "name": "devonfw-angular-sample",
+                "name": "devonfw-angular",
                 "annotations": {
-                    "description": "DevonFW sample application (angular/front-end)",
+                    "description": "DevonFW application (angular/front-end)",
                     "iconClass": "icon-nodejs",
                     "tags": "instant-app,devonfw,javascript,angular"
                 }
             },
             "labels": {
                 "application": "devonfw-angular",
-                "createdBy": "devonfw-angular-template"
+                "createdBy": "devonfw-angular"
             },
             "parameters": [
                 {

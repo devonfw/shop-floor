@@ -9,9 +9,9 @@
             "kind": "Template",
             "apiVersion": "v1",
             "metadata": {
-                "name": "devonfw-java-sample",
+                "name": "devonfw-java",
                 "annotations": {
-                    "description": "DevonFW sample application (java/backend)",
+                    "description": "DevonFW application (java/backend)",
                     "iconClass": "icon-openjdk",
                     "tags": "instant-app,devonfw,springboot,maven,java"
                 }
