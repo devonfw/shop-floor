@@ -2,6 +2,28 @@
 
 # IMPORTANT: To use it, must have on the same directory the following file ssh key in a file named: "devonfw-shoop-floor-secret"
 
+echo "
+      ____                         __            ____  _                  
+     |  _ \  _____   _____  _ __  / _|_      __ / ___|| |__   ___  _ __   
+     | | | |/ _ \ \ / / _ \| '_ \| |_\ \ /\ / / \___ \| '_ \ / _ \| '_ \  
+     | |_| |  __/\ V / (_) | | | |  _|\ V  V /   ___) | | | | (_) | |_) | 
+     |____/ \___| \_/ \___/|_| |_|_|   \_/\_/   |____/|_| |_|\___/| .__/  
+                                                                  |_|     
+                   _____ _                     __             
+                  |  ___| | ___   ___  _ __   / _| ___  _ __  
+                  | |_  | |/ _ \ / _ \| '__| | |_ / _ \| '__| 
+                  |  _| | | (_) | (_) | |    |  _| (_) | |    
+                  |_|   |_|\___/ \___/|_|    |_|  \___/|_|    
+                                                              
+                   ___                   ____  _     _  __ _   
+                  / _ \ _ __   ___ _ __ / ___|| |__ (_)/ _| |_ 
+                 | | | | '_ \ / _ \ '_ \\___ \| '_ \| | |_| __|
+                 | |_| | |_) |  __/ | | |___) | | | | |  _| |_ 
+                  \___/| .__/ \___|_| |_|____/|_| |_|_|_|  \__|
+                       |_|                                     
+                                    _ _ _
+"
+
 # STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
 oc cluster up --host-data-dir=/devonfw-shoop-floor/volumes
 
