@@ -9,6 +9,12 @@ import { OpenShiftService } from '../shared/openshift.service';
 })
 export class CicdServicesComponent implements OnInit {
   cicdservices: Service[];
+  tiles = [
+    {text: 'One', cols: 1, rows: 1, color: 'lightblue'},
+    {text: 'Two', cols: 1, rows: 1, color: 'lightgreen'},
+    {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
+    {text: 'Four', cols: 1, rows: 1, color: '#DDBDF1'},
+  ];
   constructor(private osservice: OpenShiftService) { }
 
   ngOnInit() {
@@ -17,8 +23,9 @@ export class CicdServicesComponent implements OnInit {
 
   getCICDservices(): void {
     this.osservice.getCICDservices().then(services => {
-      this.cicdservices = services
+      this.cicdservices = services;
     });
   }
+
 
 }

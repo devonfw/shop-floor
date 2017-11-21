@@ -1,0 +1,13 @@
+.service {
+  cursor: pointer;
+  border-color: #fff;
+}
+
+.service:hover {
+  background-color: #fff;
+}
+
+.deploynewapp {
+  text-align:center;
+  margin: 1em;
+}
