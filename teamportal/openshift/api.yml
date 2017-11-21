@@ -49,7 +49,7 @@ paths:
       security:
       - basicAuth: []
 # PROJECT
-  /apis/project.openshift.io/v1/projects:
+  /oapi/v1/projects:
     get:
       tags:
       - "Projects"
@@ -69,7 +69,7 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
-  /apis/project.openshift.io/v1/projectrequests:
+  /oapi/v1/projectrequests:
     post:
       tags:
       - "Projects"
@@ -99,7 +99,7 @@ paths:
       security:
       - bearerAuth: []
 # ROUTES
-  /apis/route.openshift.io/v1/namespaces/{NAMESPACE}/routes:
+  /oapi/v1/namespaces/{NAMESPACE}/routes:
     get:
       tags:
       - "Route"
