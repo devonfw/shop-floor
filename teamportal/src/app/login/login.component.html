@@ -1,0 +1,27 @@
+<td-layout-card-over cardTitle="Login" cardSubtitle="Set your Openshift Cluster credentials">
+  <mat-card-content>
+      <form #myForm="ngForm" style="text-align:center">
+          <div layout-margin>
+              <mat-input-container class="login-input">
+                  <input matInput #firstNameForm="ngModel" placeholder="Username" [(ngModel)]="user.username" name="username" required/>
+                  <mat-hint>
+                      <span [hidden]="firstNameForm.pristine || !firstNameForm.errors?.required" class="tc-red-600">Required</span>
+                  </mat-hint>
+              </mat-input-container>
+          </div>
+          <br>
+          <div layout-margin style="margin-bottom:5%">
+              <mat-input-container class="login-input">
+                  <input matInput #lastNameForm="ngModel" placeholder="password" [(ngModel)]="user.password" name="username" required/>
+                  <mat-hint>
+                      <span [hidden]="lastNameForm.pristine || !lastNameForm.errors?.required" class="tc-red-600">Required</span>
+                  </mat-hint>
+              </mat-input-container>
+          </div>
+          <img style="width:7em; margin-right:0" mat-card-image src="../../assets/images/origin-logo.png">
+          <mat-card-actions>
+            <button mat-button tdAutoTrim color="accent" class="flex-item" fxFlex (click)="doLoginToCluster()">LOGIN</button>
+          </mat-card-actions>
+      </form>
+  </mat-card-content>
+</td-layout-card-over>
