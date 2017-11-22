@@ -1,6 +1,6 @@
 #/bin/bash
 
-# IMPORTANT: To use it, must have on the same directory the following file ssh key in a file named: "devonfw-shoop-floor-secret"
+# IMPORTANT: To use it, must have on the same directory the following file ssh key in a file named: "devonfw-shop-floor-secret"
 
 echo "
       ____                         __            ____  _                  
@@ -25,7 +25,7 @@ echo "
 "
 
 # STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
-oc cluster up --host-data-dir=/devonfw-shoop-floor/volumes
+#oc cluster up --host-data-dir=/devonfw-shop-floor/volumes
 
 oc login -u system:admin
 
@@ -58,22 +58,23 @@ oc policy add-role-to-group system:image-puller system:authenticated --namespace
 
 # STEP 3: Create DevonFW templates into openshift
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json?token=AfL84DpchImiRjgd2W06WGfiqrDzM2YTks5aHVRwwA%3D%3D --namespace=openshift
 oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json?token=AfL84FN1HqvV7CJIbHoZSbTqAnASLn7yks5aHVRewA%3D%3D --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json?token=AfL84DpchImiRjgd2W06WGfiqrDzM2YTks5aHVRwwA%3D%3D --namespace=openshift
 
 # STEP 4: Create Team Portal using DevonFW Angular template
 ## Registering the Private Key with OpenShift to connect to the Private Git Repository
-oc secrets new-sshauth devonfw-shoop-floor-secret --ssh-privatekey=devonfw-shoop-floor-secret --namespace=devonfw
+oc secrets new-sshauth devonfw-shop-floor-secret --ssh-privatekey=devonfw-shop-floor-secret --namespace=devonfw
 
 ## To mark that the secret can be used by the OpenShift project builder service account run
-oc secrets link builder devonfw-shoop-floor-secret
+oc secrets link builder devonfw-shop-floor-secret
 
 ## Create Angular application out of the Angular template
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc new-app --template=devonfw-angular --namespace=devonfw --param-file=https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/teamportal/openshift/openshift.env?token=AfL84JhgutrLRi7xrB8rh0MRL6nxzsW4ks5aHVFMwA%3D%3D
+### remove the %3D%3D at the end of the token
+oc new-app --template=devonfw-angular --namespace=devonfw --param-file=teamportalparams
 
 ## Adding the Secret to the Build Configuration
-oc set build-secret --source bc/teamportal devonfw-shoop-floor-secret
+oc set build-secret --source bc/teamportal devonfw-shop-floor-secret
 
 sleep 2
 
