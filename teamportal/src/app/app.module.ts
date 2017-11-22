@@ -5,7 +5,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { CovalentDataTableModule, CovalentLayoutModule } from '@covalent/core';
 import { MaterialModule } from './material-module/material.module';
-import { MatTabsModule, MatTooltipModule } from '@angular/material';
+import {
+  MatTabsModule,
+  MatTooltipModule,
+  MatDialogModule,
+  MAT_PLACEHOLDER_GLOBAL_OPTIONS,
+  MatButtonModule,
+  MatButtonToggleModule,
+} from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {NgForageModule} from 'ngforage';
 
 import { appRoutes } from './app.routes';
@@ -13,7 +21,7 @@ import { AppComponent } from './app.component';
 import { MenuServicesComponent } from './menu-services/menu-services.component';
 
 import { CicdServicesComponent } from './menu-services/cicd-services/cicd-services.component';
-import { MyServicesComponent } from './menu-services/my-services/my-services.component';
+import { MyServicesComponent, DeployNewAppDialogComponent } from './menu-services/my-services/my-services.component';
 import { OpenShiftService } from './menu-services/shared/openshift.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
@@ -24,7 +32,8 @@ import { LoginComponent } from './login/login.component';
     MenuServicesComponent,
     CicdServicesComponent,
     MyServicesComponent,
-    LoginComponent
+    LoginComponent,
+    DeployNewAppDialogComponent,
   ],
   imports: [
     FormsModule,
@@ -36,12 +45,20 @@ import { LoginComponent } from './login/login.component';
     CovalentDataTableModule,
     MaterialModule,
     MatTabsModule,
+    MatDialogModule,
     MatTooltipModule,
     HttpClientModule,
-    NgForageModule
+    NgForageModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatButtonToggleModule
   ],
   providers: [
     OpenShiftService,
+    {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'always'}}
+  ],
+  entryComponents: [
+    DeployNewAppDialogComponent
   ],
   bootstrap: [AppComponent]
 })

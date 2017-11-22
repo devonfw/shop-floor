@@ -1,6 +1,8 @@
 .service {
   cursor: pointer;
-  border-color: #fff;
+  background-image: url("./devonfw.png");
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .service:hover {

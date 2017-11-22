@@ -2,6 +2,7 @@
   <mat-grid-tile
     *ngFor="let service of cicdservices"
     class="service"
+    style="background-image:url('../../../assets/{{service.image}}');"
     [colspan]="1"
     [rowspan]="1">
     {{service.name}}

@@ -2,11 +2,12 @@
   <mat-grid-tile
     *ngFor="let service of myservices"
     class="service"
+    style="color:'{{service.status}}'"
     [colspan]="1"
     [rowspan]="1">
-    {{service.name}}
+    <strong><font color="{{service.status}}">{{service.name}}</font></strong>
   </mat-grid-tile>
 </mat-grid-list>
 <div class="deploynewapp">
-  <button mat-fab color=primary style="color:#fff" matTooltip="Deploy new App" matTooltipPosition="above">+</button>
+  <button mat-fab color=primary style="color:#fff" matTooltip="Deploy new App" matTooltipPosition="above" (click)="openDialog()">+</button>
 </div>
