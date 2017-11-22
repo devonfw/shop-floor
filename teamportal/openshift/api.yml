@@ -31,6 +31,8 @@ tags:
     url: "https://docs.openshift.org/latest/rest_api/api/v1.Secret.html"
 - name: "New-App"
   description: "Everything about New-App"
+- name: "Build"
+  description: "Everything about Build"
 schemes:
 - "http"
 - "https"
