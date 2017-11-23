@@ -10,6 +10,7 @@ import { NgForage } from 'ngforage';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  hide = false;
   user: UserCredentials = {
     username: '',
     password: '',
@@ -33,6 +34,8 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem('token');
       localStorage.setItem('token', data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>')));
       me.router.navigate(['menu']);
+    }, error => {
+      debugger
     });
   }
 

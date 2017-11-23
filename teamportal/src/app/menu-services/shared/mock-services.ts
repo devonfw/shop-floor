@@ -11,12 +11,8 @@ export const SERVICESLIST: Service[] = [
 ];
 
 export const MYSERVICES: Service[] = [
-    { name: 'My Thai Star', image: '', urlLink: '', status: '#0f0' },
-    { name: 'Mirabaud Advisory', image: '', urlLink: '', status: '#0f0' },
-    { name: 'TRSC', image: '', urlLink: '', status: '#ff0' },
-    { name: 'Canon', image: '', urlLink: '', status: '#f00' },
-    { name: 'My Thai Star', image: '', urlLink: '', status: '#0f0' },
-    { name: 'Mirabaud Advisory', image: '', urlLink: '', status: '#f00' },
+    { name: 'My Thai Star', image: '', urlLink: '', status: '#f00' },
+    { name: 'Mirabaud Advisory', image: '', urlLink: '', status: '#ff0' },
     { name: 'TRSC', image: '', urlLink: '', status: '#0f0' },
-    { name: 'Canon', image: '', urlLink: '', status: '#0f0' }
+    { name: 'Canon', image: '', urlLink: '', status: '#f00' }
 ];
