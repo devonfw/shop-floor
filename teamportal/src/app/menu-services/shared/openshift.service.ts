@@ -89,7 +89,7 @@ export class OpenShiftService {
 
     // POST
     private post(route, body): Observable<any> {
-        return this.http.POST(route, body, {
+        return this.http.post(route, body, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 'Content-Type': 'application/json'
@@ -175,7 +175,7 @@ export class OpenShiftService {
 
     // PATCH
     private patch(route,body): Observable<any> {
-        return this.http.PATCH(route, body, {
+        return this.http.patch(route, body, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 'Content-Type': 'application/json-patch+json'
