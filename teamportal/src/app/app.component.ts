@@ -14,12 +14,12 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // this.osservice.requestToken();
-    this.osservice.requestProjects().subscribe(data => {
-    }, error => {
-      if (error.status === 403 || error.status === 401) {
-        this.router.navigate(['login']);
-      }
-    });
+    // this.osservice.requestProjects().subscribe(data => {
+    // }, error => {
+    //   if (error.status === 403 || error.status === 401) {
+    //     this.router.navigate(['login']);
+    //   }
+    // });
   }
 
   logout() {
