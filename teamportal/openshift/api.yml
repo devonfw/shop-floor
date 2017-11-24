@@ -44,7 +44,7 @@ paths:
       - "Login"
       summary: "Get Bearer Token"
       description: "Obtain the Bearer Token to communicate with the cluster.\n This metod return the bearer token inside the HTML response, it's into the <code></code> tag"
-      operationId: "getToken"
+      operationId: "requestToken"
       produces:
       - "html"
       responses:
@@ -59,7 +59,7 @@ paths:
       - "Projects"
       summary: "List or watch objects of kind Project"
       description: "obtain a list with the projects of the user"
-      operationId: "getProjects"
+      operationId: "requestProjects"
       produces:
       - "application/json"
       - "application/yaml"
@@ -79,7 +79,7 @@ paths:
       - "Projects"
       summary: "Create a new Project"
       description: "User create a new Project into the Openshift Cluster"
-      operationId: "newProject"
+      operationId: "createProject"
       produces:
       - "application/json"
       - "application/yaml"
@@ -109,7 +109,7 @@ paths:
       - "New-App"
       summary: "Read the specified Template"
       description: "STEP 1 of new app. User obtains the specified template to create te new-app"
-      operationId: "getTemplate"
+      operationId: "requestTemplate"
       produces:
       - "application/json"
       - "application/yaml"
@@ -140,7 +140,7 @@ paths:
       - "New-App"
       summary: "return the processed template"
       description: "STEP 2 of new app. User request about a processed template. You need to send a modify of the template obtained in the step 1. You must delete the \"metadata\" section and replace the value of each param read in param-file inside the \"parameters\" section. When finihs, you obtain the processed templated and must invoke an API operation for each object inside the \"objects\" sections. This calls operations are the Steps 3.x" 
-      operationId: "getProcessedTemplate"
+      operationId: "processedTemplate"
       produces:
       - "application/json"
       - "application/yaml"
@@ -174,7 +174,7 @@ paths:
       - "New-App"
       summary: "Create a Buildconfig"
       description: "STEP 3.1 of new app. User send the Buildconfig obtained in the processed template of the STEP 2." 
-      operationId: "setBuildconfig"
+      operationId: "createBuildConfig"
       produces:
       - "application/json"
       - "application/yaml"
@@ -208,7 +208,7 @@ paths:
       - "New-App"
       summary: "Create a Imagestream"
       description: "STEP 3.2 of new app. User send the Imagestream config obtained in the processed template of the STEP 2." 
-      operationId: "setImagestream"
+      operationId: "createImageStream"
       produces:
       - "application/json"
       - "application/yaml"
@@ -242,7 +242,7 @@ paths:
       - "New-App"
       summary: "Create a Deploymentconfig"
       description: "STEP 3.3 of new app. User send the Deploymentconfig obtained in the processed template of the STEP 2." 
-      operationId: "setDeploymentconfig"
+      operationId: "createDeploymentConfig"
       produces:
       - "application/json"
       - "application/yaml"
@@ -274,9 +274,10 @@ paths:
     post:
       tags:
       - "New-App"
+      - "Route"
       summary: "Create a Route"
       description: "STEP 3.4 of new app. User send the Route config obtained in the processed template of the STEP 2." 
-      operationId: "setRoute"
+      operationId: "createRoute"
       produces:
       - "application/json"
       - "application/yaml"
@@ -309,7 +310,7 @@ paths:
       - "Route"
       summary: "List or watch objects of kind Project"
       description: ""
-      operationId: "getRoutesFromNamespace"
+      operationId: "requestAllRoutes"
       produces:
       - "application/json"
       - "application/yaml"
@@ -327,13 +328,42 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/routes/{NAME}:
+    get:
+      tags:
+      - "Route"
+      summary: "Read the specified Route"
+      description: ""
+      operationId: "requestRoute"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the route"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
   /oapi/v1/namespaces/{NAMESPACE}/services:
     post:
       tags:
       - "New-App"
       summary: "Create a Service"
       description: "STEP 3.5 of new app. User send the Service config obtained in the processed template of the STEP 2." 
-      operationId: "setService"
+      operationId: "createService"
       produces:
       - "application/json"
       - "application/yaml"
@@ -369,7 +399,7 @@ paths:
       - "New-App"
       summary: "Create a new Secret in namespace"
       description: "STEP 4.1 of new app. User create a new Secret into the specific namespace"
-      operationId: "newSecretInNamespace"
+      operationId: "createSecret"
       produces:
       - "application/json"
       - "application/yaml"
@@ -495,7 +525,7 @@ paths:
       - "New-App"
       summary: "Create instantiate of a BuildRequest"
       description: "User instantiate a new build of an app, based on the BuildConfig info"
-      operationId: "buildRequest"
+      operationId: "buildApp"
       produces:
       - "application/json"
       - "application/yaml"
@@ -761,7 +791,7 @@ definitions:
     properties:
       kind:
         type: "string"
-        description: "kind of schema for Openshift API, the value is the name of the object -> BuildRequest. It must be the Same as obtained in STEP 2."
+        description: "kind of schema for Openshift API, the value is the name of the object -> BuildRequest."
         default: "BuildRequest"
       metadata:
         type: "object"
