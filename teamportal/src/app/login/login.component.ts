@@ -35,7 +35,9 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('token', data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>')));
       me.router.navigate(['menu']);
     }, error => {
-      debugger
+      //
+    }, () => {
+      //
     });
   }
 
