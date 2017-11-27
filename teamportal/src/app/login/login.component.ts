@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserCredentials } from '../menu-services/shared/models';
+import { BasicAuth } from '../menu-services/shared/models'
 import { Router } from '@angular/router';
 import { OpenShiftService } from '../menu-services/shared/openshift.service';
 import { NgForage } from 'ngforage';
-import { BasicAuth } from '../menu-services/shared/models'
 
 @Component({
   selector: 'dsf-login',
@@ -12,11 +11,6 @@ import { BasicAuth } from '../menu-services/shared/models'
 })
 export class LoginComponent implements OnInit {
   hide = false;
-  user: UserCredentials = {
-    username: '',
-    password: '',
-    token: ''
-  };
 
   basicAuth: BasicAuth = {
     username: '',
@@ -30,8 +24,8 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.user.username = '';
-    this.user.token = '';
+    this.basicAuth.username = '';
+    this.basicAuth.password = '';
     this.osservice.requestProjects().subscribe(data => {
       this.router.navigate(['/menu']);
     }, error => {
@@ -43,8 +37,6 @@ export class LoginComponent implements OnInit {
 
   doLoginToCluster() {
     const me = this;
-    this.basicAuth.username = this.user.username;
-    this.basicAuth.password = this.user.password
 
     this.osservice.requestToken(this.basicAuth).subscribe(data => {
       debugger
