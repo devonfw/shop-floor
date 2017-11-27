@@ -23,7 +23,7 @@ export interface RouteNameAndNamespace {
 
 export interface RouteNamespaceAndBodyJSON {
     namespaceRoute: string,
-    bodyJSON: JSON,
+    bodyJSON: JSON
 }
 
 /**

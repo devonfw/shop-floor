@@ -41,7 +41,7 @@ export class OpenShiftService {
         });
     }
 
-    requestToken(params: INTERFACES.BasicAuth){
+    requestToken(params: INTERFACES.BasicAuth) {
         const basicAuth = 'Basic ' + btoa(params.username + ':' + params.password);
         return this.http.get(this.API.REQUEST_TOKEN, {
             headers: new HttpHeaders({
@@ -50,7 +50,7 @@ export class OpenShiftService {
             responseType: 'text'
         });
     }
-    
+
     // requestToken(username: string, password: string): Observable<any> {
     //     const bearerparam = 'Basic ' + btoa(username + ':' + password);
     //     return this.http.get(this.API.REQUEST_TOKEN, {
@@ -60,30 +60,30 @@ export class OpenShiftService {
     //         responseType: 'text'
     //     });
     // }
-    
+
 
     requestProjects(): Observable<any> {
         return this.get(this.API.REQUEST_PROJECTS);
     }
 
     requestTemplate(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
-        const route = this.API.REQUEST_TEMPLATE;
-        route.replace("$NAME", params.name);
-        route.replace("$NAMESPACE", params.namespace);
+        let route = this.API.REQUEST_TEMPLATE;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
         return this.get(route);
     }
 
     requestAllRoutes(params: INTERFACES.RouteNamespace): Observable<any> {
-        const route = this.API.REQUEST_ROUTES;
-        route.replace("$NAMESPACE", params.namespace);
-        route.replace("/$NAME", "");
+        let route = this.API.REQUEST_ROUTES;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('/$NAME', '');
         return this.get(route);
     }
 
     requestRoutes(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
-        const route = this.API.REQUEST_ROUTES;
-        route.replace("$NAME", params.name);
-        route.replace("$NAMESPACE", params.namespace);
+        let route = this.API.REQUEST_ROUTES;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
         return this.get(route);
     }
 
@@ -101,80 +101,80 @@ export class OpenShiftService {
         const body = {
             'displayName': params.displayName,
             'description': params.displayName,
-            'kind': "ProjectRequest",
+            'kind': 'ProjectRequest',
             'metadata': {
               'name': params.name,
               'namespace': params.name
             }
-        }
+        };
         return this.post(this.API.CREATE_PROJECT, body);
     }
 
     processedTemplate(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
-        const route = this.API.PROCESS_TEMPLATE;
-        route.replace("$NAMESPACE", params.namespaceRoute);
+        let route = this.API.PROCESS_TEMPLATE;
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
         return this.post(route, params.bodyJSON);
     }
 
     createBuildConfig(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
-        const route = this.API.CREATE_BUILDCONFIG;
-        route.replace("$NAMESPACE", params.namespaceRoute);
+        let route = this.API.CREATE_BUILDCONFIG;
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
         return this.post(route, params.bodyJSON);
     }
 
     createImageStream(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
-        const route = this.API.CREATE_IMAGESTREAM;
-        route.replace("$NAMESPACE", params.namespaceRoute);
+        let route = this.API.CREATE_IMAGESTREAM;
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
         return this.post(route, params.bodyJSON);
     }
 
     createDeploymentConfig(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
-        const route = this.API.CREATE_DEPLOYMENTCONFIG;
-        route.replace("$NAMESPACE", params.namespaceRoute);
+        let route = this.API.CREATE_DEPLOYMENTCONFIG;
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
         return this.post(route, params.bodyJSON);
     }
 
-    createRoutes(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
-        const route = this.API.CREATE_ROUTE;
-        route.replace("$NAMESPACE", params.namespaceRoute);
+    createRoute(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
+        let route = this.API.CREATE_ROUTE;
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
         return this.post(route, params.bodyJSON);
     }
 
-    createServices(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
-        const route = this.API.CREATE_SERVICE;
-        route.replace("$NAMESPACE", params.namespaceRoute);
+    createService(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
+        let route = this.API.CREATE_SERVICE;
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
         return this.post(route, params.bodyJSON);
     }
-    
+
     createSecret(params: INTERFACES.CreateSecret): Observable<any> {
-        const route = this.API.CREATE_SECRET;
-        route.replace("$NAMESPACE", params.namespace);
+        let route = this.API.CREATE_SECRET;
+        route = route.replace('$NAMESPACE', params.namespace);
         const body = {
-            'kind': "Secret",
+            'kind': 'Secret',
             'metadata': {
                 'name': params.name,
             },
-            'type': "kubernetes.io/ssh-auth",
+            'type': 'kubernetes.io/ssh-auth',
             'ssh-privatekey': params.sshprivatekey
-        }
+        };
         return this.post(route, body);
     }
 
     buildApp(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
-        const route = this.API.CREATE_SECRET;
-        route.replace("$NAMESPACE", params.namespace);
-        route.replace("$NAME", params.name);
+        let route = this.API.CREATE_SECRET;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
         const body = {
-            'kind': "BuildRequest",
+            'kind': 'BuildRequest',
             'metadata': {
                 'name': params.name,
             }
-        }
+        };
         return this.post(route, body);
     }
 
     // PATCH
-    private patch(route,body): Observable<any> {
+    private patch(route, body): Observable<any> {
         return this.http.patch(route, body, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -184,25 +184,25 @@ export class OpenShiftService {
     }
 
     addSecretToBuilderSA(params: INTERFACES.Secret): Observable<any> {
-        const route = this.API.PATCH_SERVICEACCOUNT;
-        route.replace("$NAME", params.name);
-        route.replace("$NAMESPACE", params.namespace);
+        let route = this.API.PATCH_SERVICEACCOUNT;
+        route = route.replace('$NAME', params.name);
+        route = route.replace('$NAMESPACE', params.namespace);
         const body = [{
-            "op": "add",
-            "path": "/secrets/-",
-            "value": { "name": params.nameSecret }
+            'op': 'add',
+            'path': '/secrets/-',
+            'value': { 'name': params.nameSecret }
         }];
         return this.patch(route, body);
     }
 
     addSecretToBuildconfig(params: INTERFACES.Secret): Observable<any> {
-        const route = this.API.PATCH_BUILDCONFIG;
-        route.replace("$NAME", params.name);
-        route.replace("$NAMESPACE", params.namespace);
+        let route = this.API.PATCH_BUILDCONFIG;
+        route = route.replace('$NAME', params.name);
+        route = route.replace('$NAMESPACE', params.namespace);
         const body = [{
-            "op": "add",
-            "path": "/spec/source/sourceSecret",
-            "value": { "name": params.nameSecret }
+            'op': 'add',
+            'path': '/spec/source/sourceSecret',
+            'value': { 'name': params.nameSecret }
         }];
         return this.patch(route, body);
     }
