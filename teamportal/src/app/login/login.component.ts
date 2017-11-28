@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.basicAuth.username = '';
     this.basicAuth.password = '';
-    this.osservice.requestProjects().subscribe(data => {
+    this.osservice.requestAllProjects().subscribe(data => {
       this.router.navigate(['/menu']);
     }, error => {
       if (error.status === 401) {

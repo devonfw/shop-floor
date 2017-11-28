@@ -1,5 +1,9 @@
 <form>
     <mat-form-field>
-        <input matInput placeholder="openshift.json RAW URL...">
+        <input matInput placeholder="openshift.json RAW URL..." [(ngModel)]="data.route" [ngModelOptions]="{standalone: true}">
     </mat-form-field>
+    <button mat-raised-button [mat-dialog-close]=data.route>GO!</button>
+    <!-- <mat-dialog-actions>
+        
+    </mat-dialog-actions> -->
 </form>

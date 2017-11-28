@@ -30,14 +30,15 @@ export class MyServicesComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(DeployNewAppDialogComponent, {
       // width: '250px',
-      data: { name: '', animal: '' }
+      data: { route: '' }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      // debugger
-      console.log(result);
-      // this.newApp(result);
-      // console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe(route => {
+      if (route === undefined) {
+        //
+      } else {
+        this.newApp(route);
+      }
     });
   }
 
@@ -63,80 +64,84 @@ export class MyServicesComponent implements OnInit {
       };
 
       // STEP 0. TRY TO CREATE PROJECT (if the project exist, this don't do nothing)
-      this.osservice.createProject(CreateProject).subscribe(project => {
-          // LO QUE SEA CUANDO CREATEPROJECT HAYA ACABADO
+      this.osservice.requestProject(fileParams['PROJECT']).subscribe(project => {
+        this.createApp(fileParams);
       }, error => {
-          // LO
+        this.osservice.createProject(CreateProject).subscribe(newProject => {
+          this.createApp(fileParams);
+        }, errorCreate => {
+          // TODO: ¿AUTH?
+        });
       });
+    });
+  }
 
-      const params: RouteNameAndNamespace = {
-        'name': 'devonfw-' + fileParams['TYPE'],
-        'namespace': 'openshift',
-      };
+  createApp(fileParams) {
+    const params: RouteNameAndNamespace = {
+      'name': 'devonfw-' + fileParams['TYPE'],
+      'namespace': 'openshift',
+    };
+    const body: RouteNamespaceAndBodyJSON = {
+      'namespaceRoute': fileParams['PROJECT'],
+      'bodyJSON': JSON
+    };
 
-      const body: RouteNamespaceAndBodyJSON = {
-        'namespaceRoute': fileParams['PROJECT'],
-        'bodyJSON': JSON
-      };
-
-      // STEP 1. Get the Template
-      this.osservice.requestTemplate(params).subscribe(template => {
-        const parameters = template['parameters'];
-        for (let i = 0; i < parameters.length; i++) {
-          if (fileParams[parameters[i]['name']]) {
-            parameters[i]['value'] = fileParams[parameters[i]['name']];
+    // STEP 1. Get the Template
+    this.osservice.requestTemplate(params).subscribe(template => {
+      const parameters = template['parameters'];
+      for (let i = 0; i < parameters.length; i++) {
+        if (fileParams[parameters[i]['name']]) {
+          parameters[i]['value'] = fileParams[parameters[i]['name']];
+        }
+      }
+      // STEP 2. Process the Template
+      body.bodyJSON = template;
+      this.osservice.processedTemplate(body).subscribe(processedTemplate => {
+        const objects = processedTemplate['objects'];
+        for (let i = 0; i < objects.length; i++) {
+          console.log(objects[i]['kind']);
+          if (objects[i]['kind'] === 'BuildConfig') {
+            console.log(objects[i]);
+            // STEP 3.1 Create BuildConfig
+            body.bodyJSON = objects[i];
+            this.osservice.createBuildConfig(body).subscribe(data => { console.log(data); });
+          }
+          if (objects[i]['kind'] === 'ImageStream') {
+            console.log(objects[i]);
+            // STEP 3.2 Create ImageStream
+            body.bodyJSON = objects[i];
+            this.osservice.createImageStream(body).subscribe(data => { console.log(data); });
+          }
+          if (objects[i]['kind'] === 'DeploymentConfig') {
+            console.log(objects[i]);
+            // STEP 3.3 Create DeploymentConfig
+            body.bodyJSON = objects[i];
+            this.osservice.createDeploymentConfig(body).subscribe(data => { console.log(data); });
+          }
+          if (objects[i]['kind'] === 'Route') {
+            console.log(objects[i]);
+            // STEP 3.4 Create Route
+            body.bodyJSON = objects[i];
+            this.osservice.createRoute(body).subscribe(data => { console.log(data); });
+          }
+          if (objects[i]['kind'] === 'Service') {
+            console.log(objects[i]);
+            // STEP 3.5 Create Service
+            body.bodyJSON = objects[i];
+            this.osservice.createService(body).subscribe(data => { console.log(data); });
           }
         }
-        // STEP 2. Process the Template
-        body.bodyJSON = template;
-        this.osservice.processedTemplate(body).subscribe(processedTemplate => {
-          const objects = processedTemplate['objects'];
-          for (let i = 0; i < objects.length; i++) {
-            console.log(objects[i]['kind']);
-            if (objects[i]['kind'] === 'BuildConfig') {
-              console.log(objects[i]);
-              // STEP 3.1 Create BuildConfig
-              body.bodyJSON = objects[i];
-              this.osservice.createBuildConfig(body).subscribe(data => { console.log(data); });
-            }
-            if (objects[i]['kind'] === 'ImageStream') {
-              console.log(objects[i]);
-              // STEP 3.2 Create ImageStream
-              body.bodyJSON = objects[i];
-              this.osservice.createImageStream(body).subscribe(data => { console.log(data); });
-            }
-            if (objects[i]['kind'] === 'DeploymentConfig') {
-              console.log(objects[i]);
-              // STEP 3.3 Create DeploymentConfig
-              body.bodyJSON = objects[i];
-              this.osservice.createDeploymentConfig(body).subscribe(data => { console.log(data); });
-            }
-            if (objects[i]['kind'] === 'Route') {
-              console.log(objects[i]);
-              // STEP 3.4 Create Route
-              body.bodyJSON = objects[i];
-              this.osservice.createRoute(body).subscribe(data => { console.log(data); });
-            }
-            if (objects[i]['kind'] === 'Service') {
-              console.log(objects[i]);
-              // STEP 3.5 Create Service
-              body.bodyJSON = objects[i];
-              this.osservice.createService(body).subscribe(data => { console.log(data); });
-            }
-          }
-        }, error => {
-          if (error.status === 401) {
-            console.log('Unathorized. Please enter your Cluster Credentials');
-          }
-        });
       }, error => {
         if (error.status === 401) {
           console.log('Unathorized. Please enter your Cluster Credentials');
         }
       });
+    }, error => {
+      if (error.status === 401) {
+        console.log('Unathorized. Please enter your Cluster Credentials');
+      }
     });
   }
-
 }
 
 @Component({
@@ -145,12 +150,17 @@ export class MyServicesComponent implements OnInit {
 })
 export class DeployNewAppDialogComponent {
   options: FormGroup;
+  // route = '';
   constructor(
     public dialogRef: MatDialogRef<DeployNewAppDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  onNoClick(): void {
+  sendRoute() {
     this.dialogRef.close();
   }
+
+  // onNoClick(): void {
+  //   this.dialogRef.close();
+  // }
 
 }

@@ -7,7 +7,7 @@ export class API {
 
     // GET
     public REQUEST_TOKEN = environment.clusterURL + this.AUTH + 'token/request';
-    public REQUEST_PROJECTS = environment.clusterURL + this.OPENSHIFT + 'projects';
+    public REQUEST_PROJECTS = environment.clusterURL + this.OPENSHIFT + 'projects/$NAME';
     public REQUEST_TEMPLATE = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/templates/$NAME';
     public REQUEST_ROUTES = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/routes/$NAME';
 

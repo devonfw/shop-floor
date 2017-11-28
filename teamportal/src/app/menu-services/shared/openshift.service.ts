@@ -55,8 +55,16 @@ export class OpenShiftService {
         });
     }
 
-    requestProjects(): Observable<any> {
-        return this.get(this.API.REQUEST_PROJECTS);
+    requestAllProjects(): Observable<any> {
+        let route = this.API.REQUEST_PROJECTS;
+        route = route.replace('/$NAME', '');
+        return this.get(route);
+    }
+
+    requestProject(name: string): Observable<any> {
+        let route = this.API.REQUEST_PROJECTS;
+        route = route.replace('$NAME', name);
+        return this.get(route);
     }
 
     requestTemplate(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
