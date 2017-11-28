@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 export class API {
     private AUTH = 'oauth/';
     private OPENSHIFT = 'oapi/v1/';
-    private KUBERNETES = 'apis/v1/';
+    private KUBERNETES = 'api/v1/';
 
     // GET
     public REQUEST_TOKEN = environment.clusterURL + this.AUTH + 'token/request';
@@ -18,7 +18,7 @@ export class API {
     public CREATE_IMAGESTREAM = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/imagestreams';
     public CREATE_DEPLOYMENTCONFIG = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/deploymentconfigs';
     public CREATE_ROUTE = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/routes';
-    public CREATE_SERVICE = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/services';
+    public CREATE_SERVICE = environment.clusterURL + this.KUBERNETES + 'namespaces/$NAMESPACE/services';
     public CREATE_SECRET = environment.clusterURL + this.KUBERNETES + 'namespaces/$NAMESPACE/secrets';
     public BUILD_APP = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/buildconfigs/$NAME/instantiate';
 

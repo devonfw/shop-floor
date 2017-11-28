@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
     const me = this;
 
     this.osservice.requestToken(this.basicAuth).subscribe(data => {
-      debugger
       localStorage.removeItem('token');
       localStorage.setItem('token', data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>')));
       me.router.navigate(['menu']);

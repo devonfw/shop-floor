@@ -1,29 +1,35 @@
-//INPUT cluster to angular
+// INPUT cluster to angular
 
-//OUTPUT angular to cluster
+// OUTPUT angular to cluster
 export interface BasicAuth {
     username: string;
     password: string;
 }
 
 export interface CreateProject {
-    name: string,
-    displayName: string,
-    description: string,
+    'name': string;
+    'displayName': string;
+    'description': string;
+}
+
+export interface NewApp {
+    'name': string;
+    'namespace': string;
+    'fileParams': JSON;
 }
 
 export interface RouteNamespace {
-    namespace: string
+    'namespace': string;
 }
 
 export interface RouteNameAndNamespace {
-    name: string,
-    namespace: string
+    'name': string;
+    'namespace': string;
 }
 
 export interface RouteNamespaceAndBodyJSON {
-    namespaceRoute: string,
-    bodyJSON: JSON
+    'namespaceRoute': string;
+    'bodyJSON': JSON;
 }
 
 /**
@@ -31,15 +37,15 @@ export interface RouteNamespaceAndBodyJSON {
  * @param name the name of the secret.
  */
 export interface CreateSecret {
-    namespace: string,
-    name: string,
-    sshprivatekey: string
+    'namespace': string;
+    'name': string;
+    'sshprivatekey': string;
 }
 
 export interface Secret {
-    name: string,
-    namespace: string
-    nameSecret: string,
+    'name': string;
+    'namespace': string;
+    'nameSecret': string;
 }
 
 /*

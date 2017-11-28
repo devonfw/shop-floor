@@ -33,12 +33,16 @@ export class OpenShiftService {
     }
 
     // GET
-    private get(route): Observable<any> {
+    private get(route: string): Observable<any> {
         return this.http.get(route, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
             })
         });
+    }
+
+    requestFileParam(route: string): Observable<any> {
+        return this.http.get(route);
     }
 
     requestToken(params: INTERFACES.BasicAuth) {
@@ -50,17 +54,6 @@ export class OpenShiftService {
             responseType: 'text'
         });
     }
-
-    // requestToken(username: string, password: string): Observable<any> {
-    //     const bearerparam = 'Basic ' + btoa(username + ':' + password);
-    //     return this.http.get(this.API.REQUEST_TOKEN, {
-    //         headers: new HttpHeaders({
-    //             'Authorization': bearerparam,
-    //         }),
-    //         responseType: 'text'
-    //     });
-    // }
-
 
     requestProjects(): Observable<any> {
         return this.get(this.API.REQUEST_PROJECTS);
@@ -100,7 +93,7 @@ export class OpenShiftService {
     createProject(params: INTERFACES.CreateProject): Observable<any> {
         const body = {
             'displayName': params.displayName,
-            'description': params.displayName,
+            'description': params.description,
             'kind': 'ProjectRequest',
             'metadata': {
               'name': params.name,
