@@ -23,14 +23,46 @@ export class OpenShiftService {
     // SERVICES
 
     getCICDservices(): Promise<Service[]> {
-        return Promise.resolve(SERVICESLIST);
-        // return Observable<Service[]>
+        const serviceList: Service[] = [];
+        const basicAuth: INTERFACES.BasicAuth = {
+            username: 'system',
+            password: 'admin'
+        };
+        this.requestToken(basicAuth).subscribe(data => {
+            const token = data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>'));
+            let route = this.API.REQUEST_ROUTES;
+            route = route.replace('$NAMESPACE', 'devonfw');
+            route = route.replace('/$NAME', '');
+            this.http.get(route, {
+                headers: new HttpHeaders({
+                    'Authorization': 'Bearer ' + token,
+                })
+            }).subscribe(RouteList => {
+                for (let j = 0; j < RouteList['items'].length; j++) {
+                  const service = {
+                    'name': RouteList['items'][j]['spec']['to']['name'],
+                    image: '',
+                    'urlLink': RouteList['items'][j]['spec']['host'],
+                    status: ''
+                  };
+                  console.log(service);
+                  serviceList.push(service);
+                }
+            }, error => {
+                if (error.status === 401) {
+                  console.log('Unathorized. Please enter your Cluster Credentials');
+                }
+            });
+        }, error => {
+            debugger
+        });
+        return Promise.resolve(serviceList);
+        // return Promise.resolve(SERVICESLIST);
     }
 
-    getMYservices(): Promise<Service[]> {
-        return Promise.resolve(MYSERVICES);
-        // return Observable<Service[]>
-    }
+    // getMYservices(): Promise<Service[]> {
+    //     return Promise.resolve(MYSERVICES);
+    // }
 
     // GET
     private get(route: string): Observable<any> {

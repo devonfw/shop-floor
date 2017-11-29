@@ -52,8 +52,8 @@ oc new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
 ## Create base-images and add them to DevonFW project
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json?token=AfL84NxYi2swO_ePGfBpvZQb9SMcrS45ks5aHVQLwA%3D%3D --namespace=devonfw
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json?token=AfL84N4vPBNCrtwUXu4h42ioEFMQrAGmks5aHVPawA%3D%3D --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json?token=AfL84AxJQvUIn6fbioXic7zhFlRXlNBVks5aJ70kwA%3D%3D --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json?token=AfL84F7gO8gHi5p3CAOWNqXqOCRsbGFSks5aJ71ZwA%3D%3D --namespace=devonfw
 
 ## Build base-images in DevonFW project
 oc start-build s2i-devonfw-java --namespace=devonfw
@@ -72,8 +72,8 @@ oc policy add-role-to-group system:image-puller system:authenticated --namespace
 
 # STEP 3: Create DevonFW templates into openshift
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json?token=AfL84FN1HqvV7CJIbHoZSbTqAnASLn7yks5aHVRewA%3D%3D --namespace=openshift
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json?token=AfL84DpchImiRjgd2W06WGfiqrDzM2YTks5aHVRwwA%3D%3D --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json?token=AfL84OMwHDxfwsY9yJTBzDscHr6LLsi3ks5aJ73BwA%3D%3D --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json?token=AfL84PumFJr9moy8N7pG0p7IrqRsyXPuks5aJ72fwA%3D%3D --namespace=openshift
 
 # STEP 4: Create Team Portal using DevonFW Angular template
 ## Registering the Private Key with OpenShift to connect to the Private Git Repository

@@ -3,7 +3,7 @@ import { Service } from '../shared/service';
 import { OpenShiftService } from '../shared/openshift.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import { RouteNameAndNamespace, RouteNamespaceAndBodyJSON, NewApp } from '../shared/models';
+import { RouteNameAndNamespace, RouteNamespaceAndBodyJSON, NewApp, RouteNamespace } from '../shared/models';
 
 @Component({
   selector: 'my-services',
@@ -11,7 +11,7 @@ import { RouteNameAndNamespace, RouteNamespaceAndBodyJSON, NewApp } from '../sha
   styleUrls: ['./my-services.component.css']
 })
 export class MyServicesComponent implements OnInit {
-  myservices: Service[];
+  myservices: Service[] = [];
   constructor(
     private osservice: OpenShiftService,
     public dialog: MatDialog
@@ -22,8 +22,33 @@ export class MyServicesComponent implements OnInit {
   }
 
   getMYservices(): void {
-    this.osservice.getMYservices().then(services => {
-      this.myservices = services;
+    this.osservice.requestAllProjects().subscribe(ProjectList => {
+      const route: RouteNamespace = {
+        'namespace': '',
+      };
+      for (let i = 0; i < ProjectList['items'].length; i++) {
+        route['namespace'] = ProjectList['items'][i]['metadata']['name'];
+        this.osservice.requestAllRoutes(route).subscribe(RouteList => {
+          for (let j = 0; j < RouteList['items'].length; j++) {
+            const service = {
+              'name': RouteList['items'][j]['spec']['to']['name'],
+              image: '',
+              'urlLink': RouteList['items'][j]['spec']['host'],
+              status: ''
+            };
+            console.log(service);
+            this.myservices.push(service);
+          }
+        }, error => {
+          if (error.status === 401) {
+            console.log('Unathorized. Please enter your Cluster Credentials');
+          }
+        });
+      }
+    }, error => {
+      if (error.status === 401) {
+        console.log('Unathorized. Please enter your Cluster Credentials');
+      }
     });
   }
 
@@ -43,16 +68,6 @@ export class MyServicesComponent implements OnInit {
   }
 
   newApp(route: string): void {
-    // this.osservice.requestFileParam(route).subscribe(fileParams => {
-    //   this.osservice.createProject(fileParams).subscribe(project => {
-    //     this.osservice.requestTemplate(fileParams).subscribe(template => {
-    //       this.osservice.processedTemplate(template).subscribe(processedTemplate => {
-    //         //
-    //       })
-    //     })
-    //   })
-    // })
-
     // const route = 'https://raw.githubusercontent.com/Jorge-Dacal/my-thai-star/develop/angular/openshift.json';
     // const route = 'https://raw.githubusercontent.com/Jorge-Dacal/my-thai-star/develop/java/mtsj/openshift.json';
     this.osservice.requestFileParam(route).subscribe(fileParams => {
@@ -99,36 +114,30 @@ export class MyServicesComponent implements OnInit {
       this.osservice.processedTemplate(body).subscribe(processedTemplate => {
         const objects = processedTemplate['objects'];
         for (let i = 0; i < objects.length; i++) {
-          console.log(objects[i]['kind']);
           if (objects[i]['kind'] === 'BuildConfig') {
-            console.log(objects[i]);
             // STEP 3.1 Create BuildConfig
             body.bodyJSON = objects[i];
-            this.osservice.createBuildConfig(body).subscribe(data => { console.log(data); });
+            this.osservice.createBuildConfig(body).subscribe(data => { });
           }
           if (objects[i]['kind'] === 'ImageStream') {
-            console.log(objects[i]);
             // STEP 3.2 Create ImageStream
             body.bodyJSON = objects[i];
-            this.osservice.createImageStream(body).subscribe(data => { console.log(data); });
+            this.osservice.createImageStream(body).subscribe(data => { });
           }
           if (objects[i]['kind'] === 'DeploymentConfig') {
-            console.log(objects[i]);
             // STEP 3.3 Create DeploymentConfig
             body.bodyJSON = objects[i];
-            this.osservice.createDeploymentConfig(body).subscribe(data => { console.log(data); });
+            this.osservice.createDeploymentConfig(body).subscribe(data => { });
           }
           if (objects[i]['kind'] === 'Route') {
-            console.log(objects[i]);
             // STEP 3.4 Create Route
             body.bodyJSON = objects[i];
-            this.osservice.createRoute(body).subscribe(data => { console.log(data); });
+            this.osservice.createRoute(body).subscribe(data => { });
           }
           if (objects[i]['kind'] === 'Service') {
-            console.log(objects[i]);
             // STEP 3.5 Create Service
             body.bodyJSON = objects[i];
-            this.osservice.createService(body).subscribe(data => { console.log(data); });
+            this.osservice.createService(body).subscribe(data => { });
           }
         }
       }, error => {
@@ -150,7 +159,6 @@ export class MyServicesComponent implements OnInit {
 })
 export class DeployNewAppDialogComponent {
   options: FormGroup;
-  // route = '';
   constructor(
     public dialogRef: MatDialogRef<DeployNewAppDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -159,8 +167,8 @@ export class DeployNewAppDialogComponent {
     this.dialogRef.close();
   }
 
-  // onNoClick(): void {
-  //   this.dialogRef.close();
-  // }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }
