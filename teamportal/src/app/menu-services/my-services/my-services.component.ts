@@ -36,7 +36,6 @@ export class MyServicesComponent implements OnInit {
               'urlLink': RouteList['items'][j]['spec']['host'],
               status: ''
             };
-            console.log(service);
             this.myservices.push(service);
           }
         }, error => {

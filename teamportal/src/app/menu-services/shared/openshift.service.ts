@@ -25,8 +25,8 @@ export class OpenShiftService {
     getCICDservices(): Promise<Service[]> {
         const serviceList: Service[] = [];
         const basicAuth: INTERFACES.BasicAuth = {
-            username: 'system',
-            password: 'admin'
+            username: 'devonfw',
+            password: 'devonfw'
         };
         this.requestToken(basicAuth).subscribe(data => {
             const token = data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>'));
@@ -39,14 +39,15 @@ export class OpenShiftService {
                 })
             }).subscribe(RouteList => {
                 for (let j = 0; j < RouteList['items'].length; j++) {
-                  const service = {
-                    'name': RouteList['items'][j]['spec']['to']['name'],
-                    image: '',
-                    'urlLink': RouteList['items'][j]['spec']['host'],
-                    status: ''
-                  };
-                  console.log(service);
-                  serviceList.push(service);
+                  if ('teamportal' !== RouteList['items'][j]['spec']['to']['name']) {
+                      const service = {
+                        'name': RouteList['items'][j]['spec']['to']['name'],
+                        image: '',
+                        'urlLink': RouteList['items'][j]['spec']['host'],
+                        status: ''
+                      };
+                      serviceList.push(service);
+                  }
                 }
             }, error => {
                 if (error.status === 401) {

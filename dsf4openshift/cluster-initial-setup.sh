@@ -94,3 +94,7 @@ sleep 2
 
 ## Build Angular application (sets the E.V. in the Angular code)
 oc start-build teamportal --namespace=devonfw
+
+# Create a devonfw user with view role to devonfw project
+oc policy add-role-to-user view devonfw --namespace=devonfw
+oc login -u devonfw -p devonfw
