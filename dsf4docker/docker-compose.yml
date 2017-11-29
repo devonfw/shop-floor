@@ -1,6 +1,29 @@
 version: '2'
 
 services:
+  nginx-proxy:
+    image: 'jwilder/nginx-proxy'
+    restart: always
+    networks:
+      - integration
+      - mattermost
+      - dev
+      - stage
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  jenkins:
+    image: 'jenkins'
+    restart: always
+    networks:
+      - integration
+    volumes:
+      - './jenkins/volumes/jenkins_home:/var/jenkins_home'
+    environment:
+      - VIRTUAL_HOST=jenkins.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
   nexus:
     image: 'sonatype/nexus'
     restart: always
@@ -35,64 +58,14 @@ services:
       - './gitlab/volumes/ssl:/etc/ssl/certs/gitlab'
     environment:
       - VIRTUAL_HOST=gitlab.10.68.26.165.nip.io
-      - VIRTUAL_PORT=80
-#   crucible:
-#     image: 'mswinarski/atlassian-crucible'
-#     restart: always
-#     volumes:
-#       - './crucible/data:/atlassian/data/crucible'
-#     environment:
-#       - VIRTUAL_HOST=crucible.10.68.26.165.nip.io
-  # tomcat-dev:
-  #   image: 'tomcat'
-  #   restart: always
-  #   networks:
-  #     - dev
-  #   environment:
-  #     - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
-  #     - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
-  #   volumes:
-  #     - './tomcat-dev/volumes/webapps:/usr/local/tomcat/webapps/'
-  #     - './tomcat-dev/volumes/logs:/usr/local/tomcat/logs/'
-  #     - './tomcat-dev/volumes/webservicelogs/:/usr/local/logs/'
-  #   environment:
-  #     - VIRTUAL_HOST=dev.10.68.26.165.nip.io
-  # tomcat-stage:
-  #   image: 'tomcat'
-  #   restart: always
-  #   networks:
-  #     - stage
-  #   environment:
-  #     - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
-  #     - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
-  #   volumes:
-  #     - './tomcat-stage/volumes/webapps:/usr/local/tomcat/webapps/'
-  #     - './tomcat-stage/volumes/logs:/usr/local/tomcat/logs/'
-  #     - './tomcat-stage/volumes/webservicelogs/:/usr/local/logs/'
-  #   environment:
-  #     - VIRTUAL_HOST=stage.10.68.26.165.nip.io
-  nginx-proxy:
-    image: 'jwilder/nginx-proxy'
+      - VIRTUAL_PORT=8080
+  crucible:
+    image: 'mswinarski/atlassian-crucible'
     restart: always
-    networks:
-      - integration
-      - mattermost
-      - dev
-      - stage
-    ports:
-      - '80:80'
-      - '443:443'
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-  jenkins:
-    image: 'jenkins'
-    restart: always
-    networks:
-      - integration
-    volumes:
-      - './jenkins/volumes/jenkins_home:/var/jenkins_home'
+      - './crucible/data:/atlassian/data/crucible'
     environment:
-      - VIRTUAL_HOST=jenkins.10.68.26.165.nip.io
+      - VIRTUAL_HOST=crucible.10.68.26.165.nip.io
       - VIRTUAL_PORT=8080
   db:
     image: mattermost/mattermost-prod-db
@@ -131,6 +104,36 @@ services:
     environment:
       - VIRTUAL_HOST=mattermost.10.68.26.165.nip.io
       - VIRTUAL_PORT=80
+  tomcat-dev:
+    image: 'tomcat'
+    restart: always
+    networks:
+      - dev
+    environment:
+      - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
+      - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
+    volumes:
+      - './tomcat-dev/volumes/webapps:/usr/local/tomcat/webapps/'
+      - './tomcat-dev/volumes/logs:/usr/local/tomcat/logs/'
+      - './tomcat-dev/volumes/webservicelogs/:/usr/local/logs/'
+    environment:
+      - VIRTUAL_HOST=dev.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
+  tomcat-stage:
+    image: 'tomcat'
+    restart: always
+    networks:
+      - stage
+    environment:
+      - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
+      - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
+    volumes:
+      - './tomcat-stage/volumes/webapps:/usr/local/tomcat/webapps/'
+      - './tomcat-stage/volumes/logs:/usr/local/tomcat/logs/'
+      - './tomcat-stage/volumes/webservicelogs/:/usr/local/logs/'
+    environment:
+      - VIRTUAL_HOST=stage.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
 
 networks:
   mattermost:
