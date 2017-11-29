@@ -33,7 +33,7 @@ $ sudo add-apt-repository \
 
 `$ sudo apt-get install docker-ce`
 
-# 3. Install OpenShift Client tools
+## 3. Install OpenShift Client tools
 
 `$ wget https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz`
 
@@ -41,12 +41,12 @@ $ sudo add-apt-repository \
 
 `mv openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz oc-tool`
 
-## Add **oc** to PATH
+## 4. Add **oc** to PATH
 
 `$ export PATH=<dir/to/oc-tool>/oc-tool:$PATH`
 `# export PATH=<dir/to/oc-tool>/oc-tool:$PATH`
 
-## Add `172.30.0.0/16` as `insecure-registry` for the Docker Daemon
+## 5. Add `172.30.0.0/16` as `insecure-registry` for the Docker Daemon
 
 `$ vim /etc/docker/daemon.json`
 
