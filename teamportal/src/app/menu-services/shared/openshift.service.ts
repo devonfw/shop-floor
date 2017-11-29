@@ -25,8 +25,8 @@ export class OpenShiftService {
     getCICDservices(): Promise<Service[]> {
         const serviceList: Service[] = [];
         const basicAuth: INTERFACES.BasicAuth = {
-            username: 'devonfw',
-            password: 'devonfw'
+            username: 'devonfw-reader',
+            password: 'devonfw-reader'
         };
         this.requestToken(basicAuth).subscribe(data => {
             const token = data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>'));
