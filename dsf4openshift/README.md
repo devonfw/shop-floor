@@ -46,7 +46,7 @@ $ sudo add-apt-repository \
 `$ export PATH=<dir/to/oc-tool>/oc-tool:$PATH`
 `# export PATH=<dir/to/oc-tool>/oc-tool:$PATH`
 
-## 5. Add `172.30.0.0/16` as `insecure-registry` for the Docker Daemon
+## 5. Add "172.30.0.0/16" as "insecure-registry" for the Docker Daemon
 
 `$ vim /etc/docker/daemon.json`
 
