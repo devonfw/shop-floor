@@ -1,0 +1,121 @@
+nexus:
+        image: 'sonatype/nexus'
+        restart: always
+        volumes:
+                - '/nexus-data:/sonatype-work'
+sonar:
+        image: 'sonarqube'
+        ports:
+                - '9092:9092'
+                #- '8086:9000'
+        volumes:
+                - '/conf:/opt/sonarqube/conf'
+                - '/data:/opt/sonarqube/data'
+                - '/extensions:/opt/sonarqube/extensions'
+                - '/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins'
+gitlab:
+        image: 'gitlab/gitlab-ce:latest'
+        restart: always
+        volumes:
+                - '/home/devonfw/gitlab/volumes/etc/gilab:/etc/gitlab'
+                - '/home/devonfw/gitlab/volumes/var/log:/var/log/gitlab'
+                - '/home/devonfw/gitlab/volumes/var/opt:/var/opt/gitlab'
+                - '/home/devonfw/gitlab/volumes/ssl:/etc/ssl/certs/gitlab'
+crucible:
+        image: 'mswinarski/atlassian-crucible'
+        restart: always
+        volumes:
+                - '/home/devonfw/crucible/data:/atlassian/data/crucible'
+tomcat:
+        image: 'tomcat'
+        restart: always
+        environment:
+                - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
+                - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
+        volumes:
+                - '/home/devonfw/tomcat/volumes/webapps:/usr/local/tomcat/webapps/'
+                - '/home/devonfw/tomcat/volumes/logs:/usr/local/tomcat/logs/'
+                - '/home/devonfw/tomcat/volumes/webservicelogs/:/usr/local/logs/'
+tomcat-stage:
+        image: 'tomcat'
+        restart: always
+        environment:
+                - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
+                - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
+        volumes:
+                - '/home/devonfw/tomcat/volumes/webapps-stage:/usr/local/tomcat/webapps/'
+                - '/home/devonfw/tomcat/volumes/logs-stage:/usr/local/tomcat/logs/'
+                - '/home/devonfw/tomcat/volumes/webservicelogs-stage/:/usr/local/logs/'
+        ports:
+                - '8085:8080'
+nginx-proxy:
+        image: 'nginx'
+        restart: always
+        links:
+                - nexus:nexus
+                - sonar:sonar
+                - gitlab:gitlab
+                - crucible:crucible
+                - tomcat:tomcat
+                - tomcat-stage:tomcat-stage
+        ports:
+                #- '8080:8080'
+                - '8081:8081'
+                - '8086:8086'
+                - '8888:8888'
+                - '8084:8084'
+                - '8083:8083'
+                - '9999:9999'
+                - '443:443'
+        volumes:
+                - './nexus-data/conf/nginx.conf:/etc/nginx/nginx.conf:ro'
+                - './nexus-data/ssl/key-no-password.pem:/etc/nginx/ssl.key:ro'
+                - './nexus-data/ssl/cert.pem:/etc/nginx/ssl.crt:ro'
+jenkins:
+        image: 'jenkins'
+        restart: always
+        links:
+                - sonar:sonar
+        ports:
+                - '8080:8443'
+                - '50000:50000'
+        volumes:
+                - '/jenkins:/var/jenkins_home'
+        command: --httpPort=-1 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/certs/keystore.jks --httpsKeyStorePassword=Mirabaud2017
+db:
+  image: mattermost/mattermost-prod-db
+  restart: unless-stopped
+  volumes:
+    - /home/devonfw/mattermost/volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+    - /etc/localtime:/etc/localtime:ro
+  environment:
+    - POSTGRES_USER=mmuser
+    - POSTGRES_PASSWORD=mmuser_password
+    - POSTGRES_DB=mattermost
+
+app:
+  image: mattermost/mattermost-prod-app
+  links:
+    - db:db
+  restart: unless-stopped
+  volumes:
+    - /home/devonfw/mattermost/volumes/app/mattermost/config:/mattermost/config:rw
+    - /home/devonfw/mattermost/volumes/app/mattermost/data:/mattermost/data:rw
+    - /home/devonfw/mattermost/volumes/app/mattermost/logs:/mattermost/logs:rw
+    - /etc/localtime:/etc/localtime:ro
+  environment:
+    - MM_USERNAME=mmuser
+    - MM_PASSWORD=mmuser_password
+    - MM_DBNAME=mattermost
+
+web:
+  image: mattermost/mattermost-prod-web
+  ports:
+    - "8089:80"
+    - "8088:443"
+  links:
+    - app:app
+  restart: unless-stopped
+  volumes:
+    - /home/devonfw/mattermost/volumes/web/cert:/cert:ro
+    - /etc/localtime:/etc/localtime:ro
