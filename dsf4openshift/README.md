@@ -39,7 +39,7 @@ $ sudo add-apt-repository \
 
 `$ tar –xvf openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz`
 
-`mv openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz oc-tool`
+`$ mv openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz oc-tool`
 
 ## 4. Add **oc** to PATH
 
