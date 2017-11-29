@@ -1,3 +1,0 @@
-[submodule "mattermost"]
-	path = dsf4docker/mattermost-docker
-	url = https://github.com/mattermost/mattermost-docker.git
