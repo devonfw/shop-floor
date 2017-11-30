@@ -21,6 +21,10 @@ export class MyServicesComponent implements OnInit {
     this.getMYservices();
   }
 
+  goToApp(route: string) {
+    window.open('https://' + route);
+  }
+
   getMYservices(): void {
     this.osservice.requestAllProjects().subscribe(ProjectList => {
       const route: RouteNamespace = {
@@ -32,9 +36,11 @@ export class MyServicesComponent implements OnInit {
           for (let j = 0; j < RouteList['items'].length; j++) {
             const service = {
               'name': RouteList['items'][j]['spec']['to']['name'],
-              image: '',
+              'project': ProjectList['items'][i]['metadata']['annotations']['openshift.io/display-name'],
+              'namespace': route['namespace'],
+              'image': '',
               'urlLink': RouteList['items'][j]['spec']['host'],
-              status: ''
+              'status': ''
             };
             this.myservices.push(service);
           }
@@ -73,6 +79,7 @@ export class MyServicesComponent implements OnInit {
 
       const CreateProject = {
         'name': fileParams['PROJECT'],
+        // 'name': 'paquito',
         'displayName': fileParams['PROJECT_DISPLAYNAME'],
         'description': fileParams['DESCRIPTION'],
       };
@@ -82,6 +89,7 @@ export class MyServicesComponent implements OnInit {
         this.createApp(fileParams);
       }, error => {
         this.osservice.createProject(CreateProject).subscribe(newProject => {
+          debugger
           this.createApp(fileParams);
         }, errorCreate => {
           // TODO: ¿AUTH?
@@ -97,6 +105,7 @@ export class MyServicesComponent implements OnInit {
     };
     const body: RouteNamespaceAndBodyJSON = {
       'namespaceRoute': fileParams['PROJECT'],
+      // 'namespaceRoute': 'paquito',
       'bodyJSON': JSON
     };
 
@@ -112,43 +121,79 @@ export class MyServicesComponent implements OnInit {
       body.bodyJSON = template;
       this.osservice.processedTemplate(body).subscribe(processedTemplate => {
         const objects = processedTemplate['objects'];
+        let wait = 4;
         for (let i = 0; i < objects.length; i++) {
-          if (objects[i]['kind'] === 'BuildConfig') {
-            // STEP 3.1 Create BuildConfig
-            body.bodyJSON = objects[i];
-            this.osservice.createBuildConfig(body).subscribe(data => { });
-          }
-          if (objects[i]['kind'] === 'ImageStream') {
-            // STEP 3.2 Create ImageStream
-            body.bodyJSON = objects[i];
-            this.osservice.createImageStream(body).subscribe(data => { });
-          }
-          if (objects[i]['kind'] === 'DeploymentConfig') {
-            // STEP 3.3 Create DeploymentConfig
-            body.bodyJSON = objects[i];
-            this.osservice.createDeploymentConfig(body).subscribe(data => { });
-          }
-          if (objects[i]['kind'] === 'Route') {
-            // STEP 3.4 Create Route
-            body.bodyJSON = objects[i];
-            this.osservice.createRoute(body).subscribe(data => { });
-          }
+          body.bodyJSON = objects[i];
           if (objects[i]['kind'] === 'Service') {
-            // STEP 3.5 Create Service
-            body.bodyJSON = objects[i];
-            this.osservice.createService(body).subscribe(data => { });
+            objects[i]['spec']['ports'][0]['port'] = '8092';
           }
+          this.osservice.create(body).subscribe(data => {
+             wait--;
+             console.log('interno: ' + wait);
+             console.log(data);
+          });
+          // if (objects[i]['kind'] === 'BuildConfig') {
+          //   // STEP 3.1 Create BuildConfig
+          //   body.bodyJSON = objects[i];
+          //   this.osservice.createBuildConfig(body).subscribe(data => { });
+          // }
+          // if (objects[i]['kind'] === 'ImageStream') {
+          //   // STEP 3.2 Create ImageStream
+          //   body.bodyJSON = objects[i];
+          //   this.osservice.createImageStream(body).subscribe(data => { });
+          // }
+          // if (objects[i]['kind'] === 'DeploymentConfig') {
+          //   // STEP 3.3 Create DeploymentConfig
+          //   body.bodyJSON = objects[i];
+          //   this.osservice.createDeploymentConfig(body).subscribe(data => { });
+          // }
+          // if (objects[i]['kind'] === 'Route') {
+          //   // STEP 3.4 Create Route
+          //   body.bodyJSON = objects[i];
+          //   this.osservice.createRoute(body).subscribe(data => { });
+          // }
+          // if (objects[i]['kind'] === 'Service') {
+          //   // STEP 3.5 Create Service
+          //   body.bodyJSON = objects[i];
+          //   this.osservice.createService(body).subscribe(data => {
+          //     this.myservices = [];
+          //     this.getMYservices(); });
+          // }
         }
-      }, error => {
-        if (error.status === 401) {
-          console.log('Unathorized. Please enter your Cluster Credentials');
-        }
-      });
+
+        // while (wait > 0) {
+        //   console.log(wait);
+        // }
+
+        this.myservices = [];
+        this.getMYservices(); });
+
+
+      // }, error => {
+      //   if (error.status === 401) {
+      //     console.log('Unathorized. Please enter your Cluster Credentials');
+      //   }
+      // });
     }, error => {
       if (error.status === 401) {
         console.log('Unathorized. Please enter your Cluster Credentials');
       }
     });
+  }
+
+  deleteApp(name: string, namespace: string): void {
+    const params: RouteNameAndNamespace = {
+      'name': name,
+      'namespace': namespace,
+    };
+    this.osservice.deleteBuildConfig(params).subscribe(data => { });
+    this.osservice.deleteImageStream(params).subscribe(data => { });
+    this.osservice.deleteDeploymentConfig(params).subscribe(data => { });
+    this.osservice.deleteRoute(params).subscribe(data => { });
+    this.osservice.deleteService(params).subscribe(data => { this.myservices = [];
+      this.getMYservices(); });
+
+    // Optimizar haciendo que solo busque e inserte la app recien desplegada
   }
 }
 

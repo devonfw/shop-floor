@@ -1,12 +1,15 @@
 <mat-grid-list cols="3">
-  <mat-grid-tile
+  <mat-grid-tile 
     *ngFor="let service of myservices"
     class="service"
     style="color:'{{service.status}}'"
     [colspan]="1"
-    [rowspan]="1">
+    [rowspan]="1"
+    (click)="goToApp(service.urlLink)">
     <!-- <font color="{{service.status}}">{{service.name}}</font> -->
-    {{service.name}}
+    {{service.project}}<br>
+    {{service.name}}<br>
+    <button mat-mini-fab color=warn style="color:#fff" matTooltip="Delete App" matTooltipPosition="above" (click)="deleteApp(service.name,service.namespace)">-</button>
   </mat-grid-tile>
 </mat-grid-list>
 <div class="deploynewapp">

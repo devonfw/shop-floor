@@ -4,7 +4,9 @@
     class="service"
     style="background-image:url('../../../assets/{{service.image}}');"
     [colspan]="1"
-    [rowspan]="1">
-    {{service.name}}
+    [rowspan]="1"
+    (click)="goToApp(service.urlLink)">
+    {{service.project}}<br>
+    {{service.name}}<br>
   </mat-grid-tile>
 </mat-grid-list>

@@ -28,4 +28,15 @@ export class API {
 
     constructor() {}
 
+    getCreateRoute(suffix: string) {
+        switch (suffix) {
+            case 'Service':
+              return this.CREATE_SERVICE;
+            case 'Secret':
+              return this.CREATE_SECRET;
+            default:
+                return environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/' + suffix.toLowerCase() + 's';
+        }
+    }
+
 }

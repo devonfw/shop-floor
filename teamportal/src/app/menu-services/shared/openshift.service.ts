@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
 import { API } from './api';
 import { Observable } from 'rxjs/Observable';
 import { Service } from './service';
-import { SERVICESLIST, MYSERVICES } from './mock-services';
+// import { SERVICESLIST, MYSERVICES } from './mock-services';
 import { Response } from '@angular/http/src/static_response';
 import { catchError, map, tap } from 'rxjs/operators';
 import * as INTERFACES from './models';
@@ -38,13 +38,15 @@ export class OpenShiftService {
                     'Authorization': 'Bearer ' + token,
                 })
             }).subscribe(RouteList => {
-                for (let j = 0; j < RouteList['items'].length; j++) {
-                  if ('teamportal' !== RouteList['items'][j]['spec']['to']['name']) {
+                for (let i = 0; i < RouteList['items'].length; i++) {
+                  if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
                       const service = {
-                        'name': RouteList['items'][j]['spec']['to']['name'],
-                        image: '',
-                        'urlLink': RouteList['items'][j]['spec']['host'],
-                        status: ''
+                        'name': RouteList['items'][i]['spec']['to']['name'],
+                        'project': 'DevonFW',
+                        'namespace': 'devonfw',
+                        'image': '',
+                        'urlLink': RouteList['items'][i]['spec']['host'],
+                        'status': ''
                       };
                       serviceList.push(service);
                   }
@@ -150,6 +152,16 @@ export class OpenShiftService {
         return this.post(route, params.bodyJSON);
     }
 
+    create(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
+        const body = params.bodyJSON;
+        // const sufix = body['kind'].toUpperCase();
+        // console.log(body['kind']);
+        let route = this.API.getCreateRoute(body['kind']);
+        route = route.replace('$NAMESPACE', params.namespaceRoute);
+        return this.post(route, params.bodyJSON);
+        // debugger
+    }
+
     createBuildConfig(params: INTERFACES.RouteNamespaceAndBodyJSON): Observable<any> {
         let route = this.API.CREATE_BUILDCONFIG;
         route = route.replace('$NAMESPACE', params.namespaceRoute);
@@ -239,6 +251,58 @@ export class OpenShiftService {
             'value': { 'name': params.nameSecret }
         }];
         return this.patch(route, body);
+    }
+
+    // DELETE
+    private delete(route): Observable<any> {
+        return this.http.delete(route, {
+            headers: new HttpHeaders({
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        });
+    }
+
+    deleteBuildConfig(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_BUILDCONFIG;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route + '/' + params.name;
+        return this.delete(route);
+    }
+
+    deleteImageStream(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_IMAGESTREAM;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route + '/' + params.name;
+        return this.delete(route);
+    }
+
+    deleteDeploymentConfig(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_DEPLOYMENTCONFIG;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route + '/' + params.name;
+        return this.delete(route);
+    }
+
+    deleteRoute(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_ROUTE;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route + '/' + params.name;
+        return this.delete(route);
+    }
+
+    deleteService(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_SERVICE;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route + '/' + params.name;
+        return this.delete(route);
+    }
+
+    deleteSecret(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_SECRET;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route + '/' + params.name;
+        return this.delete(route);
     }
 
 }

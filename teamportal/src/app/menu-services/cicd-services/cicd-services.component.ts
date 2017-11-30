@@ -21,6 +21,10 @@ export class CicdServicesComponent implements OnInit {
     this.getCICDservices();
   }
 
+  goToApp(route: string) {
+    window.open('https://' + route);
+  }
+
   getCICDservices(): void {
     this.osservice.getCICDservices().then(services => {
       this.cicdservices = services;
