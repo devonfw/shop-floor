@@ -1,76 +1,146 @@
-version: "2"
+version: '2'
 
 services:
-
+  nginx-proxy:
+    image: 'jwilder/nginx-proxy'
+    restart: always
+    networks:
+      - integration
+      - mattermost
+      - dev
+      - stage
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
   jenkins:
-    image: jenkins
+    image: 'jenkins'
+    restart: always
     networks:
-      - devonfwshopfloor
+      - integration
     volumes:
-      - devonfw_shop_floor_jenkins_home:/var/jenkins_home
-    ports:
-      - "8080:8080"
-
+      - './jenkins/volumes/jenkins_home:/var/jenkins_home'
+    environment:
+      - VIRTUAL_HOST=jenkins.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
   nexus:
-    image: sonatype/nexus
+    image: 'sonatype/nexus'
+    restart: always
     networks:
-      - devonfwshopfloor
+      - integration
     volumes:
-      - devonfw_shop_floor_nexus_data:/sonatype-work
-    ports:
-      - "8081:8081"
-
+      - './nexus/volumes/nexus-data:/sonatype-work'
+    environment:
+      - VIRTUAL_HOST=nexus.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8081
   sonarqube:
-    image: sonarqube
-    ports:
-      - "8082:9000"
+    image: 'sonarqube'
     networks:
-      - devonfwshopfloor
-    environment:
-      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - integration
     volumes:
-      - devonfw_shop_floor_sonarqube_conf:/opt/sonarqube/conf
-      - devonfw_shop_floor_sonarqube_data:/opt/sonarqube/data
-      - devonfw_shop_floor_sonarqube_extensions:/opt/sonarqube/extensions
-      - devonfw_shop_floor_sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-  db:
-    image: postgres
-    networks:
-      - devonfwshopfloor
+      - './sonar/volumes/conf:/opt/sonarqube/conf'
+      - './sonar/volumes/data:/opt/sonarqube/data'
+      - './sonar/volumes/extensions:/opt/sonarqube/extensions'
+      - './sonar/volumes/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins'
     environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
-    volumes:
-      - devonfw_shop_floor_sonarqube_postgresql:/var/lib/postgresql
-      - devonfw_shop_floor_sonarqube_postgresql_data:/var/lib/postgresql/data
-
+      - VIRTUAL_HOST=sonarqube.10.68.26.165.nip.io
+      - VIRTUAL_PORT=9000
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
-    ports:
-      - "8083:80"
+    restart: always
     networks:
-      - devonfwshopfloor
+      - integration
+    volumes:
+      - './gitlab/volumes/etc/gilab:/etc/gitlab'
+      - './gitlab/volumes/var/log:/var/log/gitlab'
+      - './gitlab/volumes/var/opt:/var/opt/gitlab'
+      - './gitlab/volumes/ssl:/etc/ssl/certs/gitlab'
+    environment:
+      - VIRTUAL_HOST=gitlab.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
+  crucible:
+    image: 'mswinarski/atlassian-crucible'
     restart: always
     volumes:
-      - devonfw_shop_floor_gilab_config:/etc/gitlab
-      - devonfw_shop_floor_gilab_logs:/var/log/gitlab
-      - devonfw_shop_floor_gilab_data:/var/opt/gitlab
-      - devonfw_shop_floor_gilab_backups:/var/opt/gitlab/backups
+      - './crucible/data:/atlassian/data/crucible'
+    environment:
+      - VIRTUAL_HOST=crucible.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
+  db:
+    image: mattermost/mattermost-prod-db
+    restart: unless-stopped
+    networks:
+      - mattermost
+    volumes:
+      - ./mattermost/volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=mmuser_password
+      - POSTGRES_DB=mattermost
+  app:
+    image: mattermost/mattermost-prod-app
+    restart: unless-stopped
+    networks:
+      - mattermost
+    volumes:
+      - './mattermost/volumes/app/mattermost/config:/mattermost/config:rw'
+      - './mattermost/volumes/app/mattermost/data:/mattermost/data:rw'
+      - './mattermost/volumes/app/mattermost/logs:/mattermost/logs:rw'
+      - '/etc/localtime:/etc/localtime:ro'
+    environment:
+      - MM_USERNAME=mmuser
+      - MM_PASSWORD=mmuser_password
+      - MM_DBNAME=mattermost
+  web:
+    image: mattermost/mattermost-prod-web
+    networks:
+      - mattermost
+    restart: unless-stopped
+    volumes:
+      - ./mattermost/volumes/web/cert:/cert:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - VIRTUAL_HOST=mattermost.10.68.26.165.nip.io
+      - VIRTUAL_PORT=80
+  tomcat-dev:
+    image: 'tomcat'
+    restart: always
+    networks:
+      - dev
+    environment:
+      - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
+      - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
+    volumes:
+      - './tomcat-dev/volumes/webapps:/usr/local/tomcat/webapps/'
+      - './tomcat-dev/volumes/logs:/usr/local/tomcat/logs/'
+      - './tomcat-dev/volumes/webservicelogs/:/usr/local/logs/'
+    environment:
+      - VIRTUAL_HOST=dev.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
+  tomcat-stage:
+    image: 'tomcat'
+    restart: always
+    networks:
+      - stage
+    environment:
+      - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
+      - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
+    volumes:
+      - './tomcat-stage/volumes/webapps:/usr/local/tomcat/webapps/'
+      - './tomcat-stage/volumes/logs:/usr/local/tomcat/logs/'
+      - './tomcat-stage/volumes/webservicelogs/:/usr/local/logs/'
+    environment:
+      - VIRTUAL_HOST=stage.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
 
 networks:
-  devonfwshopfloor:
+  mattermost:
     driver: bridge
-
-volumes:
-  devonfw_shop_floor_jenkins_home:
-  devonfw_shop_floor_nexus_data:
-  devonfw_shop_floor_sonarqube_conf:
-  devonfw_shop_floor_sonarqube_data:
-  devonfw_shop_floor_sonarqube_extensions:
-  devonfw_shop_floor_sonarqube_bundled-plugins:
-  devonfw_shop_floor_sonarqube_postgresql:
-  devonfw_shop_floor_sonarqube_postgresql_data:
-  devonfw_shop_floor_gilab_config:
-  devonfw_shop_floor_gilab_logs:
-  devonfw_shop_floor_gilab_data:
-  devonfw_shop_floor_gilab_backups:
+  integration:
+    driver: bridge
+  dev:
+    driver: bridge
+  stage:
+    driver: bridge
