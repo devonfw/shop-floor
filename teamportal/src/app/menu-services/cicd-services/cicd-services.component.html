@@ -4,9 +4,9 @@
     class="service"
     style="background-image:url('../../../assets/{{service.image}}');"
     [colspan]="1"
-    [rowspan]="1"
-    (click)="goToApp(service.urlLink)">
+    [rowspan]="1">
     {{service.project}}<br>
     {{service.name}}<br>
+    <button mat-mini-fab color=link style="color:#333" matTooltip="Visit App" matTooltipPosition="above" (click)="goToApp(service.urlLink)">Visit</button>
   </mat-grid-tile>
 </mat-grid-list>
