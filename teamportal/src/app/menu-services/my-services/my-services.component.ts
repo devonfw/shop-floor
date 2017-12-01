@@ -22,7 +22,7 @@ export class MyServicesComponent implements OnInit {
   }
 
   goToApp(route: string) {
-    window.open('https://' + route);
+    window.open('http://' + route);
   }
 
   getMYservices(): void {
@@ -33,6 +33,7 @@ export class MyServicesComponent implements OnInit {
       for (let i = 0; i < ProjectList['items'].length; i++) {
         route['namespace'] = ProjectList['items'][i]['metadata']['name'];
         this.osservice.requestAllRoutes(route).subscribe(RouteList => {
+          debugger
           for (let j = 0; j < RouteList['items'].length; j++) {
             const service = {
               'name': RouteList['items'][j]['spec']['to']['name'],
@@ -121,7 +122,7 @@ export class MyServicesComponent implements OnInit {
       body.bodyJSON = template;
       this.osservice.processedTemplate(body).subscribe(processedTemplate => {
         const objects = processedTemplate['objects'];
-        let wait = 4;
+        let wait = 5;
         for (let i = 0; i < objects.length; i++) {
           body.bodyJSON = objects[i];
           if (objects[i]['kind'] === 'Service') {
@@ -130,7 +131,10 @@ export class MyServicesComponent implements OnInit {
           this.osservice.create(body).subscribe(data => {
              wait--;
              console.log('interno: ' + wait);
-             console.log(data);
+             if (wait === 0) {
+              this.myservices = [];
+              this.getMYservices();
+             }
           });
           // if (objects[i]['kind'] === 'BuildConfig') {
           //   // STEP 3.1 Create BuildConfig
@@ -164,9 +168,7 @@ export class MyServicesComponent implements OnInit {
         // while (wait > 0) {
         //   console.log(wait);
         // }
-
-        this.myservices = [];
-        this.getMYservices(); });
+      });
 
 
       // }, error => {
@@ -182,6 +184,7 @@ export class MyServicesComponent implements OnInit {
   }
 
   deleteApp(name: string, namespace: string): void {
+    debugger
     const params: RouteNameAndNamespace = {
       'name': name,
       'namespace': namespace,

@@ -22,7 +22,7 @@ export class CicdServicesComponent implements OnInit {
   }
 
   goToApp(route: string) {
-    window.open('https://' + route);
+    window.open('http://' + route);
   }
 
   getCICDservices(): void {
