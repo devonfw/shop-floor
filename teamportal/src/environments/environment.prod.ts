@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  clusterURL: 'https://${CLUSTER_URL}/'
+  clusterURL: 'https://10.0.75.2:8443/'
 };
