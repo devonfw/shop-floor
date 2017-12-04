@@ -1,3 +1,14 @@
+# devonfw-shop-floor 4 OpenShift
+
+## Provided Assets
+
+![](../readme/devonfw-shop-floor-openshift-assets.png)
+
+## Architecture Overview
+
+![](../readme/devonfw-shop-floor-openshift-arch.png)
+
+
 Scripts, tools etc to create and manage OpenShift based DevOps/CI/CD/Test environment
 
 1. Get your local cluster up with `oc cluster up` (edit: `minishift start` could be the correct command)
@@ -132,6 +143,10 @@ $ su
 # exit
 $ minishift start
 ```
+
+## Devonfw Primed by Red Hat for OpenShift
+
+![](../readme/devonfw-shop-floor-openshift-primed.png)
 
 ## How to use Private Git Repositories
 
