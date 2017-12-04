@@ -2,7 +2,7 @@
 
 ![](./readme/devonfw-shop-floor-arch.png)
 
-## 1. devonfw-shop-floor 4 Production Line
+## devonfw-shop-floor 4 Production Line
 
 The **Production Line** part of the devonfw-shop-floor corresponds with a guide of setting up or **prepare your PL instance** to be used by Devonfw projects.
 
@@ -10,7 +10,7 @@ Moreover, 2 Jenkinsfile(s) are provided: one for Angular projects and another on
 
 More info in the **devonfw-shop-floor 4 Production Line** Wiki section.
 
-## 2. devonfw-shop-floor 4 Docker
+## devonfw-shop-floor 4 Docker
 
 This option is the "fastest" one. Perfect to ramp up a complete **CI/2CD/COMS** environment in a matter of seconds.
 
@@ -26,7 +26,7 @@ If your remote server's OS is _i.e._ **RHEL 6.5**, the maximum version you could
 
 More details in the [dsf4docker](https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4docker) README file.
 
-## 3. devonfw-shop-floor 4 OpenShift
+## devonfw-shop-floor 4 OpenShift
 
 The OpenShift part is a set of resources that allows teams to quickly have:
 
@@ -35,4 +35,20 @@ The OpenShift part is a set of resources that allows teams to quickly have:
 3. The `openshift.json` file that should be incorporated in the project's root directory.
 4. The **Team Portal** application that will serve as a welcome point for the whole team to access to services and even deploy projects in the cluster.
 
-## 4. Changes in Devonfw projects
+## Changes in Devonfw projects
+
+Some additions of plugins, configuration files and so on need to be make in Devonfw projects to, for example, run them in SonarQube, deploy their artifacts in Nexus, run unit tests in a headless Chrome window, etc.
+
+More specific info in the Wiki.
+
+### Angular projects
+
+1. Add `ChromeHeadless` browser in the `karma.conf.js` file
+2. Add a `build:pro` yarn script in `package.json`
+
+### Java projects
+
+1. Add `<distributionManagement>` section in the parent `pom.xml`
+2. Add `sonar:sonar` plugin and `jacoco` for code coverage
+
+## Deploy Devonfw projects using Docker
