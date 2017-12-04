@@ -4,76 +4,105 @@ services:
   nginx-proxy:
     image: 'jwilder/nginx-proxy'
     restart: always
+    container_name: 'dsf_reverse_proxy'
     networks:
-      - integration
-      - mattermost
-      - dev
-      - stage
+      - devonfw-shop-floor
     ports:
       - '80:80'
       - '443:443'
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+  portainer:
+    image: 'portainer/portainer'
+    restart: always
+    container_name: 'dsf_portainer'
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - './volumes/portainer/data:/data'
+    environment:
+      - VIRTUAL_HOST=portainer.10.68.26.165.nip.io
+      - VIRTUAL_PORT=9000
+  jira:
+    image: 'blacklabelops/jira'
+    restart: always
+    container_name: 'dsf_jira'
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - './volumes/jira/data:/var/atlassian/jira'
+    environment:
+      - VIRTUAL_HOST=jira.10.68.26.165.nip.io
+      - VIRTUAL_PORT=8080
   jenkins:
     image: 'jenkins'
     restart: always
+    container_name: 'dsf_jenkins'
     networks:
-      - integration
+      - devonfw-shop-floor
     volumes:
-      - './jenkins/volumes/jenkins_home:/var/jenkins_home'
+      - './volumes/jenkins/jenkins_home:/var/jenkins_home'
     environment:
       - VIRTUAL_HOST=jenkins.10.68.26.165.nip.io
       - VIRTUAL_PORT=8080
   nexus:
     image: 'sonatype/nexus'
     restart: always
+    container_name: 'dsf_nexus'
     networks:
-      - integration
+      - devonfw-shop-floor
     volumes:
-      - './nexus/volumes/nexus-data:/sonatype-work'
+      - './volumes/nexus/nexus-data:/sonatype-work'
     environment:
       - VIRTUAL_HOST=nexus.10.68.26.165.nip.io
       - VIRTUAL_PORT=8081
   sonarqube:
     image: 'sonarqube'
+    container_name: 'dsf_sonarqube'
     networks:
-      - integration
+      - devonfw-shop-floor
     volumes:
-      - './sonar/volumes/conf:/opt/sonarqube/conf'
-      - './sonar/volumes/data:/opt/sonarqube/data'
-      - './sonar/volumes/extensions:/opt/sonarqube/extensions'
-      - './sonar/volumes/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins'
+      - './volumes/sonarqube/conf:/opt/sonarqube/conf'
+      - './volumes/sonarqube/data:/opt/sonarqube/data'
+      - './volumes/sonarqube/extensions:/opt/sonarqube/extensions'
+      - './volumes/sonarqube/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins'
     environment:
       - VIRTUAL_HOST=sonarqube.10.68.26.165.nip.io
       - VIRTUAL_PORT=9000
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
+    container_name: 'dsf_gitlab'
     networks:
-      - integration
+      - devonfw-shop-floor
     volumes:
-      - './gitlab/volumes/etc/gilab:/etc/gitlab'
-      - './gitlab/volumes/var/log:/var/log/gitlab'
-      - './gitlab/volumes/var/opt:/var/opt/gitlab'
-      - './gitlab/volumes/ssl:/etc/ssl/certs/gitlab'
+      - './volumes/gitlab/etc/gilab:/etc/gitlab'
+      - './volumes/gitlab/var/log:/var/log/gitlab'
+      - './volumes/gitlab/var/opt:/var/opt/gitlab'
+      - './volumes/gitlab/ssl:/etc/ssl/certs/gitlab'
     environment:
       - VIRTUAL_HOST=gitlab.10.68.26.165.nip.io
       - VIRTUAL_PORT=8080
   crucible:
     image: 'mswinarski/atlassian-crucible'
     restart: always
+    container_name: 'dsf_crucible'
+    networks:
+      - devonfw-shop-floor
     volumes:
-      - './crucible/data:/atlassian/data/crucible'
+      - './volumes/crucible/data:/atlassian/data/crucible'
     environment:
       - VIRTUAL_HOST=crucible.10.68.26.165.nip.io
       - VIRTUAL_PORT=8080
   db:
     image: mattermost/mattermost-prod-db
     restart: unless-stopped
+    container_name: 'dsf_mattermost_db'
     networks:
-      - mattermost
+      - devonfw-shop-floor
     volumes:
-      - ./mattermost/volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+      - './volumes/mattermost/db/var/lib/postgresql/data:/var/lib/postgresql/data'
       - /etc/localtime:/etc/localtime:ro
     environment:
       - POSTGRES_USER=mmuser
@@ -82,65 +111,63 @@ services:
   app:
     image: mattermost/mattermost-prod-app
     restart: unless-stopped
+    container_name: 'dsf_mattermost_app'
     networks:
-      - mattermost
+      - devonfw-shop-floor
     volumes:
-      - './mattermost/volumes/app/mattermost/config:/mattermost/config:rw'
-      - './mattermost/volumes/app/mattermost/data:/mattermost/data:rw'
-      - './mattermost/volumes/app/mattermost/logs:/mattermost/logs:rw'
-      - '/etc/localtime:/etc/localtime:ro'
+      - './volumes/mattermost/app/mattermost/config:/mattermost/config:rw'
+      - './volumes/mattermost/app/mattermost/data:/mattermost/data:rw'
+      - './volumes/mattermost/app/mattermost/logs:/mattermost/logs:rw'
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - MM_USERNAME=mmuser
       - MM_PASSWORD=mmuser_password
       - MM_DBNAME=mattermost
   web:
     image: mattermost/mattermost-prod-web
+    container_name: 'dsf_mattermost_web'
     networks:
-      - mattermost
+      - devonfw-shop-floor
     restart: unless-stopped
     volumes:
-      - ./mattermost/volumes/web/cert:/cert:ro
+      - './volumes/mattermost/web/cert:/cert:ro'
       - /etc/localtime:/etc/localtime:ro
     environment:
       - VIRTUAL_HOST=mattermost.10.68.26.165.nip.io
       - VIRTUAL_PORT=80
-  tomcat-dev:
+  dev:
     image: 'tomcat'
     restart: always
+    container_name: 'dsf_dev'
     networks:
-      - dev
+      - devonfw-shop-floor
     environment:
       - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
       - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
     volumes:
-      - './tomcat-dev/volumes/webapps:/usr/local/tomcat/webapps/'
-      - './tomcat-dev/volumes/logs:/usr/local/tomcat/logs/'
-      - './tomcat-dev/volumes/webservicelogs/:/usr/local/logs/'
+      - './volumes/tomcat-dev/webapps:/usr/local/tomcat/webapps/'
+      - './volumes/tomcat-dev/logs:/usr/local/tomcat/logs/'
+      - './volumes/tomcat-dev/webservicelogs/:/usr/local/logs/'
     environment:
       - VIRTUAL_HOST=dev.10.68.26.165.nip.io
       - VIRTUAL_PORT=8080
-  tomcat-stage:
+  stage:
     image: 'tomcat'
     restart: always
+    container_name: 'dsf_stage'
     networks:
-      - stage
+      - devonfw-shop-floor
     environment:
       - 'JASYPT_ENCRYPTOR_PASSWORD=mirabaud'
       - 'JASYPT_DECRYPTOR_PASSWORD=mirabaud'
     volumes:
-      - './tomcat-stage/volumes/webapps:/usr/local/tomcat/webapps/'
-      - './tomcat-stage/volumes/logs:/usr/local/tomcat/logs/'
-      - './tomcat-stage/volumes/webservicelogs/:/usr/local/logs/'
+      - './volumes/tomcat-stage/webapps:/usr/local/tomcat/webapps/'
+      - './volumes/tomcat-stage/logs:/usr/local/tomcat/logs/'
+      - './volumes/tomcat-stage/webservicelogs/:/usr/local/logs/'
     environment:
       - VIRTUAL_HOST=stage.10.68.26.165.nip.io
       - VIRTUAL_PORT=8080
 
 networks:
-  mattermost:
-    driver: bridge
-  integration:
-    driver: bridge
-  dev:
-    driver: bridge
-  stage:
+  devonfw-shop-floor:
     driver: bridge
