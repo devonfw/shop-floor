@@ -146,7 +146,7 @@ $ minishift start
 
 ## Devonfw Primed by Red Hat for OpenShift
 
-![](../readme/devonfw-shop-floor-openshift-primed.png)
+![](../readme/devonfw-shop-floor-openshift-primed.jpg)
 
 ## How to use Private Git Repositories
 
