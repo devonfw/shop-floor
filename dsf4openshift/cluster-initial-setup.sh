@@ -96,5 +96,6 @@ sleep 2
 oc start-build teamportal --namespace=devonfw
 
 # Create a devonfw user with view role to devonfw project
-oc policy add-role-to-user view devonfw-reader --namespace=devonfw
 oc login -u devonfw-reader -p devonfw-reader
+oc login -u system:admin
+oc policy add-role-to-user view devonfw-reader --namespace=devonfw
