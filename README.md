@@ -1,40 +1,54 @@
 # Devonfw Shop Floor
 
-## 0. Work with this repository
+![](./readme/devonfw-shop-floor-arch.png)
 
-In order to clone submodules alongside this parent repo, let's clone it like this:
+## devonfw-shop-floor 4 Production Line
 
-`git clone --recursive https://github.com/devonfw/devonfw-shop-floor.git`
+The **Production Line** part of the devonfw-shop-floor corresponds with a guide of setting up or **prepare your PL instance** to be used by Devonfw projects.
 
-## 1. DSF4 Docker
+Moreover, 2 Jenkinsfile(s) are provided: one for Angular projects and another one for Java projects.
 
-This option is the "fastest" one. Suitable to ramp up a complete **CI/2CD/COMS** environment. That means having all this available in your remote server:
+More info in the **devonfw-shop-floor 4 Production Line** Wiki section.
 
-- Jenkins       
-    `http://${HOST_IP}:8080`
-- Nexus     
-    `http://${HOST_IP}:8081/nexus`
-- SonarQube     
-    `http://${HOST_IP}:8082`
-- GitLab        
-    `http://${HOST_IP}:8083`
-- Mattermost        
-    `http://${HOST_IP}:80`
+## devonfw-shop-floor 4 Docker
 
-Try running the `dsf4docker.sh` script located in `/devonfw-shop-floor/dsf4docker/`:
+This option is the "fastest" one. Perfect to ramp up a complete **CI/2CD/COMS** environment in a matter of seconds.
 
-```
-./dsf4docker.sh
-```
+As the environment is based on pure **Docker**, just one command should be executed:
+
+`# docker-compose up`
+
+After the environment installation (Jenkins, Nexus, Mattermost, ...) the integration between them should be done. Follor the Wiki documentation regarding **devon-shop-floor 4 Docker - Service Integration** section for that.
 
 Both `docker-compose.yml`(s) are using a `version: "2"` of Docker Compose, so that means a minimum version of Docker (`v1.10.0+`) is mandatory.
 
 If your remote server's OS is _i.e._ **RHEL 6.5**, the maximum version you could install is `v1.7`. There's also a `docker-compose-v1.yml` for those situations located in `/devonfw-shop-floor/dsf4docker/v1/`. There is a practical experience in this repo's Wiki about the [Mirabaud Case](https://github.com/devonfw/devonfw-shop-floor/wiki/mirabaud-cicd-environment-setup).
 
-## 2. DSF4 OpenShift
+More details in the [dsf4docker](https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4docker) README file.
 
-sds
+## devonfw-shop-floor 4 OpenShift
 
-### Team Portal
+The OpenShift part is a set of resources that allows teams to quickly have:
 
-## 3. Deploy Devonfw Applications
+1. OpenShift cluster up and running
+2. Devonfw s2i templates (both for Angular and Java) to build images and run them as containers in OpenShift
+3. The `openshift.json` file that should be incorporated in the project's root directory.
+4. The **Team Portal** application that will serve as a welcome point for the whole team to access to services and even deploy projects in the cluster.
+
+## Changes in Devonfw projects
+
+Some additions of plugins, configuration files and so on need to be make in Devonfw projects to, for example, run them in SonarQube, deploy their artifacts in Nexus, run unit tests in a headless Chrome window, etc.
+
+More specific info in the Wiki.
+
+### Angular projects
+
+1. Add `ChromeHeadless` browser in the `karma.conf.js` file
+2. Add a `build:pro` yarn script in `package.json`
+
+### Java projects
+
+1. Add `<distributionManagement>` section in the parent `pom.xml`
+2. Add `sonar:sonar` plugin and `jacoco` for code coverage
+
+## Deploy Devonfw projects using Docker

@@ -39,7 +39,7 @@ export class OpenShiftService {
                 })
             }).subscribe(RouteList => {
                 for (let i = 0; i < RouteList['items'].length; i++) {
-                  if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
+                //   if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
                       const service = {
                         'name': RouteList['items'][i]['spec']['to']['name'],
                         'project': 'DevonFW',
@@ -49,7 +49,7 @@ export class OpenShiftService {
                         'status': ''
                       };
                       serviceList.push(service);
-                  }
+                //   }
                 }
             }, error => {
                 if (error.status === 401) {
@@ -128,7 +128,7 @@ export class OpenShiftService {
         return this.http.post(route, body, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             })
         });
     }
@@ -224,7 +224,7 @@ export class OpenShiftService {
         return this.http.patch(route, body, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                'Content-Type': 'application/json-patch+json'
+                'Content-Type': 'application/json-patch+json',
             }),
         });
     }
@@ -258,7 +258,7 @@ export class OpenShiftService {
         return this.http.delete(route, {
             headers: new HttpHeaders({
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             })
         });
     }

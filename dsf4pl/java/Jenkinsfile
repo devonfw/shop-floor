@@ -1,0 +1,52 @@
+node {
+    stage('Repo checkout') {
+        deleteDir()
+        git branch: 'develop', credentialsId: ${CREDENTIALS}, url: ${REPO_URL}
+    }
+
+    stage('Load tools') {
+        tool name: 'Maven 3.3.9', type: 'maven'
+        env.JAVA_HOME="${tool 'OpenJDK 1.8'}"
+        env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+    }
+    
+    stage('SonarQube analysis') {
+        withMaven(globalMavenSettingsConfig: ${GLOBAL_MAVEN_SETTINGS}, jdk: 'OpenJDK 1.8', maven: 'Maven 3.3.9') {
+            sh "mvn sonar:sonar -X -Dsonar.login=${SONARQUBE_USERNAME} -Dsonar.password=${SONARQUBE_USERNAME}"
+        }
+    }
+    
+    stage('Install dependencies') {
+        withMaven(globalMavenSettingsConfig: ${GLOBAL_MAVEN_SETTINGS}, jdk: 'OpenJDK 1.8', maven: 'Maven 3.3.9') {
+            sh "mvn clean install -Dmaven.test.skip=true"
+        }
+    }
+    
+    stage('Execute tests') {
+        withMaven(globalMavenSettingsConfig: ${GLOBAL_MAVEN_SETTINGS}, jdk: 'OpenJDK 1.8', maven: 'Maven 3.3.9') {
+            sh "mvn test"
+        }
+    }
+    
+    stage('Build and store in Nexus') {
+        withMaven(globalMavenSettingsConfig: ${GLOBAL_MAVEN_SETTINGS}, jdk: 'OpenJDK 1.8', maven: 'Maven 3.3.9') {
+            sh "mvn clean deploy -Dmaven.test.skip=true"
+        }
+    }
+
+    stage('Deployment') {
+        sshagent (credentials: [${SSH_CREDENTIALS}]) {
+            sh """
+                # Copy resulting ".war" file from workspace to deployment server
+                scp -o StrictHostKeyChecking=no server/target/${ARTIFACT_NAME}.war ${SSH_USER}@${SSH_SERVER_IP}:${SSH_SERVER_APP_DIR}
+                
+                # Launch application in Docker container
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker rm -f ${CONTAINER_NAME}
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker run -itd --name=${CONTAINER_NAME} -p ${CONTAINER_PORT}:8080 tomcat:latest
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker cp ${SSH_SERVER_APP_DIR}/dist/. ${CONTAINER_NAME}:/usr/local/tomcat/webapps/
+            """
+        }
+        sh 'echo \\"Application available at http://${CONTAINER_NAME}:${CONTAINER_PORT}\\"'
+    }
+
+}

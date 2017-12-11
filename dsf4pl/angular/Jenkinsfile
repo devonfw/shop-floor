@@ -1,0 +1,44 @@
+node {
+    stage('Repo checkout') {
+        deleteDir()
+        git branch: 'develop', credentialsId: ${CREDENTIALS}, url: ${REPO_URL}
+    }
+
+    stage('Load Tools') {
+        def node = tool name: 'Node 8.9 LTS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+        env.PATH = "${node}/bin:${env.PATH}"
+        tool 'ChromeHeadless'
+    }
+    
+    stage('Fresh Dependency Installation') {
+        sh "yarn"
+    }
+    
+    stage('Code Linting') {
+        sh "yarn lint"
+    }
+    
+    stage('Execute Angular tests') {
+        sh "ng test --browsers ChromeHeadless --single-run"
+    }
+    
+    stage('Build Application') {
+        sh "ng build --build-optimizer"
+    }
+    
+    stage('Deployment') {
+        sshagent (credentials: [${SSH_CREDENTIALS}]) {
+            sh """
+                # Copy resulting "dist" folder from workspace to deployment server
+                scp -o StrictHostKeyChecking=no -r dist ${SSH_USER}@${SSH_SERVER_IP}:${SSH_SERVER_APP_DIR}
+                
+                # Launch application in Docker container
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker rm -f ${CONTAINER_NAME}
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker run -itd --name=${CONTAINER_NAME} -p ${CONTAINER_PORT}:80 cbelda/nginx-try-files
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker exec ${CONTAINER_NAME} bash -c \\"rm /usr/share/nginx/html/*\\"
+                ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_SERVER_IP} docker cp ${SSH_SERVER_APP_DIR}/dist/. ${CONTAINER_NAME}:/usr/share/nginx/html/
+            """
+        }
+        sh 'echo \\"Application available at http://${CONTAINER_NAME}:${CONTAINER_PORT}\\"'
+    }
+}
