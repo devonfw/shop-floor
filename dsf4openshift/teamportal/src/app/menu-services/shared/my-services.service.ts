@@ -32,15 +32,11 @@ export class MyServicesService {
             myservices.push(service);
           }
         }, error => {
-          if (error.status === 401) {
-            console.log('Unathorized. Please enter your Cluster Credentials');
-          }
+          this.osservice.analizeError(error);
         });
       }
     }, error => {
-      if (error.status === 401) {
-        console.log('Unathorized. Please enter your Cluster Credentials');
-      }
+      this.osservice.analizeError(error);
     });
     return Promise.resolve(myservices);
   }

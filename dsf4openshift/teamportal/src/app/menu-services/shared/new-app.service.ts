@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RouteNameAndNamespace, RouteNamespaceAndBodyJSON } from './models';
 import { OpenShiftService } from './openshift.service';
 import { Service } from './service';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class NewAppService {
@@ -10,76 +11,98 @@ export class NewAppService {
     private osservice: OpenShiftService,
   ) { }
 
-  newApp(route: string): Promise<boolean> {
-    let created = true;
-    this.osservice.requestFileParam(route).subscribe(fileParams => {
-
-      const CreateProject = {
-        'name': fileParams['PROJECT'],
-        'displayName': fileParams['PROJECT_DISPLAYNAME'],
-        'description': fileParams['DESCRIPTION'],
-      };
-
-      // STEP 0. TRY TO CREATE PROJECT (if the project exist, this don't do nothing)
-      this.osservice.requestProject(fileParams['PROJECT']).subscribe(project => {
-        this.createApp_searchEndPoint(fileParams).then(result => {
-          created = result;
-        });
-      }, error => {
-        this.osservice.createProject(CreateProject).subscribe(newProject => {
-          this.createApp_searchEndPoint(fileParams).then(result => {
-            created = result;
+  newApp(route: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.osservice.requestFileParam(route).subscribe(fileParams => {
+        // STEP 1. TRY TO CREATE PROJECT (if the project exist, this don't do nothing)
+        this.createProject(fileParams).then(project => {
+          console.log(project);
+          // STEP 2. LINKS TO ENDPOINT?
+          this.searchEndPoint(fileParams).then(endPoint => {
+            if (endPoint) {
+              fileParams['REST_ENDPOINT_URL'] = 'http://' + endPoint;
+            }
+            // STEP 3. CREATE APP
+            this.createApp(fileParams).then(app => {
+              console.log(app);
+              resolve(true);
+            }, error => {
+              reject(this.osservice.analizeError(error));
+            });
+          }, error => {
+            if (error.status === 401) {
+              reject(this.osservice.analizeError(error));
+            } else {
+              // Aplication must be created until the endpoint fail.
+              // STEP 4. CREATE APP WITHOUT ENDPOINT
+              this.createApp(fileParams).then(app => {
+                console.log(app + 'but endpoint not found');
+                resolve('endpoint');
+              }, errorApp => {
+                reject(this.osservice.analizeError(errorApp));
+              });
+            }
           });
-        }, errorCreate => {
-          if (error.status === 401) {
-            console.log('Unathorized. Please enter your Cluster Credentials');
-          }
+        }, error => {
+          reject(this.osservice.analizeError(error));
         });
       });
     });
-    return Promise.resolve(created);
   }
 
-  private createApp_searchEndPoint(fileParams): Promise<boolean> {
-    let created = true;
-    // STEP 0.1 LINKS TO ENDPOINT?
-    if (fileParams['LINKS']) {
-      if (fileParams['LINKS']['PROJECT'] && fileParams['LINKS']['APPLICATION_NAME']) {
-        const params: RouteNameAndNamespace = {
-          'name': fileParams['LINKS']['APPLICATION_NAME'],
-          'namespace': fileParams['LINKS']['PROJECT'],
-        };
-        this.osservice.requestRoutes(params).subscribe(routes => {
-          fileParams['REST_ENDPOINT_URL'] = 'http://' + routes['spec']['host'];
-          this.createApp(fileParams).then(result => {
-            created = result;
+  private createProject(fileParams): Promise<any> {
+    const CreateProject = {
+      'name': fileParams['PROJECT'],
+      'displayName': fileParams['PROJECT_DISPLAYNAME'],
+      'description': fileParams['DESCRIPTION'],
+    };
+
+    return new Promise((resolve, reject) => {
+      this.osservice.requestProject(fileParams['PROJECT']).subscribe(project => {
+        // Proyect Exists, don't do nothing.
+        resolve('Project Exists');
+      }, errorExpected => {
+        console.log('errorExpected: ' + errorExpected);
+        if (errorExpected.status === 403) {
+          // This is not and error, Maybe the Proyect don't exists, then create it.
+          console.log('This is not and error, Maybe the Proyect don\'t exists, creating it.');
+          return this.osservice.createProject(CreateProject).subscribe(newProject => {
+            resolve('Project Created');
+          }, error => {
+            reject(error);
           });
-        }, error => {
-          if (error.status === 401) {
-            console.log('Unathorized. Please enter your Cluster Credentials');
-          } else {
-            this.createApp(fileParams).then(result => {
-              created = result;
-            });
-          }
-        });
-      } else {
-        console.log('No REST_ENDPOINT_URL found, starting createApp');
-        this.createApp(fileParams).then(result => {
-          created = result;
-        });
-      }
-    } else {
-      console.log('No LINKS to endpoint found, starting createApp');
-      this.createApp(fileParams).then(result => {
-        created = result;
+        } else {
+          reject(errorExpected);
+        }
       });
-    }
-    return Promise.resolve(created);
+    });
   }
 
-  private createApp(fileParams): Promise<boolean> {
-    let created = true;
+  private searchEndPoint(fileParams): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (fileParams['LINKS']) {
+        if (fileParams['LINKS']['PROJECT'] && fileParams['LINKS']['APPLICATION_NAME']) {
+          const params: RouteNameAndNamespace = {
+            'name': fileParams['LINKS']['APPLICATION_NAME'],
+            'namespace': fileParams['LINKS']['PROJECT'],
+          };
+          this.osservice.requestRoutes(params).subscribe(routes => {
+            resolve(routes['spec']['host']);
+          }, error => {
+            reject(error);
+          });
+        } else {
+          console.log('No REST_ENDPOINT_URL found, starting createApp');
+          resolve(false);
+        }
+      } else {
+        console.log('No LINKS to endpoint found, starting createApp');
+        resolve(false);
+      }
+    });
+  }
+
+  private createApp(fileParams): Promise<any> {
     const params: RouteNameAndNamespace = {
       'name': 'devonfw-' + fileParams['TYPE'],
       'namespace': 'openshift',
@@ -88,19 +111,42 @@ export class NewAppService {
       'namespaceRoute': fileParams['PROJECT'],
       'bodyJSON': JSON
     };
+    return new Promise((resolve, reject) => {
+      this.requestTemplate(params, fileParams).then(template => {
+        body.bodyJSON = template;
+        this.processedTemplate(body).then(result => {
+          console.log(result);
+          resolve('App created');
+        }, error => {
+          reject(error);
+        });
+      }, error => {
+        reject(error);
+      });
+    });
+  }
 
-    // STEP 1. Get the Template
-    this.osservice.requestTemplate(params).subscribe(template => {
-      const parameters = template['parameters'];
-      for (let i = 0; i < parameters.length; i++) {
-        if (fileParams[parameters[i]['name']]) {
-          parameters[i]['value'] = fileParams[parameters[i]['name']];
+  private requestTemplate(params, fileParams): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.osservice.requestTemplate(params).subscribe(template => {
+        const parameters = template['parameters'];
+        for (let i = 0; i < parameters.length; i++) {
+          if (fileParams[parameters[i]['name']]) {
+            parameters[i]['value'] = fileParams[parameters[i]['name']];
+          }
         }
-      }
-      // STEP 2. Process the Template
-      body.bodyJSON = template;
-      this.osservice.processedTemplate(body).subscribe(processedTemplate => {
+        resolve(template);
+      }, error => {
+        reject(error);
+      });
+    });
+  }
+
+  private processedTemplate(body): Promise<any> {
+    return new Promise((resolve, reject) => {
+    this.osservice.processedTemplate(body).subscribe(processedTemplate => {
         const objects = processedTemplate['objects'];
+        console.log('Creating confings');
         for (let i = 0; i < objects.length; i++) {
           body.bodyJSON = objects[i];
           if (objects[i]['kind'] === 'Service') {
@@ -109,25 +155,15 @@ export class NewAppService {
           // STEP 3 CREATE CONFIGS
           this.osservice.create(body).subscribe(data => {
             // creating confing
+            console.log(data['kind'] + 'created');
           }, error => {
-            created = false;
-            if (error.status === 401) {
-              console.log('Unathorized. Please enter your Cluster Credentials');
-            }
+            reject(error);
           });
         }
+        resolve('All confings created');
       }, error => {
-        created = false;
-        if (error.status === 401) {
-          console.log('Unathorized. Please enter your Cluster Credentials');
-        }
+        reject(error);
       });
-    }, error => {
-      created = false;
-      if (error.status === 401) {
-        console.log('Unathorized. Please enter your Cluster Credentials');
-      }
     });
-    return Promise.resolve(created);
   }
 }

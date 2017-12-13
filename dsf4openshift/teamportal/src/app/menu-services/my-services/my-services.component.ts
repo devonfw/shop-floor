@@ -5,6 +5,7 @@ import { OpenShiftService } from '../shared/openshift.service';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { MyServicesService } from '../shared/my-services.service';
+import { DeleteAppService } from '../shared/delete-app.service';
 
 @Component({
   selector: 'my-services',
@@ -56,8 +57,10 @@ export class MyServicesComponent implements OnInit {
   newApp(route: string): void {
     // const route = 'https://raw.githubusercontent.com/Jorge-Dacal/my-thai-star/develop/angular/openshift.json';
     // const route = 'https://raw.githubusercontent.com/Jorge-Dacal/my-thai-star/develop/java/mtsj/openshift.json';
-    this.newAppService.newApp(route).then(created => {
-      console.log('created: ' + created);
+    this.newAppService.newApp(route).then(newApp => {
+      if (newApp === 'endpoint') {
+        // TODO: endpoint in openshift.json not found
+      }
       this.getMYservices();
     }).catch(error => {
       if (error.status === 401) {

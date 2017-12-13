@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
 import { API } from './api';
 import { Observable } from 'rxjs/Observable';
 import { Service } from './service';
-// import { SERVICESLIST, MYSERVICES } from './mock-services';
 import { Response } from '@angular/http/src/static_response';
 import { catchError, map, tap } from 'rxjs/operators';
 import * as INTERFACES from './models';
@@ -21,9 +20,19 @@ export class OpenShiftService {
     ) { }
 
     // SERVICES
+    analizeError(error): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (error.status === 401) {
+                console.log('Unathorized. Please enter your Cluster Credentials');
+            } else if (error.status === 403) {
+                console.log('Forbidden. This user don\'t have permissions to do it');
+            }
+            resolve(error);
+        });
+    }
 
-    getCICDservices(): Promise<Service[]> {
-        const serviceList: Service[] = [];
+    getCICDservices(): Promise<any> {
+        const cicdServices: Service[] = [];
         const basicAuth: INTERFACES.BasicAuth = {
             username: 'devonfw-reader',
             password: 'devonfw-reader'
@@ -39,16 +48,16 @@ export class OpenShiftService {
                 })
             }).subscribe(RouteList => {
                 for (let i = 0; i < RouteList['items'].length; i++) {
-                if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
-                      const service = {
+                    if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
+                        const service = {
                         'name': RouteList['items'][i]['spec']['to']['name'],
                         'project': 'DevonFW',
                         'namespace': 'devonfw',
                         'image': '',
                         'urlLink': RouteList['items'][i]['spec']['host'],
                         'status': ''
-                      };
-                      serviceList.push(service);
+                        };
+                        cicdServices.push(service);
                     }
                 }
             }, error => {
@@ -59,13 +68,8 @@ export class OpenShiftService {
         }, error => {
             debugger
         });
-        return Promise.resolve(serviceList);
-        // return Promise.resolve(SERVICESLIST);
+        return Promise.resolve(cicdServices);
     }
-
-    // getMYservices(): Promise<Service[]> {
-    //     return Promise.resolve(MYSERVICES);
-    // }
 
     // GET
     private get(route: string): Observable<any> {
@@ -328,5 +332,4 @@ export class OpenShiftService {
         route = route + '/' + params.name;
         return this.delete(route);
     }
-
 }
