@@ -39,7 +39,7 @@ export class OpenShiftService {
                 })
             }).subscribe(RouteList => {
                 for (let i = 0; i < RouteList['items'].length; i++) {
-                //   if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
+                if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
                       const service = {
                         'name': RouteList['items'][i]['spec']['to']['name'],
                         'project': 'DevonFW',
@@ -49,7 +49,7 @@ export class OpenShiftService {
                         'status': ''
                       };
                       serviceList.push(service);
-                //   }
+                    }
                 }
             }, error => {
                 if (error.status === 401) {
@@ -228,7 +228,31 @@ export class OpenShiftService {
             }),
         });
     }
+/*
+    addBackEnd(params: string): Observable<any> {
+        let route = this.API.PATCH_SERVICEACCOUNT;
+        route = route.replace('$NAME', params.name);
+        route = route.replace('$NAMESPACE', params.namespace);
+        const body = [{
+            'op': 'add',
+            'path': '/secrets/-',
+            'value': { 'name': params.nameSecret }
+        }];
+        return this.patch(route, body);
+    }
 
+    updateBackEnd(params: string): Observable<any> {
+        let route = this.API.PATCH_SERVICEACCOUNT;
+        route = route.replace('$NAME', params.name);
+        route = route.replace('$NAMESPACE', params.namespace);
+        const body = [{
+            'op': 'add',
+            'path': '/secrets/-',
+            'value': { 'name': params.nameSecret }
+        }];
+        return this.patch(route, body);
+    }
+*/
     addSecretToBuilderSA(params: INTERFACES.Secret): Observable<any> {
         let route = this.API.PATCH_SERVICEACCOUNT;
         route = route.replace('$NAME', params.name);

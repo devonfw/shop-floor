@@ -25,6 +25,9 @@ import { MyServicesComponent, DeployNewAppDialogComponent } from './menu-service
 import { OpenShiftService } from './menu-services/shared/openshift.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
+import { DeleteAppService } from './menu-services/shared/delete-app.service';
+import { NewAppService } from './menu-services/shared/new-app.service';
+import { MyServicesService } from './menu-services/shared/my-services.service';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,9 @@ import { LoginComponent } from './login/login.component';
   ],
   providers: [
     OpenShiftService,
+    MyServicesService,
+    NewAppService,
+    DeleteAppService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'always'}}
   ],
   entryComponents: [
