@@ -14,6 +14,8 @@ import * as INTERFACES from './models';
 @Injectable()
 export class OpenShiftService {
 
+    PROTOCOL = 'http://';
+
     API: API = new API();
     constructor(
         private http: HttpClient,
@@ -32,43 +34,29 @@ export class OpenShiftService {
     }
 
     getCICDservices(): Promise<any> {
-        const cicdServices: Service[] = [];
-        const basicAuth: INTERFACES.BasicAuth = {
-            username: 'devonfw-reader',
-            password: 'devonfw-reader'
-        };
-        this.requestToken(basicAuth).subscribe(data => {
-            const token = data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>'));
-            let route = this.API.REQUEST_ROUTES;
-            route = route.replace('$NAMESPACE', 'devonfw');
-            route = route.replace('/$NAME', '');
-            this.http.get(route, {
-                headers: new HttpHeaders({
-                    'Authorization': 'Bearer ' + token,
-                })
-            }).subscribe(RouteList => {
-                for (let i = 0; i < RouteList['items'].length; i++) {
-                    if ('teamportal' !== RouteList['items'][i]['spec']['to']['name']) {
-                        const service = {
-                        'name': RouteList['items'][i]['spec']['to']['name'],
-                        'project': 'DevonFW',
-                        'namespace': 'devonfw',
-                        'image': '',
-                        'urlLink': RouteList['items'][i]['spec']['host'],
-                        'status': ''
-                        };
-                        cicdServices.push(service);
-                    }
-                }
+        return new Promise((resolve, reject) => {
+            const basicAuth: INTERFACES.BasicAuth = {
+                username: 'devonfw-reader',
+                password: 'devonfw-reader'
+            };
+            this.requestToken(basicAuth).subscribe(data => {
+                const token = data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>'));
+                let route = this.API.REQUEST_ROUTES;
+                route = route.replace('$NAMESPACE', 'devonfw');
+                route = route.replace('/$NAME', '');
+                this.http.get(route, {
+                    headers: new HttpHeaders({
+                        'Authorization': 'Bearer ' + token,
+                    })
+                }).subscribe(RouteList => {
+                    resolve(RouteList);
+                }, error => {
+                    reject(error);
+                });
             }, error => {
-                if (error.status === 401) {
-                  console.log('Unathorized. Please enter your Cluster Credentials');
-                }
+                reject(error);
             });
-        }, error => {
-            debugger
         });
-        return Promise.resolve(cicdServices);
     }
 
     // GET
@@ -122,6 +110,34 @@ export class OpenShiftService {
 
     requestRoutes(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
         let route = this.API.REQUEST_ROUTES;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
+        return this.get(route);
+    }
+
+    requestAllBuilds(params: INTERFACES.RouteNamespace): Observable<any> {
+        let route = this.API.REQUEST_BUILDS;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('/$NAME', '');
+        return this.get(route);
+    }
+
+    requestBuild(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.REQUEST_BUILDS;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
+        return this.get(route);
+    }
+
+    requestAllPods(params: INTERFACES.RouteNamespace): Observable<any> {
+        let route = this.API.REQUEST_PODS;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('/$NAME', '');
+        return this.get(route);
+    }
+
+    requestPod(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.REQUEST_PODS;
         route = route.replace('$NAMESPACE', params.namespace);
         route = route.replace('$NAME', params.name);
         return this.get(route);
@@ -330,6 +346,20 @@ export class OpenShiftService {
         let route = this.API.CREATE_SECRET;
         route = route.replace('$NAMESPACE', params.namespace);
         route = route + '/' + params.name;
+        return this.delete(route);
+    }
+
+    deleteBuild(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.REQUEST_BUILDS;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
+        return this.delete(route);
+    }
+
+    deletePod(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.REQUEST_PODS;
+        route = route.replace('$NAMESPACE', params.namespace);
+        route = route.replace('$NAME', params.name);
         return this.delete(route);
     }
 }

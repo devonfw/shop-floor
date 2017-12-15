@@ -10,6 +10,8 @@ export class API {
     public REQUEST_PROJECTS = environment.clusterURL + this.OPENSHIFT + 'projects/$NAME';
     public REQUEST_TEMPLATE = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/templates/$NAME';
     public REQUEST_ROUTES = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/routes/$NAME';
+    public REQUEST_BUILDS = environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/builds/$NAME';
+    public REQUEST_PODS = environment.clusterURL + this.KUBERNETES + 'namespaces/$NAMESPACE/pods/$NAME';
 
     // POST
     public CREATE_PROJECT = environment.clusterURL + this.OPENSHIFT + 'projectrequests';

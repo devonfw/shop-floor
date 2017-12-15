@@ -11,7 +11,16 @@ export class NewAppService {
     private osservice: OpenShiftService,
   ) { }
 
-  newApp(route: string): Promise<any> {
+  /**
+   * This function read an openshift.json file and create an app into the openshift cluster
+   * using the devonfw templates.
+   *
+   * The openshift.json is a file with the information that teamportal need to know to create
+   * a new app in the openshift cluster.
+   *
+   * @param route the openshift.json RAW URL
+   */
+  public newApp(route: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.osservice.requestFileParam(route).subscribe(fileParams => {
         // STEP 1. TRY TO CREATE PROJECT (if the project exist, this don't do nothing)
@@ -20,7 +29,7 @@ export class NewAppService {
           // STEP 2. LINKS TO ENDPOINT?
           this.searchEndPoint(fileParams).then(endPoint => {
             if (endPoint) {
-              fileParams['REST_ENDPOINT_URL'] = 'http://' + endPoint;
+              fileParams['REST_ENDPOINT_URL'] = this.osservice.PROTOCOL + endPoint;
             }
             // STEP 3. CREATE APP
             this.createApp(fileParams).then(app => {
@@ -36,7 +45,7 @@ export class NewAppService {
               // Aplication must be created until the endpoint fail.
               // STEP 4. CREATE APP WITHOUT ENDPOINT
               this.createApp(fileParams).then(app => {
-                console.log(app + 'but endpoint not found');
+                console.log(app + ' but endpoint not found');
                 resolve('endpoint');
               }, errorApp => {
                 reject(this.osservice.analizeError(errorApp));
@@ -144,25 +153,56 @@ export class NewAppService {
 
   private processedTemplate(body): Promise<any> {
     return new Promise((resolve, reject) => {
-    this.osservice.processedTemplate(body).subscribe(processedTemplate => {
-        const objects = processedTemplate['objects'];
-        console.log('Creating confings');
-        for (let i = 0; i < objects.length; i++) {
-          body.bodyJSON = objects[i];
-          if (objects[i]['kind'] === 'Service') {
-            objects[i]['spec']['ports'][0]['port'] = '8092';
-          }
-          // STEP 3 CREATE CONFIGS
-          this.osservice.create(body).subscribe(data => {
-            // creating confing
-            console.log(data['kind'] + 'created');
-          }, error => {
-            reject(error);
-          });
-        }
-        resolve('All confings created');
+      this.osservice.processedTemplate(body).subscribe(processedTemplate => {
+        this.createConfigs(processedTemplate, body).then(created => {
+          resolve(created);
+        }, error => {
+          // TODO: care is a list of errors
+          reject(error);
+        });
       }, error => {
         reject(error);
+      });
+    });
+  }
+
+  private async createConfigs(processedTemplate, body): Promise<any> {
+    const errors = [];
+    const promises: Promise<any>[] = [];
+
+    const objects = processedTemplate['objects'];
+    console.log('Creating confings');
+
+    for (let i = 0; i < objects.length; i++) {
+      body.bodyJSON = objects[i];
+      if (objects[i]['kind'] === 'Service') {
+        objects[i]['spec']['ports'][0]['port'] = '8092';
+      }
+      // STEP 3 CREATE CONFIGS
+      promises.push(this.createConfig(body).then(created => {
+        console.log(created);
+      }, error => {
+        errors.push(error);
+      }));
+    }
+
+    await Promise.all(promises);
+
+    return new Promise((resolve, reject) => {
+      if (errors.length === 0) {
+        resolve('All configs created');
+      } else {
+        reject(errors);
+      }
+    });
+  }
+
+  private createConfig(body): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.osservice.create(body).subscribe(data => {
+        resolve(data['kind'] + ' created');
+      }, errorCreated => {
+        reject(errorCreated);
       });
     });
   }

@@ -63,20 +63,17 @@ export class MyServicesComponent implements OnInit {
       }
       this.getMYservices();
     }).catch(error => {
-      if (error.status === 401) {
-        console.log('Unathorized. Please enter your Cluster Credentials');
-      }
+      console.log(error);
     });
   }
 
   deleteApp(name: string, namespace: string): void {
     this.deleteAppService.deleteApp(name, namespace).then(deleted => {
-      console.log('deleted: ' + deleted);
+      console.log(deleted);
       this.getMYservices();
     }).catch(error => {
-      if (error.status === 401) {
-        console.log('Unathorized. Please enter your Cluster Credentials');
-      }
+      // TODO: Care is a list of errors.
+      console.log(error);
     });
   }
 }
