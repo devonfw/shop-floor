@@ -6,6 +6,8 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import { MyServicesService } from '../shared/my-services.service';
 import { DeleteAppService } from '../shared/delete-app.service';
+import { DeployNewErrorDialogComponent } from '../../error-dialog/error-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'my-services',
@@ -15,7 +17,9 @@ import { DeleteAppService } from '../shared/delete-app.service';
 export class MyServicesComponent implements OnInit {
   myservices: Service[] = [];
   constructor(
+    private router: Router,
     public dialog: MatDialog,
+    private errorDialog: MatDialog,
     private myServicesService: MyServicesService,
     private newAppService: NewAppService,
     private deleteAppService: DeleteAppService,
@@ -23,6 +27,7 @@ export class MyServicesComponent implements OnInit {
 
   ngOnInit() {
     this.getMYservices();
+    // this.openErrorDialog('Texto de ejemplo');
   }
 
   goToApp(route: string) {
@@ -44,13 +49,36 @@ export class MyServicesComponent implements OnInit {
     });
   }
 
+  analizeError(error) {
+    console.log('analize error');
+    if (error.status !== 401) {
+      this.openErrorDialog(error);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  openErrorDialog(error): void {
+    const dialogRef = this.errorDialog.open(DeployNewErrorDialogComponent, {
+      // width: '250px',
+      'data': { 'error': error }
+    });
+
+    dialogRef.afterClosed().subscribe(route => {
+      if (route === undefined) {
+        //
+      } else {
+        //
+      }
+    });
+  }
+
   getMYservices(): void {
     this.myServicesService.getMYservices().then(services => {
       this.myservices = services;
     }).catch(error => {
-      if (error.status === 401) {
-        console.log('Unathorized. Please enter your Cluster Credentials');
-      }
+      console.log(error);
+      this.analizeError(error);
     });
   }
 
@@ -63,17 +91,17 @@ export class MyServicesComponent implements OnInit {
       }
       this.getMYservices();
     }).catch(error => {
-      console.log(error);
+      this.analizeError(error);
     });
   }
 
   deleteApp(name: string, namespace: string): void {
     this.deleteAppService.deleteApp(name, namespace).then(deleted => {
-      console.log(deleted);
+      // console.log(deleted);
       this.getMYservices();
     }).catch(error => {
       // TODO: Care is a list of errors.
-      console.log(error);
+      this.analizeError(error);
     });
   }
 }
