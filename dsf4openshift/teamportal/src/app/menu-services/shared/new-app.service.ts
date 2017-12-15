@@ -25,7 +25,7 @@ export class NewAppService {
       this.osservice.requestFileParam(route).subscribe(fileParams => {
         // STEP 1. TRY TO CREATE PROJECT (if the project exist, this don't do nothing)
         this.createProject(fileParams).then(project => {
-          console.log(project);
+          // console.log(project);
           // STEP 2. LINKS TO ENDPOINT?
           this.searchEndPoint(fileParams).then(endPoint => {
             if (endPoint) {
@@ -33,7 +33,7 @@ export class NewAppService {
             }
             // STEP 3. CREATE APP
             this.createApp(fileParams).then(app => {
-              console.log(app);
+              // console.log(app);
               resolve(true);
             }, error => {
               reject(this.osservice.analizeError(error));
@@ -45,7 +45,7 @@ export class NewAppService {
               // Aplication must be created until the endpoint fail.
               // STEP 4. CREATE APP WITHOUT ENDPOINT
               this.createApp(fileParams).then(app => {
-                console.log(app + ' but endpoint not found');
+                // console.log(app + ' but endpoint not found');
                 resolve('endpoint');
               }, errorApp => {
                 reject(this.osservice.analizeError(errorApp));
@@ -71,10 +71,10 @@ export class NewAppService {
         // Proyect Exists, don't do nothing.
         resolve('Project Exists');
       }, errorExpected => {
-        console.log('errorExpected: ' + errorExpected);
+        // console.log('errorExpected: ' + errorExpected);
         if (errorExpected.status === 403) {
           // This is not and error, Maybe the Proyect don't exists, then create it.
-          console.log('This is not and error, Maybe the Proyect don\'t exists, creating it.');
+          // console.log('This is not and error, Maybe the Proyect don\'t exists, creating it.');
           return this.osservice.createProject(CreateProject).subscribe(newProject => {
             resolve('Project Created');
           }, error => {
@@ -101,11 +101,11 @@ export class NewAppService {
             reject(error);
           });
         } else {
-          console.log('No REST_ENDPOINT_URL found, starting createApp');
+          // console.log('No REST_ENDPOINT_URL found, starting createApp');
           resolve(false);
         }
       } else {
-        console.log('No LINKS to endpoint found, starting createApp');
+        // console.log('No LINKS to endpoint found, starting createApp');
         resolve(false);
       }
     });
@@ -124,7 +124,7 @@ export class NewAppService {
       this.requestTemplate(params, fileParams).then(template => {
         body.bodyJSON = template;
         this.processedTemplate(body).then(result => {
-          console.log(result);
+          // console.log(result);
           resolve('App created');
         }, error => {
           reject(error);
@@ -171,7 +171,7 @@ export class NewAppService {
     const promises: Promise<any>[] = [];
 
     const objects = processedTemplate['objects'];
-    console.log('Creating confings');
+    // console.log('Creating confings');
 
     for (let i = 0; i < objects.length; i++) {
       body.bodyJSON = objects[i];
@@ -180,7 +180,7 @@ export class NewAppService {
       }
       // STEP 3 CREATE CONFIGS
       promises.push(this.createConfig(body).then(created => {
-        console.log(created);
+        // console.log(created);
       }, error => {
         errors.push(error);
       }));

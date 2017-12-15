@@ -24,40 +24,38 @@ export class DeleteAppService {
     };
 
     promises.push(this.deleteBuildConfig(params).then(deleted => {
-      console.log(deleted + ' deleted');
+      // console.log(deleted + ' deleted');
     }, error => {
       errors.push(this.osservice.analizeError(error));
     }));
     promises.push(this.deleteImageStream(params).then(deleted => {
-      console.log('ImageStream ' + deleted + ' deleted');
+      // console.log('ImageStream ' + deleted + ' deleted');
     }, error => {
       errors.push(this.osservice.analizeError(error));
     }));
     promises.push(this.deleteDeploymentConfig(params).then(deleted => {
-      console.log('DeploymentConfig ' + deleted + ' deleted');
+      // console.log('DeploymentConfig ' + deleted + ' deleted');
     }, error => {
       errors.push(this.osservice.analizeError(error));
     }));
     promises.push(this.deleteRoute(params).then(deleted => {
-      console.log('Route ' + deleted + ' deleted');
+      // console.log('Route ' + deleted + ' deleted');
     }, error => {
       errors.push(this.osservice.analizeError(error));
     }));
     promises.push(this.deleteService(params).then(deleted => {
-      console.log('Service ' + deleted + ' deleted');
+      // console.log('Service ' + deleted + ' deleted');
     }, error => {
       errors.push(this.osservice.analizeError(error));
     }));
     promises.push(this.deletePods(params).then(deleted => {
-      console.log(deleted);
+      // console.log(deleted);
     }, error => {
-      console.log('error deleting pods');
       errors.push(this.osservice.analizeError(error));
     }));
     promises.push(this.deleteBuilds(params).then(deleted => {
-      console.log(deleted);
+      // console.log(deleted);
     }, error => {
-      console.log('error deleting builds');
       errors.push(this.osservice.analizeError(error));
     }));
 
@@ -154,7 +152,7 @@ export class DeleteAppService {
       if (buildList['items'][i]['metadata']['name'].search(params.name) >= 0) {
         buildParams.name = buildList['items'][i]['metadata']['name'];
         promises.push(this.deleteBuild(buildParams).then(deleted => {
-          console.log('Build ' + deleted['kind'] + ' deleted');
+          // console.log('Build ' + deleted['kind'] + ' deleted');
         }, error => {
           errors.push(error);
         }));
@@ -214,7 +212,7 @@ export class DeleteAppService {
       if (podList['items'][i]['metadata']['name'].search(params.name) >= 0) {
         podsParams.name = podList['items'][i]['metadata']['name'];
         promises.push(this.deletePod(podsParams).then(deleted => {
-          console.log(deleted['kind'] + ' deleted');
+          // console.log(deleted['kind'] + ' deleted');
         }, error => {
           errors.push(error);
         }));
