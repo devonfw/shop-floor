@@ -43,7 +43,7 @@
                     "name": "REST_ENDPOINT_PATTERN",
                     "displayName": "REST Endpoint PATTERN URL",
 					"value": "http://localhost:8081"
-				}
+				},
                 {
                     "description": "Git source URI for application",
                     "name": "GIT_URI",

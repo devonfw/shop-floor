@@ -29,17 +29,19 @@ echo -e "${BLUE}
 ${NC}"
 
 if [[ ! -f devonfw-shop-floor-secret ]]; then
-    echo -e "Devonfw GitHub Secret with name \"${RED}devonfw-shop-floor-secret${NC}\" not found! Exiting..."
+    echo -e "Devonfw GitHub Secret with name \"${RED}devonfw-shop-floor-secret${NC}\" not found! Exiting...\n"
+    read -n1 -r -p "Press any key to close..." key
     exit 0
 fi
 
 if [[ ! -f teamportalparams ]]; then
-    echo -e "Parameters to deploy the Team Portal with name "${RED}teamportalparams${NC}" not found! Exiting..."
+    echo -e "Parameters to deploy the Team Portal with name "${RED}teamportalparams${NC}" not found! Exiting...\n"
+    read -n1 -r -p "Press any key to close..." key
     exit 0
 fi
 
 # STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
-oc cluster up --host-data-dir=/devonfw-shop-floor/volumes --host-config-dir='origin/master-config.yaml'
+oc cluster up --host-data-dir=/devonfw-shop-floor/volumes --host-config-dir=origin/master-config.yaml
 
 oc login -u system:admin
 
@@ -52,8 +54,8 @@ oc new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
 ## Create base-images and add them to DevonFW project
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json?token=AfL84AxJQvUIn6fbioXic7zhFlRXlNBVks5aJ70kwA%3D%3D --namespace=devonfw
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json?token=AfL84F7gO8gHi5p3CAOWNqXqOCRsbGFSks5aJ71ZwA%3D%3D --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json?token=AfL84I94dViYuXjfkM0knBWSvNmRVv3Aks5aQORwwA%3D%3D --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json?token=AfL84KJ5WWGOPJB2-kr3VqYjNYL_J-q1ks5aQOSMwA%3D%3D --namespace=devonfw
 
 ## Build base-images in DevonFW project
 oc start-build s2i-devonfw-java --namespace=devonfw
@@ -72,8 +74,8 @@ oc policy add-role-to-group system:image-puller system:authenticated --namespace
 
 # STEP 3: Create DevonFW templates into openshift
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json?token=AfL84OMwHDxfwsY9yJTBzDscHr6LLsi3ks5aJ73BwA%3D%3D --namespace=openshift
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json?token=AfL84PumFJr9moy8N7pG0p7IrqRsyXPuks5aJ72fwA%3D%3D --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json?token=AfL84OWDMfe7f5wzmDPpYdZGJYF-6efPks5aQOS6wA%3D%3D --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json?token=AfL84MlHiQcg2EGN-2vN_x8TyuJffMg3ks5aQOSfwA%3D%3D --namespace=openshift
 
 # STEP 4: Create Team Portal using DevonFW Angular template
 ## Registering the Private Key with OpenShift to connect to the Private Git Repository
@@ -99,3 +101,6 @@ oc start-build teamportal --namespace=devonfw
 oc login -u devonfw-reader -p devonfw-reader
 oc login -u system:admin
 oc policy add-role-to-user view devonfw-reader --namespace=devonfw
+
+echo -e "\nCluster Initial Setup finish.\n"
+read -n1 -r -p "Press any key to close..." key

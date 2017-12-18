@@ -1,4 +1,4 @@
 APPLICATION_NAME=teamportal
 GIT_URI=ssh://git@ssh.github.com:443/devonfw/devonfw-shop-floor.git
 GIT_REF=master
-CONTEXT_DIR=/teamportal
+CONTEXT_DIR=/dsf4openshift/teamportal
