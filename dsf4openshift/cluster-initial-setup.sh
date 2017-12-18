@@ -90,6 +90,7 @@ oc secrets link builder devonfw-shop-floor-secret
 oc new-app --template=devonfw-angular --namespace=devonfw --param-file=teamportalparams
 
 ## Adding the Secret to the Build Configuration
+oc project devonfw
 oc set build-secret --source bc/teamportal devonfw-shop-floor-secret
 
 sleep 2
