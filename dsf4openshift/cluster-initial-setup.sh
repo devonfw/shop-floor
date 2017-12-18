@@ -39,7 +39,7 @@ if [[ ! -f teamportalparams ]]; then
 fi
 
 # STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
-oc cluster up --host-data-dir=/devonfw-shop-floor/volumes --master-config=/origin/master-config.yaml
+oc cluster up --host-data-dir=/devonfw-shop-floor/volumes --host-config-dir='origin/master-config.yaml'
 
 oc login -u system:admin
 
