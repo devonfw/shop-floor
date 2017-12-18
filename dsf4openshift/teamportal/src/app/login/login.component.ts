@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/menu']);
     }, error => {
       if (error.status === 401) {
-        console.log('Unauthorized. Please enter your Cluster Credentials');
+        // console.log('Unauthorized. Please enter your Cluster Credentials');
       }
     });
   }
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('token', data.substring(data.indexOf('<code>') + 6, data.indexOf('</code>')));
       me.router.navigate(['menu']);
     }, error => {
-      debugger
+      // debugger
     }, () => {
       //
     });

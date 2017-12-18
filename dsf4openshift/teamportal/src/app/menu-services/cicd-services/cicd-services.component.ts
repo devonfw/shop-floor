@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Service } from '../shared/service';
 import { OpenShiftService } from '../shared/openshift.service';
+import { CicdServicesService } from '../shared/cicd-services.service';
 
 @Component({
   selector: 'cicd-services',
@@ -15,7 +16,10 @@ export class CicdServicesComponent implements OnInit {
     {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
     {text: 'Four', cols: 1, rows: 1, color: '#DDBDF1'},
   ];
-  constructor(private osservice: OpenShiftService) { }
+  constructor(
+    private osservice: OpenShiftService,
+    private cicdServices: CicdServicesService,
+  ) { }
 
   ngOnInit() {
     this.getCICDservices();
@@ -26,7 +30,7 @@ export class CicdServicesComponent implements OnInit {
   }
 
   getCICDservices(): void {
-    this.osservice.getCICDservices().then(services => {
+    this.cicdServices.getCICDservices().then(services => {
       this.cicdservices = services;
     });
   }

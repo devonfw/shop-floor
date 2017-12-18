@@ -28,6 +28,8 @@ import { LoginComponent } from './login/login.component';
 import { DeleteAppService } from './menu-services/shared/delete-app.service';
 import { NewAppService } from './menu-services/shared/new-app.service';
 import { MyServicesService } from './menu-services/shared/my-services.service';
+import { CicdServicesService } from './menu-services/shared/cicd-services.service';
+import { DeployNewErrorDialogComponent } from './error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { MyServicesService } from './menu-services/shared/my-services.service';
     MyServicesComponent,
     LoginComponent,
     DeployNewAppDialogComponent,
+    DeployNewErrorDialogComponent
   ],
   imports: [
     FormsModule,
@@ -61,10 +64,12 @@ import { MyServicesService } from './menu-services/shared/my-services.service';
     MyServicesService,
     NewAppService,
     DeleteAppService,
+    CicdServicesService,
     {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'always'}}
   ],
   entryComponents: [
-    DeployNewAppDialogComponent
+    DeployNewAppDialogComponent,
+    DeployNewErrorDialogComponent
   ],
   bootstrap: [AppComponent]
 })
