@@ -38,12 +38,12 @@
                     "name": "REST_ENDPOINT_URL",
                     "displayName": "REST Endpoint URL"
                 },
-				{
-				    "description": "The pattern URL of the backend's REST API endpoint that must be modify by the REST_ENDPOINT_URL variable",
+                {
+                    "description": "The pattern URL of the backend's REST API endpoint that must be modify by the REST_ENDPOINT_URL variable",
                     "name": "REST_ENDPOINT_PATTERN",
                     "displayName": "REST Endpoint PATTERN URL",
-					"value": "http://localhost:8081"
-				},
+                    "value": "http://localhost:8081"
+                },
                 {
                     "description": "Git source URI for application",
                     "name": "GIT_URI",
