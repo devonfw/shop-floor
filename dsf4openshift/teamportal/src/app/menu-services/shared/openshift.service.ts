@@ -23,11 +23,11 @@ export class OpenShiftService {
 
     // SERVICES
     analizeError(error): any {
-        if (error.status === 401) {
-            // console.log('Unathorized. Please enter your Cluster Credentials');
-        } else if (error.status === 403) {
-            // console.log('Forbidden. This user don\'t have permissions to do it');
-        }
+        // if (error.status === 401) {
+        //     // console.log('Unathorized. Please enter your Cluster Credentials');
+        // } else if (error.status === 403) {
+        //     // console.log('Forbidden. This user don\'t have permissions to do it');
+        // }
         return error;
     }
 
