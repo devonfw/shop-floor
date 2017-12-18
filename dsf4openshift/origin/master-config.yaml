@@ -93,7 +93,7 @@ corsAllowedOrigins:
 - 10.0.75.2:8443
 - 127.0.0.1
 - localhost
-- teamportal
+- http://teamportal-devonfw.10.0.75.2.nip.io
 disabledFeatures: null
 dnsConfig:
   allowRecursiveQueries: true
