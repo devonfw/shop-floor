@@ -31,6 +31,8 @@ tags:
     url: "https://docs.openshift.org/latest/rest_api/api/v1.Secret.html"
 - name: "New-App"
   description: "Everything about New-App"
+- name: "Delete-App"
+  description: "Everything about Delete-App"
 - name: "Build"
   description: "Everything about Build"
 schemes:
@@ -202,6 +204,81 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/buildconfigs/{NAME}:
+    delete:
+      tags:
+      - "Delete-App"
+      summary: "Delete the specified Buildconfig"
+      description: "User request to delete an specified Buildconfig"
+      operationId: "deleteBuildConfig"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Buildconfig"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+    patch:
+      tags:
+      - "Secrets"
+      - "New-App"
+      summary: "Set build-secret to app"
+      description: "STEP 4.3 of new app. User add the name of the repository secret into the buildconfig of the app"
+      operationId: "addSecretToBuildconfig"
+      consumes:
+      - "application/json-patch+json"
+      - "application/merge-patch+json"
+      - "application/strategic-merge-patch+json"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the buildconfig. It should be the name of the app."
+        default: "builder"
+        required: true
+      - in: "body"
+        name: "namesecret"
+        description: "this must be Content-Type application/json-patch+json and have the information about where must add the name of the secret into the buildconfig. \n example: [ { \"op\": \"add\", \"path\": \"/spec/source/sourceSecret\", \"value\": { \"name\": \"namesecret\" } } ]"
+        required: true
+        schema:
+          $ref: "#/definitions/SecretToBuildconfig"
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
   /oapi/v1/namespaces/{NAMESPACE}/imagestreams:
     post:
       tags:
@@ -236,6 +313,37 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/imagestreams/{NAME}:
+    delete:
+      tags:
+      - "Delete-App"
+      summary: "Delete the specified Imagestream"
+      description: "User request to delete an specified Imagestream"
+      operationId: "deleteImagestream"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Imagestream"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
   /oapi/v1/namespaces/{NAMESPACE}/deploymentconfigs:
     post:
       tags:
@@ -264,6 +372,65 @@ paths:
           description: "OK"
         201:
           description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/deploymentconfigs/{NAME}:
+    get:
+      tags:
+      - "Status-App"
+      summary: "Read the specified Deploymentconfig"
+      description: "User request an specified Deploymentconfig"
+      operationId: "requestDeploymentConfig"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Deploymentconfig"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - "Delete-App"
+      summary: "Delete the specified Deploymentconfig"
+      description: "User request to delete an specified Deploymentconfig"
+      operationId: "deleteDeploymentconfig"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Deploymentconfig"
+        required: true
+      responses:
+        200:
+          description: "OK"
         400:
           description: "BadRequest"
         401:
@@ -357,6 +524,37 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
+    delete:
+      tags:
+      - "Delete-App"
+      - "Route"
+      summary: "Delete the specified Route"
+      description: "User request to delete an specified Route"
+      operationId: "deleteRoute"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Route"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
   /oapi/v1/namespaces/{NAMESPACE}/services:
     post:
       tags:
@@ -385,6 +583,37 @@ paths:
           description: "OK"
         201:
           description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/services/{NAME}:
+    delete:
+      tags:
+      - "Delete-App"
+      summary: "Delete the specified Service"
+      description: "User request to delete an specified Service"
+      operationId: "deleteService"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Service"
+        required: true
+      responses:
+        200:
+          description: "OK"
         400:
           description: "BadRequest"
         401:
@@ -472,51 +701,6 @@ paths:
           description: "Unauthorized"
       security:
       - bearerAuth: []
-  /oapi/v1/namespaces/{NAMESPACE}/buildconfigs/{NAME}:
-    patch:
-      tags:
-      - "Secrets"
-      - "New-App"
-      summary: "Set build-secret to app"
-      description: "STEP 4.3 of new app. User add the name of the repository secret into the buildconfig of the app"
-      operationId: "addSecretToBuildconfig"
-      consumes:
-      - "application/json-patch+json"
-      - "application/merge-patch+json"
-      - "application/strategic-merge-patch+json"
-      produces:
-      - "application/json"
-      - "application/yaml"
-      - "application/vnd.kubernetes.protobuf"
-      parameters:
-      - in: "path"
-        name: "NAMESPACE"
-        type: string
-        description: "The namespace of the project"
-        required: true
-      - in: "path"
-        name: "NAME"
-        type: string
-        description: "The name of the buildconfig. It should be the name of the app."
-        default: "builder"
-        required: true
-      - in: "body"
-        name: "namesecret"
-        description: "this must be Content-Type application/json-patch+json and have the information about where must add the name of the secret into the buildconfig. \n example: [ { \"op\": \"add\", \"path\": \"/spec/source/sourceSecret\", \"value\": { \"name\": \"namesecret\" } } ]"
-        required: true
-        schema:
-          $ref: "#/definitions/SecretToBuildconfig"
-      responses:
-        200:
-          description: "OK"
-        201:
-          description: "Created"
-        400:
-          description: "BadRequest"
-        401:
-          description: "Unauthorized"
-      security:
-      - bearerAuth: []
 #BUILD
   /oapi/v1/namespaces/{NAMESPACE}/buildconfigs/{NAME}/instantiate:
     post:
@@ -552,6 +736,189 @@ paths:
           description: "OK"
         201:
           description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/builds:
+    get:
+      tags:
+      - "Build"
+      - "Delete-App"
+      summary: "list or watch objects of kind Build"
+      description: "User request all builds in namespace"
+      operationId: "requestAllBuilds"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      - "application/json;stream=watch"
+      - "application/vnd.kubernetes.protobuf;stream=watch"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/builds/{NAME}:
+    get:
+      tags:
+      - "Build"
+      summary: "Read the specified Build"
+      description: "User request an specified Build"
+      operationId: "requestBuild"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Build"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        201:
+          description: "Created"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - "Build"
+      - "Delete-App"
+      summary: "Delete the specified Build"
+      description: "User request to delete an specified Build"
+      operationId: "deleteBuild"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Build"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "BadRequest"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+#POD
+  /oapi/v1/namespaces/{NAMESPACE}/pods:
+    get:
+      tags:
+      - "Pod"
+      - "Delete-App"
+      summary: "list or watch objects of kind Pods"
+      description: "User request all Pods in namespace"
+      operationId: "requestAllPods"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      - "application/json;stream=watch"
+      - "application/vnd.kubernetes.protobuf;stream=watch"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+  /oapi/v1/namespaces/{NAMESPACE}/pods/{NAME}:
+    get:
+      tags:
+      - "Pod"
+      summary: "Read the specified Pod"
+      description: "User request an specified Pod"
+      operationId: "requestPod"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Pod"
+        required: true
+      responses:
+        200:
+          description: "OK"
+        401:
+          description: "Unauthorized"
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - "Pod"
+      - "Delete-App"
+      summary: "Delete the specified Pod"
+      description: "User request to delete an specified Pod"
+      operationId: "deletePod"
+      produces:
+      - "application/json"
+      - "application/yaml"
+      - "application/vnd.kubernetes.protobuf"
+      parameters:
+      - in: "path"
+        name: "NAMESPACE"
+        type: string
+        description: "The namespace of the project"
+        required: true
+      - in: "path"
+        name: "NAME"
+        type: string
+        description: "The name of the Pod"
+        required: true
+      responses:
+        200:
+          description: "OK"
         400:
           description: "BadRequest"
         401:

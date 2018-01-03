@@ -141,6 +141,12 @@ export class OpenShiftService {
         return this.get(route);
     }
 
+    requestDeploymentConfig(params: INTERFACES.RouteNameAndNamespace): Observable<any> {
+        let route = this.API.CREATE_DEPLOYMENTCONFIG;
+        route = route.replace('$NAMESPACE', params.namespace) + '/' + params.name;
+        return this.get(route);
+    }
+
     // POST
     private post(route, body): Observable<any> {
         return this.http.post(route, body, {

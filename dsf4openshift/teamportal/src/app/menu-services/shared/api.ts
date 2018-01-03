@@ -40,5 +40,4 @@ export class API {
                 return environment.clusterURL + this.OPENSHIFT + 'namespaces/$NAMESPACE/' + suffix.toLowerCase() + 's';
         }
     }
-
 }
