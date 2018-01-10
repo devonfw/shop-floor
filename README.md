@@ -51,4 +51,3 @@ More specific info in the Wiki.
 1. Add `<distributionManagement>` section in the parent `pom.xml`
 2. Add `sonar:sonar` plugin and `jacoco` for code coverage
 
-## Deploy Devonfw projects using Docker
