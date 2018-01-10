@@ -17,7 +17,7 @@ The project's structure will be as follows:
     - docker-compose.yml
 ````
 
-In the case of the **Java** part, the `Dockerfile` is "looking for" a folder at its same level called `mtsj`. If yours is different, you'll need to change it [here](), or just leave a `.` in case your project is already at that level.
+In the case of the **Java** part, the `Dockerfile` is "looking for" a folder at its same level called `mtsj`. If yours is different, you'll need to change it [here](https://github.com/devonfw/devonfw-shop-floor/blob/master/dsf4docker/devonfw-deployment/java/Dockerfile#L4), or just leave a `.` in case your project is already at that level.
 
 If the project is configured adding provided files to the correct places, the only thing left to do is to get everything up by running at the `docker-compose.yml` file's level:
 
