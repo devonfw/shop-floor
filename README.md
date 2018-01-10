@@ -52,22 +52,22 @@ More specific info in the Wiki.
 2. Add `sonar:sonar` plugin and `jacoco` for code coverage
 
 
-### What does **Devonfw Shop Floor** offers?
+## What does **Devonfw Shop Floor** offers?
 
-#### Production Line:
+### Production Line:
 - Jenkinsfile(s) for both **Angular** and **Java**.
 - [How to configure](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-production-line-environment) your Production Line instance to run **devonfw** projects.
 
-#### Docker:
+### Docker:
 - Complete CI/CD/COMS environment for teams installed with **docker-compose**.
 - Service integration/configuration using [documentation](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-docker).
 - [How to deploy](https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4docker/devonfw-deployment) **Devonfw** projects using **docker-compose**
 
-#### OpenShift:
+### OpenShift:
 - Scripts for the installation of an **OpenShift Origin v3.6** installation (once **docker** and **openshift client (oc)** are installed).
 - **Devonfw templates** for **Angular** and **Java** projects, for deployment in the cluster.
 - Deployment script (alterative way of deployment, instead of using the OpenShift dashboard).
 - *Beta version* of the Team Portal application, that allows CICD services easy access and project deployment.
 
-#### Backup:
+### Backup:
 - Scripts to make backups of your databases in a remote machine (production-like machine).
