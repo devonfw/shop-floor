@@ -121,7 +121,7 @@
                                     },
                                     {
                                         "name": "REST_ENDPOINT_PATTERN",
-                                        "value": "$(REST_ENDPOINT_PATTERN)"
+                                        "value": "${REST_ENDPOINT_PATTERN}"
                                     },
                                     {
                                         "name": "BUILD_TARGET",
