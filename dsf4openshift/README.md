@@ -16,6 +16,16 @@ Scripts, tools etc to create and manage OpenShift based DevOps/CI/CD/Test enviro
 3. See your environment in the Openshift Dashboard
 4. Manually deploy the **Nexus** service
 
+# CentOS 7
+
+## 1. Run installation scripts
+
+// TODO
+
+## 2. Expose cluster to outside
+
+// TODO
+
 # Debian
 
 ## 1. Set up Docker Repository (Debian/Jessie)
@@ -72,7 +82,7 @@ Add this to the new file:
 Close and save no VIM by typing: `ESC` and writing `:wq` standing for "Write" and "Quit"
 
 
-# RHEL
+# RHEL 6.5
 
 ## How to install RHEL
 
