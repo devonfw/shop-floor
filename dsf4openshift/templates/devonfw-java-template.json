@@ -214,7 +214,7 @@
                                         "image": "${APPLICATION_NAME}",
                                         "ports": [
                                             {
-                                                "containerPort": 8080,
+                                                "containerPort": 8081,
                                                 "protocol": "TCP"
                                             }
                                         ],
@@ -257,8 +257,8 @@
                         "ports": [
                             {
                                 "name": "${APPLICATION_NAME}-http",
-                                "port": 8080,
-                                "targetPort": 8080
+                                "port": 8081,
+                                "targetPort": 8081
                             }
                         ],
                         "selector": {
