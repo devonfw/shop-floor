@@ -5,6 +5,8 @@ This is a guide to add custom icons into an Openshift cluster.
 # Images Style
 The icons for templates, must measure 50px x 50px or the image not show right.
 
+# How to use your custom icons in openshift cluster
+
 ## 1. Obtain the master-config.yaml of our openshift cluster.
 To modify the icons inside openshift, we must to modify our master-config.yaml of our openshift cluster. This file is inside the openshift container and to obtain a copy of it, we must to know whats the name of our openshift container.
 
