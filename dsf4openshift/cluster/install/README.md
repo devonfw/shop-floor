@@ -20,16 +20,16 @@ $ export PATH=$PATH:/home/administrador/oc
 ```
 
 ## 2. Install Openshift Cluster
-### 2.1. Download docker images for openshift
-```
-$ oc cluster up
-```
-### 2.2. Add the insecure registry
+### 2.1. Add the insecure registry
 Create file /etc/docker/daemon.json with the next content:
 ```
 {
     "insecure-registries" : [ "172.30.0.0/16" ]
 }
+```
+### 2.2. Download docker images for openshift
+```
+$ oc cluster up
 ```
 
 ## 3. Install Oc Cluster Wrapper
