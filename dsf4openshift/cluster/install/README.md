@@ -42,8 +42,9 @@ oc-cluster up devonfw-shop-floor --public-hostname X.X.X.X
 ### 3.1. Configure iptables
 We must to create iptables rules to allow traffic from other machines.
 
-<span style="color:red">The next commands it's to let all traffic, don't do it on a real server.</span>
 ```diff
+- The next commands it's to let all traffic, don't do it on a real server.
+
 - $ iptables -F
 - $ iptables -X
 - $ iptables -t nat -F
