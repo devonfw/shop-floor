@@ -26,10 +26,11 @@ $ oc cluster up
 ```
 ### 2.2. Add the insecure registry
 Create file /etc/docker/daemon.json with the next content:
-
+```
 {
     "insecure-registries" : [ "172.30.0.0/16" ]
 }
+```
 
 ## 3. Install Oc Cluster Wrapper
 To manage easier the cluster persistent, we are going to use oc cluster wrapper.
