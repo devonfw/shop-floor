@@ -41,7 +41,7 @@ wget https://raw.githubusercontent.com/openshift-evangelists/oc-cluster-wrapper/
 oc-cluster up devonfw-shop-floor --public-hostname X.X.X.X
 
 ### 3.1. Configure iptables
-We must to create iptables rules to allow traffic from other machines.
+We must create iptables rules to allow traffic from other machines.
 
 ```diff
 - The next commands it's to let all traffic, don't do it on a real server.
@@ -77,5 +77,6 @@ or if the context devonfw-shop-floor exist
 $ devonfw-shop-floor-down
 ```
 ## Use non-persistent cluster
+```
 oc cluster up --image openshift/origin --public-hostname X.X.X.X --routing-suffix apps.X.X.X.X.nip.io
-
+```
