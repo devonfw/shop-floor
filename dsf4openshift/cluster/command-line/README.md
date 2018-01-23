@@ -1,6 +1,6 @@
 # DevonFW Openshift Origin Command Line
 
-This are scripts to make more easy the way for control a cluster of DevonFW Oenshift Origin.
+This are scripts to make easier  the way for control a cluster of DevonFW Oenshift Origin.
 
 ## List of scripts
 

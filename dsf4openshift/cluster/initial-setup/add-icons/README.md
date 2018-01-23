@@ -2,13 +2,13 @@
 
 This is a guide to add custom icons into an Openshift cluster.
 
-# Images Style
+# Imagen Style
 The icons for templates, must measure 50px x 50px or the image not show right.
 
 # How to use your custom icons in openshift cluster
 
 ## 1. Obtain the master-config.yaml of our openshift cluster.
-To modify the icons inside openshift, we must to modify our master-config.yaml of our openshift cluster. This file is inside the openshift container and to obtain a copy of it, we must to know whats the name of our openshift container.
+To modify the icons inside openshift, we must to modify our master-config.yaml of our openshift cluster. This file is inside the openshift container and to obtain a copy of it, we must to know what's our openshift container name.
 
 ### 1.1. Obtain the name of our openshift container.
 To obtain it, we can know it executing the next:
@@ -20,7 +20,7 @@ CONTAINER ID        IMAGE                                           COMMAND     
 Here we can see that the name of the container is origin. Normaly the container it's called as origin.
 
 ### 1.2. Copy the master-config.yaml of our openshift container to our directory.
- This file is inside the openshift container in the next directory: /var/lib/origin/openshift.local.config/master/`master-config.yaml` and we can copy it with the next command:
+This file is inside the openshift container in the next directory: /var/lib/origin/openshift.local.config/master/`master-config.yaml` and we can copy it with the next command:
 ```
 $ docker cp origin:/var/lib/origin/openshift.local.config/master/master-config.yaml ./
 ```
@@ -76,7 +76,7 @@ $ docker cp ./icons.css origin:/var/lib/origin/openshift.local.config/master/sty
 ```
 
 ## 4. Edit and copy the master-config.yaml to use our css.
-the master-config.yaml have a section to charge custom styles in Openshift. This is inside the assetConfig and it's called `extensionStylesheets`.
+The master-config.yaml have a section to charge custom styles in Openshift. This is inside the assetConfig and it's called `extensionStylesheets`.
 
 To use our icons.css only need to add the directory route of icons.css in the extensionStylesheets of the master-config.yaml
 ```
@@ -88,7 +88,7 @@ assetConfig:
   ...
 ...
 ```
-Now we only need to copy that master-config.yaml inside openshift, and reestart it to load the new configuration. To do that execute the next:
+Now we only need to copy that master-config.yaml inside openshift, and restart it to load the new configuration. To do that execute the next:
 ```
 $ docker cp ./master-config.yaml origin:/var/lib/origin/openshift.local.config/master/master-config.yaml
 ```
