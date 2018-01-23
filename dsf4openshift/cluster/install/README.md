@@ -21,7 +21,7 @@ $ export PATH=$PATH:/home/administrador/oc
 
 ## 2. Install Openshift Cluster
 ### 2.1. Add the insecure registry
-Create file /etc/docker/daemon.json with the next content:
+Create file ```/etc/docker/daemon.json``` with the next content:
 ```
 {
     "insecure-registries" : [ "172.30.0.0/16" ]
