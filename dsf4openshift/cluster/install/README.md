@@ -64,17 +64,9 @@ With oc cluster wrapper we could have a different clusters with different contex
 ```
 $ oc-cluster up devonfw-shop-floor --public-hostname X.X.X.X
 ```
-or if the context devonfw-shop-floor exist
-```
-$ devonfw-shop-floor-up
-```
 ## Cluster down
 ```
 $ oc-cluster down
-```
-or if the context devonfw-shop-floor exist
-```
-$ devonfw-shop-floor-down
 ```
 ## Use non-persistent cluster
 ```
