@@ -106,6 +106,7 @@ echo "   PROJECT_DISPLAYNAME=$PROJECT_DISPLAYNAME"
 echo "   DESCRIPTION=$DESCRIPTION"
 echo " * TYPE=$TYPE"
 echo " * APPLICATION_NAME=$APPLICATION_NAME"
+echo " * APPLICATION_GROUP_NAME=$APPLICATION_GROUP_NAME"
 echo " * GIT_URI=$GIT_URI"
 echo " * GIT_REF=$GIT_REF"
 echo " * CONTEXT_DIR=$CONTEXT_DIR"
@@ -143,7 +144,7 @@ then
 fi
 
 # 1.5 ARE REQUIRED PARAMS EMPTY?
-if [ -z "$PROJECT" ] || [ -z "$TYPE" ] || [ -z "$APPLICATION_NAME" ] || [ -z "$GIT_URI" ] || [ -z "$GIT_REF" ] || [ -z "$CONTEXT_DIR" ]
+if [ -z "$PROJECT" ] || [ -z "$TYPE" ] || [ -z "$APPLICATION_NAME" ] || [ -z "$APPLICATION_GROUP_NAME" ] || [ -z "$GIT_URI" ] || [ -z "$GIT_REF" ] || [ -z "$CONTEXT_DIR" ]
 then
 	echo -e "\nthe parameters with an * are required and can't be empty.\n"
 	read -n1 -r -p "Press any key to close..." key
@@ -180,7 +181,7 @@ DIRE="${CONTEXT_DIR:1}"
 else
 DIRE="$CONTEXT_DIR"
 fi
-PARAMS="-p APPLICATION_NAME=$APPLICATION_NAME -p GIT_URI=$GIT_URI -p GIT_REF=$GIT_REF -p CONTEXT_DIR=$DIRE"
+PARAMS="-p APPLICATION_NAME=$APPLICATION_NAME -p APPLICATION_GROUP_NAME=$APPLICATION_GROUP_NAME -p GIT_URI=$GIT_URI -p GIT_REF=$GIT_REF -p CONTEXT_DIR=$DIRE"
 if ! [ -z "$REST_ENDPOINT_PATTERN" ]
 then
 	PARAMS="$PARAMS -p REST_ENDPOINT_PATTERN=$REST_ENDPOINT_PATTERN"
