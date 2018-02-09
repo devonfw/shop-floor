@@ -1,11 +1,23 @@
 #header-logo {
-  background-image: url("https://raw.githubusercontent.com/oasp/icons/master/devonfw/devonfw-openshift.png");
+  background-image: url("https://raw.githubusercontent.com/oasp/s2i/icons/master/devonfw/devonfw-openshift.png");
   width: 230px;
   height: 40px;
 }
 
 .devonfw-logo {
-  background-image: url("https://raw.githubusercontent.com/oasp/icons/master/devonfw/devonfw.png");
+  background-image: url("https://raw.githubusercontent.com/oasp/s2i/icons/master/devonfw/devonfw.png");
+  width: 50px;
+  height: 50px;
+}
+
+.devonfw-angular-logo {
+  background-image: url("https://raw.githubusercontent.com/oasp/s2i/master/devonfw/icons/devonfw-angular.png");
+  width: 50px;
+  height: 50px;
+}
+
+.devonfw-java-logo {
+  background-image: url("https://raw.githubusercontent.com/oasp/s2i/master/devonfw/icons/devonfw-kava.png");
   width: 50px;
   height: 50px;
 }
