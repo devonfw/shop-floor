@@ -29,8 +29,8 @@ ${NC}"
 # STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
 # oc cluster up --host-data-dir=/devonfw-shop-floor --host-config-dir=/origin/master-config.yaml
 # oc cluster up --host-data-dir=/dsf-openshift --use-existing-config --host-config-dir=/openshift.local.config
-
-oc login -u system:admin
+echo "Login as admin"
+oc login
 
 oc adm policy add-cluster-role-to-user cluster-admin system
 
@@ -41,8 +41,8 @@ oc new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
 ## Create base-images and add them to DevonFW project
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/oasp/s2i/master/devonfw/s2i/s2i-devonfw-java-imagestream.json --namespace=devonfw
-oc create -f https://raw.githubusercontent.com/oasp/s2i/master/devonfw/s2i/s2i-devonfw-angular-imagestream.json --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/oasp/s2i/master/s2i/angular/s2i-devonfw-java-imagestream.json --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/oasp/s2i/master/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
 
 ## Build base-images in DevonFW project
 oc start-build s2i-devonfw-java --namespace=devonfw
@@ -61,8 +61,8 @@ oc policy add-role-to-group system:image-puller system:authenticated --namespace
 
 # STEP 4: Create DevonFW templates into openshift
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/oasp/s2i/master/devonfw/templates/devonfw-java-template.json --namespace=openshift
-oc create -f https://raw.githubusercontent.com/oasp/s2i/master/devonfw/templates/devonfw-angular-template.json --namespace=openshift
+oc create -f https://raw.githubusercontent.com/oasp/s2i/master/templates/devonfw/devonfw-java-template.json --namespace=openshift
+oc create -f https://raw.githubusercontent.com/oasp/s2i/master/templates/devonfw/devonfw-angular-template.json --namespace=openshift
 
 echo -e "\nCluster Initial Setup finish.\n"
 read -n1 -r -p "Press any key to close..." key
