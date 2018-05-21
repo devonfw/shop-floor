@@ -14,15 +14,16 @@
 #  *  limitations under the License.
 #  ******************************************************************************/
 
-# 1. Build
-FROM maven:3.5-jdk-8-alpine AS build
-WORKDIR /app
-COPY path/to/project/folder/. /app
-RUN ls -l
-RUN mvn install
-
-# 2. Deploy
-FROM tomcat:latest
-WORKDIR /app
-COPY --from=build /app/server/target/artifact.war /usr/local/tomcat/webapps/
-EXPOSE 8080
+PROJECT="mythaistar"
+PROJECT_DISPLAYNAME="My Thai Star"
+DESCRIPTION="My Thai Star reference application for DevonFW"
+TYPE="angular"
+APPLICATION_NAME="mythaistar-angular"
+APPLICATION_GROUP_NAME="My-Thai-Star"
+GIT_URI="https://github.com/oasp/my-thai-star.git"
+GIT_REF="develop"
+CONTEXT_DIR="/angular"
+REST_ENDPOINT_PATTERN="http://de-mucdevondepl01:9090"
+LINKS_PROJECT="mythaistar"
+LINKS_APPLICATION_NAME="mythaistar-java"
+SSH_KEY_ROUTE=""

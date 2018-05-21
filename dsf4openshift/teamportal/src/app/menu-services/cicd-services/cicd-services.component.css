@@ -1,9 +1,0 @@
-.service {
-  cursor: pointer;
-  /* border-color: #fff; */
-  background-color: #eee;
-}
-
-.service:hover {
-  background-color: #fff;
-}

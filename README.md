@@ -33,7 +33,6 @@ The OpenShift part is a set of resources that allows teams to quickly have:
 1. OpenShift cluster up and running
 2. Devonfw s2i templates (both for Angular and Java) to build images and run them as containers in OpenShift
 3. The `openshift.json` file that should be incorporated in the project's root directory.
-4. The **Team Portal** application that will serve as a welcome point for the whole team to access to services and even deploy projects in the cluster.
 
 ## Changes in Devonfw projects
 
