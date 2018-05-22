@@ -1,6 +1,6 @@
 # devonfw-shop-floor 4 OpenShift
 
-# Content
+## Content
 
 This are a complete documentation to install and configure an Openshift Cluster to be a DevonFW Openshift Cluster.
 

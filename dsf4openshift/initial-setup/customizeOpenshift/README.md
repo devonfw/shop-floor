@@ -5,11 +5,6 @@ This is a guide to customize Openshift cluster. For more informaticon read the n
 
 # Index
 
-- [`Images Styles`](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/#images-styles).
-- [`Quick Use`](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/#quick-use).
-- [How to add custom `icons` inside openshift](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/#how-to-add-custom-icons-inside-openshift).
-- [How to add custom `catalog categories` inside openshift](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/#how-to-add-custom-catalog-categories-inside-openshift).
-
 - [`Images Styles`](./#images-styles).
 - [`Quick Use`](./#quick-use).
 - [How to add custom `icons` inside openshift](./#how-to-add-custom-icons-inside-openshift).
@@ -90,7 +85,7 @@ This is a guide to add custom icons into an Openshift cluster.
 Inside openshift.local.devonfw/stylesheet folder we have the icons.css example to use the devonfw icons.
 
 ## 1. Previous steps
-- [Obtain master-config.ymal of our openshift cluster](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/#1-obtain-the-master-configyaml-of-our-openshift-cluster).
+- [Obtain master-config.ymal of our openshift cluster](./#1-obtain-the-master-configyaml-of-our-openshift-cluster).
 
 ## 2. Create a css
 #### 2.1. Custom logo for openshift cluster
@@ -98,7 +93,7 @@ For this example, we are going to call the css icons.css but you can call as you
 Openshift cluster draw their icon by the id header-logo, then we only need to add to our icons.css the next Style Attribute ID
 ```
 #header-logo {
-  background-image: url("https://raw.githubusercontent.com/oasp/icons/master/devonfw/devonfw-openshift.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-openshift.png);
   width: 230px;
   height: 40px;
 }
@@ -107,7 +102,7 @@ Openshift cluster draw their icon by the id header-logo, then we only need to ad
 To use a custom icon to a template openshift use a class name. Then, we need to insert inside our icons.css the next Style Class
 ```
 .devonfw-logo {
-  background-image: url("https://raw.githubusercontent.com/oasp/icons/master/devonfw/devonfw.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw.png");
   width: 50px;
   height: 50px;
 }
@@ -193,7 +188,7 @@ This is a guide to add custom `Catalog Categories` into an Openshift cluster.
 Inside openshift.local.devonfw/scripts folder we have the catalog-categories.js example to use the devonfw catalog categories.
 
 ## 1. Previous steps
-- [Obtain master-config.ymal of our openshift cluster](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/#1-obtain-the-master-configyaml-of-our-openshift-cluster).
+- [Obtain master-config.ymal of our openshift cluster](./#1-obtain-the-master-configyaml-of-our-openshift-cluster).
 
 ## 2. Create a scrip to add custom lengauges and custom catalog categories
 #### 2.1. Custom language

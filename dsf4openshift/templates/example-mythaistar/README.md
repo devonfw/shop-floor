@@ -12,7 +12,7 @@ We need to deploy s2i builder images. More information:
 - [Source-2-Image](https://github.com/oasp/s2i#deploy-the-source-2-image-builder-images).
 
 We need to deploy devonfw templates to use this s2i and add it to the browse catalog. More information:
-- [DevonFW templates](https://github.com/oasp/s2i/tree/master/templates/devonfw#how-to-use).
+- [DevonFW templates](./devonfw#how-to-use).
 
 #### Deploy My Thai Star Application
 

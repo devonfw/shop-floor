@@ -17,17 +17,16 @@ Remember that this templates need a build image from s2i-devonfw-angular and s2i
 ##### Customize Openshift
 
 Remeber that this templates also have a custom icons, and to use it, we must modify the master-config.yml inside openshift. More information:
-- [Customize DevonFW Openshift Origin](https://github.com/oasp/s2i/tree/master/templates/devonfw/customizeOpenshift/).
+- [Customize DevonFW Openshift Origin](./../initial-setup/customizeOpenshift).
 
 #### Deploy DevonFW templates
 
 Now, it's time to create devonfw templates to use this s2i and add it to the browse catalog.
 
 To let all user to use this templates in all openshift projects, we should create it in an openshift namespace. To do that, we must log in as an admin.
-To let all user to use this templates in all openshift projects, we should create it in an openshift namespace. To do that, we must log in as an admin.
 
-    $ oc create -f https://raw.githubusercontent.com/oasp/s2i/master/templates/devonfw/devonfw-java-template.json --namespace=openshift
-    $ oc create -f https://raw.githubusercontent.com/oasp/s2i/master/templates/devonfw/devonfw-angular-template.json --namespace=openshift
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json --namespace=openshift
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json --namespace=openshift
 
 When it finish, remember to logout as an admin and enter with our normal user.
 
