@@ -66,7 +66,6 @@ More specific info in the Wiki.
 - Scripts for the installation of an **OpenShift Origin v3.6** installation (once **docker** and **openshift client (oc)** are installed).
 - **Devonfw templates** for **Angular** and **Java** projects, for deployment in the cluster.
 - Deployment script (alterative way of deployment, instead of using the OpenShift dashboard).
-- *Beta version* of the Team Portal application, that allows CICD services easy access and project deployment.
 
 ### Backup:
 - Scripts to make backups of your databases in a remote machine (production-like machine).

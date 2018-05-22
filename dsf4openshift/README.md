@@ -1,14 +1,6 @@
 # devonfw-shop-floor 4 OpenShift
 
-## Provided Assets
-
-![](../readme/devonfw-shop-floor-openshift-assets.png)
-
-## Architecture Overview
-
-![](../readme/devonfw-shop-floor-openshift-arch.png)
-
-# DevonFW Openshift Origin Content
+# Content
 
 This are a complete documentation to install and configure an Openshift Cluster to be a DevonFW Openshift Cluster.
 
