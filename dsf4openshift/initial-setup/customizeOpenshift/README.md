@@ -47,7 +47,7 @@ To use our customization of DevonFW Openshift, we need to copy our files inside 
 To do this we  need to copy our openshift.local.devonfw inside openshift
 container, on the step one we obtain the name of this container, for this example we assume that it's called origin.
 ```
-$ docker cp ./openshift.locla.devonfw origin:/var/lib/origin/
+$ docker cp ./openshift.local.devonfw origin:/var/lib/origin/
 ```
 
 ## 4. Edit and copy the master-config.yaml to use our customize files
@@ -93,7 +93,7 @@ For this example, we are going to call the css icons.css but you can call as you
 Openshift cluster draw their icon by the id header-logo, then we only need to add to our icons.css the next Style Attribute ID
 ```
 #header-logo {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-openshift.png);
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/openshift.local.devonfw/images/devonfw-openshift.png);
   width: 230px;
   height: 40px;
 }
@@ -102,7 +102,7 @@ Openshift cluster draw their icon by the id header-logo, then we only need to ad
 To use a custom icon to a template openshift use a class name. Then, we need to insert inside our icons.css the next Style Class
 ```
 .devonfw-logo {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/openshift.local.devonfw/images/devonfw.png");
   width: 50px;
   height: 50px;
 }

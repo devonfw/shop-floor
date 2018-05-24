@@ -1,0 +1,77 @@
+{
+  "kind": "List",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "s2i-devonfw-java"
+  },
+  "items": [
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "s2i-devonfw-java"
+      },
+      "spec": {
+        "triggers": [
+          {
+            "type": "GitHub",
+            "github": {
+              "secret": "secret"
+            }
+          },
+          {
+            "type": "Generic",
+            "generic": {
+              "secret": "secret"
+            }
+          },
+          {
+            "type": "ImageChange",
+            "imageChange": {}
+          }
+        ],
+        "source": {
+          "type": "Git",
+          "git": {
+            "uri": "https://github.com/oasp/s2i.git",
+            "ref": "master"
+          }
+        },
+        "strategy": {
+          "type": "Docker",
+          "dockerStrategy": {
+            "dockerfilePath": "s2i/java/Dockerfile"
+          }
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "s2i-devonfw-java:latest"
+          }
+        },
+        "resources": {}
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "s2i-devonfw-java"
+      },
+      "spec": {
+        "tags": [
+          {
+            "name": "latest",
+            "annotations": {
+              "description": "The Open Application Standard Platform for Java S2I image",
+              "iconClass": "icon-java",
+              "tags": "builder,java,maven,springboot,oasp,microservices,fatjar",
+              "supports": "java:8,maven:3,oasp:2.4",
+              "version": "1.0"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
