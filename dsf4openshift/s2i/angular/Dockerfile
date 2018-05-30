@@ -23,6 +23,16 @@ ENV SUMMARY="Base image for running DevonFW-based Angular applications"
 ENV DESCRIPTION="Base image for running DevonFW-based Angular applications"
 ENV TAGS="builder,s2i,devonfw,javascript,nginx,angular"
 
+# Locations, $PATH etc.
+ENV STI_SCRIPTS_PATH=/usr/local/sti
+ENV APP_ROOT=/opt/app-root
+ENV NGINX_CONFIGURATION_PATH=${APP_ROOT}/etc/nginx.d
+ENV NGINX_DEFAULT_CONF_PATH=${APP_ROOT}/etc/nginx.default.d
+
+# Code context in github
+ENV CODE_CONTEXT=dsf4openshift/s2i/angular
+
+### Atomic/OpenShift Labels - https://github.com/projectatomic/ContainerApplicationGenericLabels
 LABEL name="$NAME" \
       maintainer="$MAINTAINER" \
       vendor="$VENDOR" \
@@ -33,10 +43,6 @@ LABEL name="$NAME" \
       io.k8s.description="DESCRIPTION" \
       io.k8s.display-name="$NAME" \
       io.openshift.tags="$TAGS"
-
-ENV STI_SCRIPTS_PATH=/usr/local/sti
-ENV NGINX_CONFIGURATION_PATH=/opt/app-root/etc/nginx.d
-ENV NGINX_DEFAULT_CONF_PATH=/opt/app-root/etc/nginx.default.d
 
 # Gain access to EPEL (Extra Packages for Enterprise Linux)
 RUN yum install -y epel-release
@@ -66,21 +72,21 @@ RUN yum install -y nodejs
 
 # Copy the S2I scripts to $STI_SCRIPTS_PATH
 LABEL io.openshift.s2i.scripts-url=image:///usr/local/sti
-COPY s2i/angular/bin/ $STI_SCRIPTS_PATH
+COPY ${CODE_CONTEXT}/bin/ $STI_SCRIPTS_PATH
 
 # Copy extra files to the image.
-COPY s2i/angular/root/ /
+COPY ${CODE_CONTEXT}/root/ /
 
 # In order to drop the root user, we have to make some directories world
 # writeable as OpenShift default security model is to run the container under
 # random UID.
-RUN sed -i -f /opt/app-root/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf && \
-    mkdir -p /opt/app-root/etc/nginx.d/ && \
-    mkdir -p /opt/app-root/etc/nginx.default.d/ && \
+RUN sed -i -f ${APP_ROOT}/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf && \
+    mkdir -p ${NGINX_CONFIGURATION_PATH} && \
+    mkdir -p ${NGINX_DEFAULT_CONF_PATH} && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
     mkdir -p /.config && \
-    chmod -R a+rwx /opt/app-root/etc && \
+    chmod -R a+rwx ${APP_ROOT}/etc && \
     chmod -R a+rwx /var/opt/rh/rh-nginx110 && \
     chmod -R a+rwx /usr/lib/node_modules && \
     chmod -R a+rwX /.cache && \
@@ -93,7 +99,7 @@ RUN npm install -g yarn
 # RUN npm rebuild node-sass --force
 
 # Change permissions
-RUN chown -R ${USER_ID}:0 /opt/app-root && \
+RUN chown -R ${USER_ID}:0 ${APP_ROOT} && \
     chown -R ${USER_ID}:0 /var/opt/rh/rh-nginx110 && \
     chown -R ${USER_ID}:0 /usr/lib/node_modules && \
     chown -R ${USER_ID}:0 /.cache && \
@@ -102,9 +108,9 @@ RUN chown -R ${USER_ID}:0 /opt/app-root && \
 VOLUME ["/opt/rh/rh-nginx110/root/usr/share/nginx/html"]
 VOLUME ["/var/opt/rh/rh-nginx110/log/nginx/"]
 
-ENV BASH_ENV=/opt/app-root/etc/scl_enable \
-    ENV=/opt/app-root/etc/scl_enable \
-    PROMPT_COMMAND=". /opt/app-root/etc/scl_enable"
+ENV BASH_ENV=${APP_ROOT}/etc/scl_enable \
+    ENV=${APP_ROOT}/etc/scl_enable \
+    PROMPT_COMMAND=". ${APP_ROOT}/etc/scl_enable"
 
 # The default user in the centos image
 USER ${USER_ID}

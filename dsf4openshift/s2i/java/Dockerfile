@@ -5,6 +5,9 @@ MAINTAINER Michael Kuehl <mkuehl@redhat.com> Cristobal Belda <cbeldape@capgemini
 ENV VERSION 1.0
 ENV RELEASE 1
 
+# Set the default port for applications built using this image
+EXPOSE 8081
+
 # Installed components version
 ENV JAVA_VERSION 1.8.0
 ENV MAVEN_VERSION 3.5.3
@@ -26,6 +29,9 @@ ENV STI_SCRIPTS_PATH=/usr/local/sti
 ENV MAVEN_HOME /usr/local/maven
 ENV PATH=/opt/maven/bin/:$PATH
 ENV APP_ROOT=/opt/app-root
+
+# Code context in github
+ENV CODE_CONTEXT=dsf4openshift/s2i/java
 
 # User ID 
 ENV USER_ID 1001
@@ -62,12 +68,12 @@ RUN (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries
     mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven && \
     ln -sf /usr/local/maven/bin/mvn /usr/local/bin/mvn
 
-COPY dsf4openshift/s2i/java/contrib/settings.xml $MAVEN_HOME/conf
+COPY ${CODE_CONTEXT}/contrib/settings.xml $MAVEN_HOME/conf
 RUN chmod -R a+rwX $MAVEN_HOME/conf
 
 # Install S2I scripts etc.
 LABEL io.openshift.s2i.scripts-url=image:///usr/local/sti
-COPY s2i/java/bin/ $STI_SCRIPTS_PATH
+COPY ${CODE_CONTEXT}/bin/ $STI_SCRIPTS_PATH
 RUN chmod -R a+rx ${STI_SCRIPTS_PATH} && \
     chown -R ${USER_ID}:0 ${STI_SCRIPTS_PATH}
 
@@ -81,9 +87,6 @@ RUN mkdir -p ${APP_ROOT}/src && \
 
 # The default user in the image
 USER ${USER_ID}
-
-# Set the default port for applications built using this image
-EXPOSE 8081
 
 # Set the default CMD for the image
 WORKDIR ${APP_ROOT}
