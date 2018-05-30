@@ -44,6 +44,7 @@ RUN yum install -y --enablerepo=centosplus $INSTALL_PKGS && \
     yum clean all
 
 # Install Maven
+RUN echo "Maven Version: ${MAVEN_VERSION}"
 RUN (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
     tar -zx -C /usr/local) && \
     mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven && \
