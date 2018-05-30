@@ -1,5 +1,5 @@
 FROM centos:centos7
-MAINTAINER Michael Kuehl <mkuehl@redhat.com> Cristobal Belda <cbeldape@capgemini.com>
+MAINTAINER Michael Kuehl <mkuehl@redhat.com> Cristobal Belda <cbeldape@capgemini.com> Jorge Dacal <jodacalc@capgemini.com>
 
 # Image version
 ENV VERSION 1.0

@@ -1,5 +1,5 @@
 FROM centos:centos7
-MAINTAINER Michael Kuehl <mkuehl@redhat.com> Cristobal Belda <cbeldape@capgemini.com>
+MAINTAINER Michael Kuehl <mkuehl@redhat.com> Cristobal Belda <cbeldape@capgemini.com> Jorge Dacal <jodacalc@capgemini.com>
 
 # Image version
 ENV VERSION 1.0
@@ -79,20 +79,15 @@ RUN chmod -R a+rx ${STI_SCRIPTS_PATH} && \
 # Copy extra files to the image.
 COPY ${CODE_CONTEXT}/root/ /
 
-# In order to drop the root user, we have to make some directories world
-# writeable as OpenShift default security model is to run the container under
-# random UID.
-RUN sed -i -f ${APP_ROOT}/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf && \
-    mkdir -p ${NGINX_CONFIGURATION_PATH} && \
-    mkdir -p ${NGINX_DEFAULT_CONF_PATH} && \
+# nginx config
+RUN sed -i -f ${APP_ROOT}/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf
+
+# Create file locations
+RUN mkdir -p ${NGINX_CONFIGURATION_PATH}/ && \
+    mkdir -p ${NGINX_DEFAULT_CONF_PATH}/ && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
     mkdir -p /.config && \
-    chmod -R a+rwx ${APP_ROOT}/etc && \
-    chmod -R a+rwx /var/opt/rh/rh-nginx110 && \
-    chmod -R a+rwx /usr/lib/node_modules && \
-    chmod -R a+rwX /.cache && \
-    chmod -R a+rwX /.config
 
 # Install Javascript stuff
 ENV npm_config=/tmp
@@ -102,11 +97,13 @@ RUN npm install -g yarn
 
 # Change permissions
 RUN chown -R ${USER_ID}:0 ${APP_ROOT} && \
+    chown -R ${USER_ID}:0 ${APP_ROOT}/etc && \
     chown -R ${USER_ID}:0 /var/opt/rh/rh-nginx110 && \
     chown -R ${USER_ID}:0 /usr/lib/node_modules && \
     chown -R ${USER_ID}:0 /.cache && \
     chown -R ${USER_ID}:0 /.config
 
+# nginx volumes
 VOLUME ["/opt/rh/rh-nginx110/root/usr/share/nginx/html"]
 VOLUME ["/var/opt/rh/rh-nginx110/log/nginx/"]
 
@@ -118,4 +115,5 @@ ENV BASH_ENV=${APP_ROOT}/etc/scl_enable \
 USER ${USER_ID}
 
 # Set the default CMD for the image
+WORKDIR ${APP_ROOT}
 CMD $STI_SCRIPTS_PATH/usage
