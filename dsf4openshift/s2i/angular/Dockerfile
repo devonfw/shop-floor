@@ -15,17 +15,24 @@ ENV NGINX_VERSION=1.10
 # User ID 
 ENV USER_ID 1001
 
-ENV SUMMARY="Base image for running OASP-based Angular applications"
-ENV DESCRIPTION="Base image for running OASP-based Angular applications"
+# Image metadata
+ENV NAME="devonfw-angular"
+ENV MAINTAINER="mkuehl@redhat.com"
+ENV VENDOR="Capgemini"
+ENV SUMMARY="Base image for running DevonFW-based Angular applications"
+ENV DESCRIPTION="Base image for running DevonFW-based Angular applications"
+ENV TAGS="builder,s2i,devonfw,javascript,nginx,angular"
 
-LABEL summary="$SUMMARY" \
+LABEL name="$NAME" \
+      maintainer="$MAINTAINER" \
+      vendor="$VENDOR" \
+      version="$VERSION" \
+      release="$RELEASE" \
+      summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="DESCRIPTION" \
-      io.k8s.display-name="oasp-angular" \
-      io.openshift.tags="builder,s2i,oasp,javascript,nginx,angular" \
-      name="oasp/s2i-oasp-angular" \
-      version="$VERSION" \
-      release="$RELEASE"
+      io.k8s.display-name="$NAME" \
+      io.openshift.tags="$TAGS"
 
 ENV STI_SCRIPTS_PATH=/usr/local/sti
 ENV NGINX_CONFIGURATION_PATH=/opt/app-root/etc/nginx.d

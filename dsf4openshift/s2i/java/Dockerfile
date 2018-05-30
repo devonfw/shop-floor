@@ -28,7 +28,7 @@ ENV PATH=/opt/maven/bin/:$PATH
 ENV APP_ROOT=/opt/app-root
 
 # User ID 
-ENV USER_ID 10001
+ENV USER_ID 1001
 
 ### Atomic/OpenShift Labels - https://github.com/projectatomic/ContainerApplicationGenericLabels
 LABEL name="$NAME" \
