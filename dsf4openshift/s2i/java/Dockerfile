@@ -15,15 +15,18 @@ ENV USER_ID 1001
 ENV JAVA_VERSION 1.8.0
 ENV MAVEN_VERSION 3.5.3
 
-ENV SUMMARY="Base image for running OASP-based java applications"
-ENV DESCRIPTION="Base image for running OASP-based java applications"
+ENV MAVEN_HOME /usr/local/maven
+ENV PATH=/opt/maven/bin/:$PATH
+
+ENV SUMMARY="Base image for running DevonFW-based java applications"
+ENV DESCRIPTION="Base image for running DevonFW-based java applications"
 
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="DESCRIPTION" \
-      io.k8s.display-name="oasp-java" \
-      io.openshift.tags="builder,s2i,oasp,java" \
-      name="oasp/s2i-oasp-java" \
+      io.k8s.display-name="devonfw-java" \
+      io.openshift.tags="builder,s2i,devonfw,java" \
+      name="dsf/s2i-devonfw-java" \
       version="$VERSION" \
       release="$RELEASE"
 
@@ -51,8 +54,6 @@ RUN (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries
     ln -sf /usr/local/maven/bin/mvn /usr/local/bin/mvn
 
 # Add a default mvn settings.xml file
-ENV MAVEN_HOME /usr/local/maven
-ENV PATH=/opt/maven/bin/:$PATH
 COPY s2i/java/contrib/settings.xml $MAVEN_HOME/conf
 RUN chmod -R a+rwX $MAVEN_HOME/conf
 
