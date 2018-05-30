@@ -27,7 +27,7 @@ if [ -d $LOCAL_SOURCE_DIR/configuration ]; then
     mv $LOCAL_SOURCE_DIR/configuration/settings.xml $HOME/.m2
   fi
 
-  # We move the rest of the configuration, if provided to the place where the app will run
+  # We move the rest of the configuration, if provided to the place where the app will run
   cp -v $LOCAL_SOURCE_DIR/configuration/* $DEPLOY_DIR
 fi
 
