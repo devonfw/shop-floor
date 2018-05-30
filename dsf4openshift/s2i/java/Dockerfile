@@ -62,7 +62,7 @@ RUN (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries
     mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven && \
     ln -sf /usr/local/maven/bin/mvn /usr/local/bin/mvn
 
-COPY s2i/java/contrib/settings.xml $MAVEN_HOME/conf
+COPY dsf4openshift/s2i/java/contrib/settings.xml $MAVEN_HOME/conf
 RUN chmod -R a+rwX $MAVEN_HOME/conf
 
 # Install S2I scripts etc.
