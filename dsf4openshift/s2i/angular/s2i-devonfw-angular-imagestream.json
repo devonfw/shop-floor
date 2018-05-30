@@ -33,14 +33,14 @@
         "source": {
           "type": "Git",
           "git": {
-            "uri": "https://github.com/oasp/s2i.git",
+            "uri": "https://github.com/devonfw/devonfw-shop-floor",
             "ref": "master"
           }
         },
         "strategy": {
           "type": "Docker",
           "dockerStrategy": {
-            "dockerfilePath": "s2i/angular/Dockerfile"
+            "dockerfilePath": "dsf4openshift/s2i/angular/Dockerfile"
           }
         },
         "output": {
