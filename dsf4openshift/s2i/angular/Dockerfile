@@ -73,6 +73,8 @@ RUN yum install -y nodejs
 # Copy the S2I scripts to $STI_SCRIPTS_PATH
 LABEL io.openshift.s2i.scripts-url=image:///usr/local/sti
 COPY ${CODE_CONTEXT}/bin/ $STI_SCRIPTS_PATH
+RUN chmod -R a+rx ${STI_SCRIPTS_PATH} && \
+    chown -R ${USER_ID}:0 ${STI_SCRIPTS_PATH}
 
 # Copy extra files to the image.
 COPY ${CODE_CONTEXT}/root/ /

@@ -14,6 +14,7 @@ Download Openshift Origin Client from [here](https://www.openshift.org/download.
 When the download it's complete, only extract it on the directory that you want, for example `/home/administrador/oc`
 
 <!-- 
+````
 wget https://github.com/openshift/origin/releases/download/v3.7.1/openshift-origin-server-v3.7.1-ab0f056-linux-64bit.tar.gz
 ```
 tar -xvzf openshift-origin-server-v3.7.1-ab0f056-linux-64bit.tar.gz
