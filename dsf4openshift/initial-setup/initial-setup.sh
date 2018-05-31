@@ -46,7 +46,7 @@ ${NC}"
 # oc cluster up --host-data-dir=/devonfw-shop-floor --host-config-dir=/origin/master-config.yaml
 # oc cluster up --host-data-dir=/dsf-openshift --use-existing-config --host-config-dir=/openshift.local.config
 echo "Login as admin"
-oc login -u system:admin
+oc login
 
 oc adm policy add-cluster-role-to-user cluster-admin system
 
