@@ -104,7 +104,12 @@ RUN mkdir -p ${NGINX_CONFIGURATION_PATH} && \
     mkdir -p ${APP_ROOT}/etc && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
-    mkdir -p /.config
+    mkdir -p /.config && \
+    chmod -R a+rwx /opt/app-root/etc && \
+    chmod -R a+rwx /var/opt/rh/rh-nginx110 && \
+    chmod -R a+rwx /usr/lib/node_modules && \
+    chmod -R a+rwX /.cache && \
+    chmod -R a+rwX /.config
 
 # Install Javascript stuff
 ENV npm_config=/tmp
