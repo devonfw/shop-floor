@@ -114,6 +114,7 @@ RUN npm install -g yarn
 # Change permissions
 RUN chown -R ${USER_ID}:0 ${APP_ROOT} && \
     chown -R ${USER_ID}:0 ${APP_ROOT}/etc && \
+    chown -R ${USER_ID}:0 ${APP_ROOT}/etc/passwd && \
     chown -R ${USER_ID}:0 /var/opt/rh/rh-nginx110 && \
     chown -R ${USER_ID}:0 /usr/lib/node_modules && \
     chown -R ${USER_ID}:0 /.cache && \
