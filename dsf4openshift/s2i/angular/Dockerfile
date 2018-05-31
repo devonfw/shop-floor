@@ -82,7 +82,7 @@ RUN chmod -R a+rx ${STI_SCRIPTS_PATH} && \
     chown -R ${USER_ID}:0 ${STI_SCRIPTS_PATH}
 
 # Copy extra files to the image.
-COPY ${CODE_CONTEXT}/angular/root/ /
+COPY ${CODE_CONTEXT}/root/ /
 
 # nginx config
 RUN sed -i -f /opt/app-root/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf
