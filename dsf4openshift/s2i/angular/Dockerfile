@@ -67,6 +67,14 @@ RUN yum install -y epel-release
 # Clean the cache (see https://access.redhat.com/articles/1320623)
 RUN rm -fr /var/cache/yum/* && yum clean all 
 
+# Install SUDO and CURL (for correct NodeJS version: 8.9.1 LTS)
+RUN yum install curl sudo -y
+RUN yum update -y
+
+# Install NodeJS 8.9.1 LTS
+RUN curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
+RUN yum install -y nodejs
+
 # Install OS packages
 RUN yum install -y yum-utils gettext hostname && \
     yum install -y centos-release-scl-rh epel-release && \
