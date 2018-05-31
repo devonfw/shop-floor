@@ -44,6 +44,9 @@ ENV STI_SCRIPTS_PATH=/usr/local/sti
 ENV NGINX_CONFIGURATION_PATH=${APP_ROOT}/etc/nginx.d
 ENV NGINX_DEFAULT_CONF_PATH=${APP_ROOT}/etc/nginx.default.d
 
+# Code context in github
+ENV CODE_CONTEXT=dsf4openshift/s2i/angular
+
 ### Atomic/OpenShift Labels - https://github.com/projectatomic/ContainerApplicationGenericLabels
 LABEL name="$NAME" \
       maintainer="$MAINTAINER" \
@@ -74,12 +77,12 @@ RUN yum install -y yum-utils gettext hostname && \
 
 # Install S2I scripts etc.
 LABEL io.openshift.s2i.scripts-url=image:///usr/local/sti
-COPY s2i/angular/bin/ $STI_SCRIPTS_PATH
+COPY ${CODE_CONTEXT}/bin/ $STI_SCRIPTS_PATH
 RUN chmod -R a+rx ${STI_SCRIPTS_PATH} && \
     chown -R ${USER_ID}:0 ${STI_SCRIPTS_PATH}
 
 # Copy extra files to the image.
-COPY s2i/angular/root/ /
+COPY ${CODE_CONTEXT}/angular/root/ /
 
 # nginx config
 RUN sed -i -f /opt/app-root/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf
