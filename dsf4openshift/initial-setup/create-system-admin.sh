@@ -42,13 +42,21 @@ echo -e "${BLUE}
                                     _ _ _
 ${NC}"
 
-# STEP 1: create an admin user for openshift
+# Create an admin user for a Blank Openshift.
 echo "Generate an admin to openshift. User is system and password is admin"
-oc login -u system -p admin
+# STEP 1: Create a new user
+# Sintax
+# oc login -u ${name} -p ${password}
+# REMEBER also to change it on "step 3" cluster-admin ${name}
+oc login -u admin -p admin
 
+# STEP 2: Log with admin credentials
 oc login -u system:admin
 
-oc adm policy add-cluster-role-to-user cluster-admin system
+# STEP 3: Give administrator privileges to the user
+# Syntax
+# oc adm policy add-cluster-role-to-user cluster-admin ${name}
+oc adm policy add-cluster-role-to-user cluster-admin admin
 
 echo -e "\nCluster Initial Setup finish.\n"
 read -n1 -r -p "Press any key to close..." key

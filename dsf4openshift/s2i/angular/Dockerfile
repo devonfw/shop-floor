@@ -99,11 +99,11 @@ COPY ${CODE_CONTEXT}/root/ /
 RUN sed -i -f ${APP_ROOT}/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf
 
 # Create file locations
-RUN mkdir -p ${NGINX_CONFIGURATION_PATH}/ && \
-    mkdir -p ${NGINX_DEFAULT_CONF_PATH}/ && \
+RUN mkdir -p ${NGINX_CONFIGURATION_PATH} && \
+    mkdir -p ${NGINX_DEFAULT_CONF_PATH} && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
-    mkdir -p /.config && \
+    mkdir -p /.config
 
 # Install Javascript stuff
 ENV npm_config=/tmp

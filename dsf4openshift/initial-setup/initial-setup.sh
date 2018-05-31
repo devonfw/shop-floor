@@ -48,8 +48,6 @@ ${NC}"
 echo "Login as admin"
 oc login
 
-oc adm policy add-cluster-role-to-user cluster-admin system
-
 # STEP 2: create the devonFW project and add the s2i base-images.
 
 ## Create project to store build base-images
