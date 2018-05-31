@@ -42,9 +42,7 @@ echo -e "${BLUE}
                                     _ _ _
 ${NC}"
 
-# STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
-# oc cluster up --host-data-dir=/devonfw-shop-floor --host-config-dir=/origin/master-config.yaml
-# oc cluster up --host-data-dir=/dsf-openshift --use-existing-config --host-config-dir=/openshift.local.config
+# STEP 1: create an admin user for openshift
 echo "Generate an admin to openshift. User is system and password is admin"
 oc login -u system -p admin
 
