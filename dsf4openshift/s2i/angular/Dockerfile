@@ -101,7 +101,7 @@ RUN sed -i -f ${APP_ROOT}/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf
 # Create file locations
 RUN mkdir -p ${NGINX_CONFIGURATION_PATH} && \
     mkdir -p ${NGINX_DEFAULT_CONF_PATH} && \
-    mkdir -p ${APP_ROOT}/etc/passwd && \
+    mkdir -p ${APP_ROOT}/etc && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
     mkdir -p /.config
@@ -115,7 +115,6 @@ RUN npm install -g yarn
 # Change permissions
 RUN chown -R ${USER_ID}:0 ${APP_ROOT} && \
     chown -R ${USER_ID}:0 ${APP_ROOT}/etc && \
-    chown -R ${USER_ID}:0 ${APP_ROOT}/etc/passwd && \
     chown -R ${USER_ID}:0 /var/opt/rh/rh-nginx110 && \
     chown -R ${USER_ID}:0 /usr/lib/node_modules && \
     chown -R ${USER_ID}:0 /.cache && \
