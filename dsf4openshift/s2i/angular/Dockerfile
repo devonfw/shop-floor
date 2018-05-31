@@ -42,8 +42,8 @@ ENV TAGS="builder,s2i,devonfw,javascript,nginx,angular"
 # Locations, $PATH etc.
 ENV STI_SCRIPTS_PATH=/usr/local/sti
 ENV APP_ROOT=/opt/app-root
-ENV NGINX_CONFIGURATION_PATH=${APP_ROOT}/etc/nginx.d
-ENV NGINX_DEFAULT_CONF_PATH=${APP_ROOT}/etc/nginx.default.d
+ENV NGINX_CONFIGURATION_PATH=${APP_ROOT}/etc/nginx.d/
+ENV NGINX_DEFAULT_CONF_PATH=${APP_ROOT}/etc/nginx.default.d/
 
 # Code context in github
 ENV CODE_CONTEXT=dsf4openshift/s2i/angular
@@ -101,6 +101,7 @@ RUN sed -i -f ${APP_ROOT}/nginxconf.sed /etc/opt/rh/rh-nginx110/nginx/nginx.conf
 # Create file locations
 RUN mkdir -p ${NGINX_CONFIGURATION_PATH} && \
     mkdir -p ${NGINX_DEFAULT_CONF_PATH} && \
+    mkdir -p ${APP_ROOT}/etc/passwd && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
     mkdir -p /.config
