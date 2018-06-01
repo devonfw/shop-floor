@@ -105,7 +105,7 @@ RUN mkdir -p ${NGINX_CONFIGURATION_PATH} && \
     mkdir -p /usr/lib/node_modules && \
     mkdir -p /.cache && \
     mkdir -p /.config && \
-    chmod -R a+rwx /opt/app-root/etc && \
+    chmod -R a+rwx ${APP_ROOT}/etc && \
     chmod -R a+rwx /var/opt/rh/rh-nginx110 && \
     chmod -R a+rwx /usr/lib/node_modules && \
     chmod -R a+rwX /.cache && \
@@ -137,5 +137,5 @@ ENV BASH_ENV=${APP_ROOT}/etc/scl_enable \
 USER ${USER_ID}
 
 # Set the default CMD for the image
-# WORKDIR ${APP_ROOT}
+WORKDIR ${APP_ROOT}
 CMD $STI_SCRIPTS_PATH/usage

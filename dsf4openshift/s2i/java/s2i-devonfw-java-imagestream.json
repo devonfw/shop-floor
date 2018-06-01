@@ -33,7 +33,7 @@
         "source": {
           "type": "Git",
           "git": {
-            "uri": "https://github.com/devonfw/devonfw-shop-floor",
+            "uri": "https://github.com/Jorge-Dacal/devonfw-shop-floor",
             "ref": "master"
           }
         },
