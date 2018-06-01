@@ -14,15 +14,12 @@
 #    limitations under the License.
 ####################################################################################
 
-# 1. Build
-FROM maven:3.5-jdk-8-alpine AS build
-WORKDIR /app
-COPY path/to/project/folder/. /app
-RUN ls -l
-RUN mvn install
+FROM nginx:latest
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    apache2-utils \
+    && rm -rf /var/lib/apt/lists/*
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
 
-# 2. Deploy
-FROM tomcat:latest
-WORKDIR /app
-COPY --from=build /app/server/target/artifact.war /usr/local/tomcat/webapps/
-EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
