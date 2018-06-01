@@ -133,6 +133,8 @@ ENV BASH_ENV=${APP_ROOT}/etc/scl_enable \
     ENV=${APP_ROOT}/etc/scl_enable \
     PROMPT_COMMAND=". ${APP_ROOT}/etc/scl_enable"
 
+COPY ${NGINX_CONFIGURATION_PATH} /etc/opt/rh/rh-nginx110/nginx/conf.d/
+
 # The default user in the centos image
 USER ${USER_ID}
 
