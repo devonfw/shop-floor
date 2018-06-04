@@ -4,6 +4,8 @@ This are the s2i souce and templates to build an s2i images. It provides OpenShi
 
 This work is totally based on the implementation of  [Michael Kuehl](https://github.com/Mickuehl) from RedHat for Oasp s2i.
 
+All this information is used as a part of the [initial setup](./../initial-setup) for openshift.
+
 <!--
 ## Overview
 
@@ -32,8 +34,8 @@ First, create a dedicated `devonfw` project as admin.
 
 Now add the builder image configuration and start their build.
 
-    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
-    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
+    $ oc create -f oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
+    oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
     oc start-build s2i-devonfw-java --namespace=devonfw
     oc start-build s2i-devonfw-angular --namespace=devonfw
     
@@ -50,18 +52,12 @@ Now, it's time to create devonfw templates to use this s2i and add it to the bro
 
 #### Build All
 
-Use script `build.sh` to automatically install and build all image streams. The script also creates templates devonfw-angular and devonfw-java inside the project 'openshift' to be used by everyone.
+Use [this](https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/initial-setup.sh) script to automatically install and build all image streams. The script also creates templates devonfw-angular and devonfw-java inside the project 'openshift' to be used by everyone.
 
 1. Open a bash shell as Administrator
 2. Execute shell file: 
 
-`$ /PATH/TO/BUILD/FILE/build.sh`
-
-### Further documentation
-
-* The '[My Thai Star](templates/mythaistar)' reference application templates
-* [Source-2-Image](https://github.com/openshift/source-to-image)
-* [Open Application Standard Platform](https://github.com/oasp)
+`$ /PATH/TO/BUILD/FILE/initial-setup.sh`
 
 ### Links & References
 
@@ -69,4 +65,4 @@ This is a list of useful articels etc I found while creating the templates.
 
 * [Template Icons](https://github.com/openshift/openshift-docs/issues/1329)
 * [Red Hat Cool Store Microservice Demo](https://github.com/jbossdemocentral/coolstore-microservice)
-* [Openshift Web Console Customization](https://docs.openshift.com/container-platform/3.5/install_config/web_console_customization.html)
+* [Openshift Web Console Customization](https://docs.openshift.com/container-platform/latest/install_config/web_console_customization.html)
