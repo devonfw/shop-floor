@@ -1,18 +1,21 @@
 # Deployment of Devonfw projects
 
-This section of the **Devonfw Shop Floor** offers a "first approach" regarding the deployment of a project composed by 2 different parts (an **Angular** client-side and a **Java** server-side) using **Docker** and **Docker Compose**. More specifically, the project is [**My Thai Star**](http://github.com/oasp/my-thai-star.git), the _blue print_ for Devonfw projects, which is being constantly updated to latest versions.
+This section of the **Devonfw Shop Floor** offers a "first approach" regarding the deployment of a project composed by 2 different parts (an **Angular** client-side and a **Java** server-side) using **Docker** and **Docker Compose**. Moreover, the approach includes the usage of a **reverse-proxy** to route the traffic between client and server in this way:
 
-The project's structure will be as follows:
+![](https://user-images.githubusercontent.com/20857839/36028242-8998f41c-0d9e-11e8-93b3-6bfe50152bf8.png)
 
 ````
 - my-thai-star/
     + angular/
         + (...)
-        + default.conf
         - Dockerfile
+        + nginx.conf
     + java/
-        + mtsj*
         - Dockerfile
+        + mtsj*
+    + reverse-proxy/
+        - Dockerfile
+        - nginx.conf
     + (...)
     - docker-compose.yml
 ````
