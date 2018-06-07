@@ -1,5 +1,9 @@
 # Devonfw CICD Environment
 
+## Architecture overview
+
+![](../../readme/devonfw-shop-floor-docker-arch.png)
+
 ## Install Devonfw Shop Floor 4 Docker
 
 There is an installation script to do so, so the complete installation should be completed by running it. Make sure this script has execution permissions in the Docker Host:
@@ -24,7 +28,3 @@ As well as for the installation, if we want to remove everything concerning **De
 
 Docker compose file using syntax 1.x
 Simply go to the directory `cd v1/` and run `docker-compose up -d` from there.
-
-## Architecture overview
-
-![](../../readme/devonfw-shop-floor-docker-arch.png)
