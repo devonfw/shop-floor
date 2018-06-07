@@ -16,7 +16,7 @@ This script, besides the container "installation" itself, will also adapt the `d
 As well as for the installation, if we want to remove everything concerning **Devonfw Shop Floor 4 Docker** from our Docker Host, we'll run this script:
 
 ```
-# chmod +x dsf4docker-uinstall.sh
+# chmod +x dsf4docker-uninstall.sh
 # ./dsf4docker-uninstall.sh
 ```
 
