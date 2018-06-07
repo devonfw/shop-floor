@@ -20,7 +20,7 @@ This script, besides the container "installation" itself, will also adapt the `d
 As well as for the installation, if we want to remove everything concerning **Devonfw Shop Floor 4 Docker** from our Docker Host, we'll run this script:
 
 ```
-# chmod +x dsf4docker-uinstall.sh
+# chmod +x dsf4docker-uninstall.sh
 # ./dsf4docker-uninstall.sh
 ```
 
@@ -28,3 +28,10 @@ As well as for the installation, if we want to remove everything concerning **De
 
 Docker compose file using syntax 1.x
 Simply go to the directory `cd v1/` and run `docker-compose up -d` from there.
+<<<<<<< HEAD
+=======
+
+## Architecture overview
+
+![](../../readme/devonfw-shop-floor-docker-arch.png)
+>>>>>>> d7a2b6010a2ede9b5872402f063df2d7be20d3c9
