@@ -1,7 +1,7 @@
 # devonfw-shop-floor 4 Docker
 
 This section of the **devonfw shop floor** is composed by 2 strategies integrating **Docker with Devonfw**
-## Devonfw CICD Environment
+## docker-devonfw-cicd-environment
 
 This strategy aims to provide within "no-time" a complete environment of Continuous Integration and Continuous Delivery. Using Docker, all these services could be up and running after some simple steps:
 - Reverse-proxy (access to the whole environment)
@@ -17,7 +17,7 @@ This strategy aims to provide within "no-time" a complete environment of Continu
 
 As the installation will be perpetrated by using Docker, just the `docker-compose up -d` command should be executed at the directory level of the `docker-compose.yml` file.
 
-## Devonfw Docker Deployment
+## docker-devonfw-deployment
 
 This strategy will help configuring Devonfw applications to be run with Docker, answering some questions like _do I have to create Dockerfiles?_, _where to put them in my project?_, _how many ports are going to be needed for the app?_ and so on.
 
