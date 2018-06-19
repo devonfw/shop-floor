@@ -1,0 +1,5 @@
+Thanks for suggesting about contributing to DevonFW Shop Floor. We are looking forward to your contibutions.
+
+Please find help on our contibution howtos for contibutions to the https://github.com/devonfw/devon-guide/wiki/Contributing-Wiki[wiki], contributions to the https://github.com/devonfw/devon-guide/wiki/Contributing-Code[source code], check the guide on how to work with https://github.com/devonfw/devon-guide/wiki/Contributing-Git-Fork-Guide[git forks], and check the workflow how to work with https://github.com/devonfw/devon-guide/wiki/devon-guide-working-with-git-and-github#devon-and-oasp4j-workflow-for-git[pull requests].
+
+Please make sure, that you are following the https://github.com/devonfw/devon-guide/wiki/Contributing-Development-Guidelines[contribution guidelines] and follow and agree our https://github.com/devonfw/devon-guide/wiki/Contributing-Code-of-Conduct[code of conduct].
