@@ -13,9 +13,9 @@ DevonFw Openshift Origin use custom icons, and we need to add it to openshift. M
 
 This script do as follows:
 1. Create a project devonfw
-2. Build inside devonfw a s2i-devonfw-java and s2i-devonfw-angular images from the template located in [s2i](./../s2i) section.
+2. Build inside devonfw a s2i-devonfw-java and s2i-devonfw-angular images from the template located in [s2i](./../../openshift-devonfw-deployment/s2i) section.
 3. Setup the devonfw project as "image-puller" to let their imagenes be used in other projects in the same cluster.
-4. Add to namespace openshift a devonfw-java and a devonfw-angular templates located in [templates](./../templates) section. This templates are added in the openshift namespace to be used by everyone for build a devonfw application.
+4. Add to namespace openshift a devonfw-java and a devonfw-angular templates located in [templates](./../../openshift-devonfw-deployment/templates) section. This templates are added in the openshift namespace to be used by everyone for build a devonfw application.
 
 ## Known issues
 

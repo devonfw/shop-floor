@@ -1,4 +1,4 @@
-# Builder Image for OASP4J
+# Builder Image for DevonFW
 
 TBD
 
@@ -6,7 +6,7 @@ TBD
 
 The template declare all the necessary things to build an image to be used by devonfw-java template and it uses this Dockerfile
 
-#### Environment variables
+### Environment variables
 
 Application developers can use the following environment variables to configure the runtime behavior of the build process:
 
@@ -15,7 +15,7 @@ NAME        | Description
 APP_OPTIONS | Application options. These options will be passed to the Spring Boot command line
 ARTIFACT_DIR | The location of the deployable artifacts, rel. to APP_OPTIONS
 
-#### How to use
+### How to use
 
-Read the next: [Deploy the Source-2-Image builder images](https://github.com/oasp/s2i#deploy-the-source-2-image-builder-images).
+Read the next: [Deploy the Source-2-Image builder images](./../s2i#deploy-the-source-2-image-builder-images).
 

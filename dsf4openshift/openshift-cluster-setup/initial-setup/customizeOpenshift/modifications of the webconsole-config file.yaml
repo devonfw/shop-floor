@@ -14,12 +14,11 @@
 #  *  limitations under the License.
 #  ******************************************************************************/
 
-assetConfig:
-  extensionScripts:
-  - /var/lib/origin/openshift.local.devonfw/scripts/catalog-categories.js
-  extensionStylesheets:
-  - /var/lib/origin/openshift.local.devonfw/stylesheet/icons.css
+webconsole-config.yaml:
+	[...]
   extensions:
-  - name: images
-    sourceDirectory: /var/lib/origin/openshift.local.devonfw/images
-    
+    scriptURLs:
+      - https://cdn.rawgit.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/scripts/catalog-categories.js
+    stylesheetURLs:
+	   - https://cdn.rawgit.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/stylesheet/icons.css
+  [...]

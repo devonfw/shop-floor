@@ -47,7 +47,7 @@ ENV PATH=/opt/maven/bin/:$PATH
 ENV APP_ROOT=/opt/app-root
 
 # Code context in github
-ENV CODE_CONTEXT=dsf4openshift/s2i/java
+ENV CODE_CONTEXT=dsf4openshift/openshift-devonfw-deployment/s2i/java
 
 # User ID 
 ENV USER_ID 1001

@@ -4,7 +4,7 @@ This are the DevonFW templates to build devonfw apps for Openshift using the s2i
 
 - Inside the `example-mythaistar` we have an example to deploy My Thai Star application using DevonFW templates.
 
-All this information is used as a part of the [initial setup](./../initial-setup) for openshift.
+All this information is used as a part of the [initial setup](./../../openshift-cluster-setup/initial-setup) for openshift.
 
 ## How to use
 
@@ -18,7 +18,7 @@ Remember that this templates need a build image from s2i-devonfw-angular and s2i
 ##### Customize Openshift
 
 Remeber that this templates also have a custom icons, and to use it, we must modify the master-config.yml inside openshift. More information:
-- [Customize DevonFW](./../initial-setup/customizeOpenshift) for Openshift Origin.
+- [Customize DevonFW](./../../openshift-cluster-setup/initial-setup/customizeOpenshift) for Openshift Origin.
 
 #### Deploy DevonFW templates
 
