@@ -17,5 +17,5 @@ ARTIFACT_DIR | The location of the deployable artifacts, rel. to APP_OPTIONS
 
 ### How to use
 
-Read the next: [Deploy the Source-2-Image builder images](./../s2i#deploy-the-source-2-image-builder-images).
+Read the next: [Deploy the Source-2-Image builder images](./../#deploy-the-source-2-image-builder-images).
 

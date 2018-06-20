@@ -8,4 +8,4 @@ The template declare all the necessary things to build an image to be used by de
 
 ### How to use
 
-Read the next: [Deploy the Source-2-Image builder images](./../s2i#deploy-the-source-2-image-builder-images).
+Read the next: [Deploy the Source-2-Image builder images](./../#deploy-the-source-2-image-builder-images).

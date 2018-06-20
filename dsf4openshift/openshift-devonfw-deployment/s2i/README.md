@@ -35,13 +35,13 @@ First, create a dedicated `devonfw` project as admin.
 Now add the builder image configuration and start their build.
 
     $ oc create -f oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
-    oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
-    oc start-build s2i-devonfw-java --namespace=devonfw
-    oc start-build s2i-devonfw-angular --namespace=devonfw
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
+    $ oc start-build s2i-devonfw-java --namespace=devonfw
+    $ oc start-build s2i-devonfw-angular --namespace=devonfw
     
 Make sure other projects can access the builder images:
 
-    oc policy add-role-to-group system:image-puller system:authenticated --namespace=devonfw
+    $ oc policy add-role-to-group system:image-puller system:authenticated --namespace=devonfw
 
 That's all !
 
