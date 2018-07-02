@@ -11,15 +11,15 @@ EXPOSE 8080
 # Installed components
 # ENV JAVA_VERSION 1.8.0
 
-ENV SUMMARY="Base image for running OASP-based java applications"
-ENV DESCRIPTION="Base image for running OASP-based java applications"
+ENV SUMMARY="Base image for running DevonFW-based java applications"
+ENV DESCRIPTION="Base image for running DevonFW-based java applications"
 
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="DESCRIPTION" \
-      io.k8s.display-name="oasp-java" \
-      io.openshift.tags="builder,s2i,oasp,java" \
-      name="oasp/s2i-oasp-java" \
+      io.k8s.display-name="devonfw-java" \
+      io.openshift.tags="builder,s2i,devonfw,java" \
+      name="devonfw/s2i-devonfw-java" \
       version="$VERSION" \
       release="$RELEASE"
 

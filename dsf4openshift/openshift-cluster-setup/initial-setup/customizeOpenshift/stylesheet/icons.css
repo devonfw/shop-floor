@@ -15,33 +15,33 @@
  ******************************************************************************/
 
 #header-logo {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-openshift.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw-openshift.png");
   width: 230px;
   height: 40px;
 }
 
 .devonfw-logo-language {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-languagesIcon.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw-languagesIcon.png");
   width: 110px;
   height: 36px;
 }
 
 .devonfw-logo {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw.png");
   width: 50px;
   height: 50px;
 }
 
 .devonfw-angular-logo {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-angular.png");
-  content: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-angular.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw-angular.png");
+  content: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw-angular.png");
   width: 50px;
   height: 50px;
 }
 
 .devonfw-java-logo {
-  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-java.png");
-  content: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/customizeOpenshift/images/devonfw-java.png");
+  background-image: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw-java.png");
+  content: url("https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/images/devonfw-java.png");
   width: 50px;
   height: 50px;
 }

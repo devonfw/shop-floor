@@ -4,7 +4,7 @@ This are the s2i souce and templates to build an s2i images. It provides OpenShi
 
 This work is totally based on the implementation of  [Michael Kuehl](https://github.com/Mickuehl) from RedHat for Oasp s2i.
 
-All this information is used as a part of the [initial setup](./../initial-setup) for openshift.
+All this information is used as a part of the [initial setup](./../../openshift-cluster-setup/initial-setup) for openshift.
 
 <!--
 ## Overview
@@ -20,7 +20,7 @@ In order to get started, additional templates to deploy the [OASP 'My Thai Star'
 -->
 ## Previous setup
 
-In order to build all of this, it will be necessary, first, to have a running OpenShift cluster. How to install it [here](https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/install).
+In order to build all of this, it will be necessary, first, to have a running OpenShift cluster. How to install it [here](./../../openshift-cluster-setup/install).
 
 ## Usage
 
@@ -34,25 +34,25 @@ First, create a dedicated `devonfw` project as admin.
 
 Now add the builder image configuration and start their build.
 
-    $ oc create -f oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
-    oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
-    oc start-build s2i-devonfw-java --namespace=devonfw
-    oc start-build s2i-devonfw-angular --namespace=devonfw
+    $ oc create -f oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
+    $ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
+    $ oc start-build s2i-devonfw-java --namespace=devonfw
+    $ oc start-build s2i-devonfw-angular --namespace=devonfw
     
 Make sure other projects can access the builder images:
 
-    oc policy add-role-to-group system:image-puller system:authenticated --namespace=devonfw
+    $ oc policy add-role-to-group system:image-puller system:authenticated --namespace=devonfw
 
 That's all !
 
 #### Deploy DevonFW templates
 
 Now, it's time to create devonfw templates to use this s2i and add it to the browse catalog. More information:
-- [DevonFW templates](https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/templates).
+- [DevonFW templates](./../templates).
 
 #### Build All
 
-Use [this](https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/initial-setup/initial-setup.sh) script to automatically install and build all image streams. The script also creates templates devonfw-angular and devonfw-java inside the project 'openshift' to be used by everyone.
+Use [this](https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/initial-setup.sh) script to automatically install and build all image streams. The script also creates templates devonfw-angular and devonfw-java inside the project 'openshift' to be used by everyone.
 
 1. Open a bash shell as Administrator
 2. Execute shell file: 

@@ -46,7 +46,7 @@ ENV NGINX_CONFIGURATION_PATH=${APP_ROOT}/etc/nginx.d/
 ENV NGINX_DEFAULT_CONF_PATH=${APP_ROOT}/etc/nginx.default.d/
 
 # Code context in github
-ENV CODE_CONTEXT=dsf4openshift/s2i/angular
+ENV CODE_CONTEXT=dsf4openshift/openshift-devonfw-deployment/s2i/angular
 
 ### Atomic/OpenShift Labels - https://github.com/projectatomic/ContainerApplicationGenericLabels
 LABEL name="$NAME" \

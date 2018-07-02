@@ -40,7 +40,7 @@
         "strategy": {
           "type": "Docker",
           "dockerStrategy": {
-            "dockerfilePath": "dsf4openshift/s2i/java/Dockerfile"
+            "dockerfilePath": "dsf4openshift/openshift-devonfw-deployment/s2i/java/Dockerfile"
           }
         },
         "output": {
@@ -63,10 +63,11 @@
           {
             "name": "latest",
             "annotations": {
-              "description": "The Open Application Standard Platform for Java S2I image",
+              "description": "The DevonFW for Java S2I image",
               "iconClass": "icon-java",
-              "tags": "builder,java,maven,springboot,oasp,microservices,fatjar",
-              "supports": "java:8,maven:3,oasp:2.4",
+              "tags": "builder,java,maven,springboot,devonfw,microservices,fatjar",
+              "supports": "java:8,maven:3,devonfw:2.4",
+              "sampleRepo": "https://github.com/devonfw/devonfw-shop-floor/tree/develop/dsf4openshift/openshift-devonfw-deployment/s2i.git",
               "version": "1.0"
             }
           }
