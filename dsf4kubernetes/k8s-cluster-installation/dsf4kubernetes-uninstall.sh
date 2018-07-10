@@ -60,5 +60,8 @@ echo -e "\nDeleting docker images..."
 
 docker rmi -f $(docker images | grep -E 'gcr|quay.io|docker.io' | awk '{print $3}')
 
+sudo sed -i --follow-symlinks 's/SELINUX=disabled/SELINUX=enforcing/g' /etc/sysconfig/selinux
+setenforce 1
+
 echo -e "\nUninstall process finished"
 read -n1 -r -p "Press any key to close..." key

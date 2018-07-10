@@ -34,6 +34,7 @@ echo -e "
 # Disable SeLinux
 setenforce 0
 sudo sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+sudo sed -i --follow-symlinks 's/SELINUX=permissive/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 # Disable Swap
 swapoff -a
