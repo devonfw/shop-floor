@@ -38,7 +38,8 @@ sudo sed -i --follow-symlinks 's/SELINUX=permissive/SELINUX=disabled/g' /etc/sys
 
 # Disable Swap
 swapoff -a
-sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sed -i '/ swap / s/^[^#]\(.*\)$/#\/\1/g' /etc/fstab
+
 
 # Check Docker
 echo -e "\nChecking Docker...\n"

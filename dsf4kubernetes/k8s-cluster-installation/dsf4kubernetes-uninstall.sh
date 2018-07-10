@@ -60,6 +60,9 @@ echo -e "\nDeleting docker images..."
 
 docker rmi -f $(docker images | grep -E 'gcr|quay.io|docker.io' | awk '{print $3}')
 
+swapon -a
+sed -i '/ swap / s/^#\(.*\)$/\1/g' /etc/fstab
+
 sudo sed -i --follow-symlinks 's/SELINUX=disabled/SELINUX=enforcing/g' /etc/sysconfig/selinux
 setenforce 1
 
