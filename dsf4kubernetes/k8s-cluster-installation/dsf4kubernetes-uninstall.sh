@@ -28,10 +28,11 @@ echo -e "
     Version 2.0
 "
 
-set -e
-
 # Kill kubectl process
 kill -9 $(lsof -i tcp:443 | grep kubectl | cut -d " " -f 4)
+
+# to stop the script if something fail.
+set -e
 
 # Uninstall
 kubeadm reset
@@ -60,11 +61,43 @@ echo -e "\nDeleting docker images..."
 
 docker rmi -f $(docker images | grep -E 'gcr|quay.io|docker.io' | awk '{print $3}')
 
-swapon -a
 sed -i '/ swap / s/^#\(.*\)$/\1/g' /etc/fstab
+swapon -a
 
 sudo sed -i --follow-symlinks 's/SELINUX=disabled/SELINUX=enforcing/g' /etc/sysconfig/selinux
-setenforce 1
 
-echo -e "\nUninstall process finished"
+echo -e "\nTo complete the uninstall process you must reboot your machine."
+
+echo -e "\nTo complete the uninstall process you must reboot your machine."
+
+for i in `seq 1 3`;
+do
+    read -p "Do you want to reboot now? [y/n]: " response
+    case $response in
+        [Yy]* ) sudo shutdown -r now; break;;
+        [Nn]* ) exit;;
+    esac
+    case $i in
+        "1" ) echo "Incorrect option. Please answer yes or not.";;
+        "2" ) echo "You failed to choose the option again. Are you kidding?";;
+        "3" ) echo -e "3 failed options. This machine needs to be rebooted. You have to do it yourself. We cannot solve all your problems for you. Hasta la vista baby!\n"
+              printf "
+                                     ______
+                                   <((((((\\\\\\\\\\ 
+                                   /      . }\ 
+                                   ;--..--._|}
+                (\                 '--/\--'  )
+                 \\\\\\                | '-'  :'|
+                  \\\\\\               . -==- .-|
+                   \\\\\\               \.__.'   \--._
+                   [\\\\\\          __.--|       //  _/'--.
+                   \ \\\\\\       .'-._ ('-----'/ __/      \ 
+                    \ \\\\\\     /   __>|      | '--.       |
+                     \ \\\\\\   |   \   |     /    /       /
+                      \ '\ /     \  |     |  _/       /
+                       \  \       \ |     | /        /
+                        \  \      \        /         \n\n";;
+    esac
+done
+
 read -n1 -r -p "Press any key to close..." key

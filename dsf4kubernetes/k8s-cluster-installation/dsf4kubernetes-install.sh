@@ -70,6 +70,8 @@ fi
 
 # Installing kubeadm, kubelet and kubectl
 
+echo -e "\nInstalling kubeadm, kubelet and kubectl...\n"
+
 sudo cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
