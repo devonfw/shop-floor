@@ -34,6 +34,11 @@ Create file ```/etc/docker/daemon.json``` with the next content:
     "insecure-registries" : [ "172.30.0.0/16" ]
 }
 ```
+After editing the config, reload systemd and restart the Docker daemon.
+```
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+```
 ### 2.2. Download docker images for openshift
 ```
 $ oc cluster up
