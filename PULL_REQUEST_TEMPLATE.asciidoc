@@ -1,5 +1,5 @@
-Issue Number
+**Issue Number:**
 
-Implementation description
+**Implementation description**
 
 @devonfw/devonfw-shop-floor

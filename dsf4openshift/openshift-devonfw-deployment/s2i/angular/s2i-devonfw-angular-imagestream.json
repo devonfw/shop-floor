@@ -40,7 +40,7 @@
         "strategy": {
           "type": "Docker",
           "dockerStrategy": {
-            "dockerfilePath": "dsf4openshift/s2i/angular/Dockerfile"
+            "dockerfilePath": "dsf4openshift/openshift-devonfw-deployment/s2i/angular/Dockerfile"
           }
         },
         "output": {
@@ -63,11 +63,11 @@
           {
             "name": "latest",
             "annotations": {
-              "description": "The Open Application Standard Platform S2I image",
+              "description": "The DevonFW for Angular S2I image",
               "iconClass": "icon-nodejs",
-              "tags": "builder,oasp,microservices,javascript,angular",
-              "supports": "oasp:2.4",
-              "sampleRepo": "https://github.com/oasp/s2i.git",
+              "tags": "builder,devonfw,microservices,javascript,angular",
+              "supports": "devonfw:2.4",
+              "sampleRepo": "https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/openshift-devonfw-deployment/s2i.git",
               "version": "1.0"
             }
           }

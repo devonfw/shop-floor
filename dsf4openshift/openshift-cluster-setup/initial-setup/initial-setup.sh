@@ -1,20 +1,20 @@
-# /*******************************************************************************
-#  * Copyright 2015-2018 Capgemini SE.
-#  * 
-#  *  Licensed under the Apache License, Version 2.0 (the "License");
-#  *  you may not use this file except in compliance with the License.
-#  *  You may obtain a copy of the License at
-#  * 
-#  *      http://www.apache.org/licenses/LICENSE-2.0
-#  * 
-#  *  Unless required by applicable law or agreed to in writing, software
-#  *  distributed under the License is distributed on an "AS IS" BASIS,
-#  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  *  See the License for the specific language governing permissions and
-#  *  limitations under the License.
-#  ******************************************************************************/
-
 #/bin/bash
+
+############################################################################
+# Copyright 2015-2018 Capgemini SE.
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+############################################################################
 
 RED="\033[31m"
 BLUE="\033[34m"
@@ -55,8 +55,8 @@ oc new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
 ## Create base-images and add them to DevonFW project
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
 
 ## Build base-images in DevonFW project
 oc start-build s2i-devonfw-java --namespace=devonfw
@@ -75,8 +75,8 @@ oc policy add-role-to-group system:image-puller system:authenticated --namespace
 
 # STEP 4: Create DevonFW templates into openshift
 ### if this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-java-template.json --namespace=openshift
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/templates/devonfw-angular-template.json --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-java-template.json --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-angular-template.json --namespace=openshift
 
 echo -e "\nCluster Initial Setup finish.\n"
 read -n1 -r -p "Press any key to close..." key
