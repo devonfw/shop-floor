@@ -63,9 +63,10 @@ More specific info in the Wiki.
 - [How to deploy](https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4docker/devonfw-deployment) **Devonfw** projects using **docker-compose**
 
 ### OpenShift:
-- Scripts for the installation of an **OpenShift Origin v3.6** installation (once **docker** and **openshift client (oc)** are installed).
+- Scripts for the configuration of an **OpenShift Origin v3.9** installation (once **docker** and **openshift client (oc)** are installed).
 - **Devonfw templates** for **Angular** and **Java** projects, for deployment in the cluster.
 - Deployment script (alterative way of deployment, instead of using the OpenShift dashboard).
+- Delete script (alterative way of delete, instead of using the OpenShift dashboard).
 
 ### Backup:
 - Scripts to make backups of your databases in a remote machine (production-like machine).
