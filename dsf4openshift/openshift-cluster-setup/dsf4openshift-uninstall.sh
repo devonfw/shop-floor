@@ -19,47 +19,30 @@
 # Draw Logo
 
 echo -e " 
-         _      __ _  _   _  __     _                          _             
-      __| |___ / _| || | | |/ /   _| |__   ___ _ __ _ __   ___| |_ ___  ___  
-     / _\` / __| |_| || |_| ' / | | | '_ \ / _ \ '__| '_ \ / _ \ __/ _ \/ __| 
-    | (_| \__ \  _|__   _| . \ |_| | |_) |  __/ |  | | | |  __/ ||  __/\__ \ 
-     \__,_|___/_|    |_| |_|\_\__,_|_.__/ \___|_|  |_| |_|\___|\__\___||___/ 
-    
+         _      __ _  _    ___                       _     _  __ _   
+      __| |___ / _| || |  / _ \ _ __   ___ _ __  ___| |__ (_)/ _| |_ 
+     / _\` / __| |_| || |_| | | | '_ \ / _ \ '_ \/ __| '_ \| | |_| __|
+    | (_| \__ \  _|__   _| |_| | |_) |  __/ | | \__ \ | | | |  _| |_ 
+     \__,_|___/_|    |_|  \___/| .__/ \___|_| |_|___/_| |_|_|_|  \__|
+                               |_|                                   
     Version 2.0
 "
 
 # Kill kubectl process
-kill -9 $(lsof -i tcp:443 | grep kubectl | cut -d " " -f 4)
+sudo oc cluster down
 
 # to stop the script if something fail.
 set -e
 
 # Uninstall
-sudo kubeadm reset
-
-sudo yum remove -y kubectl
-
-sudo yum remove -y kubelet
 
 echo -e "\nDeleting file system resources..."
 
-sudo rm -rf /etc/kubernetes*
-sudo rm -f /etc/yum.repos.d/kubernetes*
-sudo rm -f /etc/sysctl.d/k8s.conf*
-sudo rm -f /usr/bin/kubeadm
-sudo rm -f /usr/bin/kubectl
-sudo rm -f /usr/bin/kubelet
-sudo rm -rf $HOME/.kube
-sudo rm -rf /etc/systemd/system/kubelet.service.d/
-# sudo rm -f /etc/systemd/system/multi-user.target.wants/kubelet.service
-# sudo rm -f /usr/lib/systemd/system/kubelet.service
-
-sudo systemctl stop kubepods*.slice
-sudo systemctl reset-failed kubelet
+sudo rm -rf /usr/bin/oc
 
 echo -e "\nDeleting docker images..."
 
-sudo docker rmi -f $(docker images | grep -E 'gcr|quay.io|docker.io' | awk '{print $3}')
+sudo docker rmi -f $(docker images | grep -E 'docker.io/openshift|docker.io/centos|172.30.1.1' | awk '{print $3}')
 
 sudo sed -i '/ swap / s/^#\(.*\)$/\1/g' /etc/fstab
 sudo swapon -a

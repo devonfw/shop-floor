@@ -31,19 +31,29 @@ echo -e "
 # Check for updates
 # sudo yum update -y
 
-# Disable SeLinux
-setenforce 0
-sudo sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-sudo sed -i --follow-symlinks 's/SELINUX=permissive/SELINUX=disabled/g' /etc/sysconfig/selinux
+# Put SeLinux in permissive mode (or disabled)
+case $(getenforce) in
+    "Disabled" ) echo "take care: SELINUX is disabled. Kubernetes can be runned in permissive or disabled mode.";;
+    "Permissive" ) ;;
+    * ) sudo setenforce 0;;
+esac
+
+case $(grep "^SELINUX=" /etc/sysconfig/selinux) in
+    "SELINUX=disabled" ) echo "Take care: SELINUX is disabled in /etc/sysconfig/selinux Kubernetes can be runned in permissive or disabled mode.";;
+    "SELINUX=enforcing" ) sudo sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux;;
+    "SELINUX=permissive" ) ;;
+    * ) echo "Error: Security-Enhanced Linux (SELinux) must be permissive or disabled."
+        echo "Also, configure SELINUX=permissive in the /etc/selinux/config file and reboot your machine"
+        exit 1;;
+esac
 
 # Disable Swap
-swapoff -a
-sed -i '/ swap / s/^[^#]\(.*\)$/#\/\1/g' /etc/fstab
-
+sudo swapoff -a
+sudo sed -i '/ swap / s/^[^#]\(.*\)$/#\/\1/g' /etc/fstab
 
 # Check Docker
 echo -e "\nChecking Docker...\n"
-docker version
+sudo docker version
 case "$?" in
     "127")
         echo -e "\nDocker is not installed.\nTo install kubernetes docker must be installed."
@@ -59,8 +69,7 @@ case "$?" in
         ;;
 esac
 
-docker_v=$(docker version | grep "Version:" | awk 'NR==1{print $2}')
-# if [ $docker_v == '1.13.1' ]
+sudo docker_v=$(docker version | grep "Version:" | awk 'NR==1{print $2}')
 if [ $docker_v != "1.11.2" ] && [ $docker_v != "1.12.6" ] && [ $docker_v != "1.13.1" ] && [ $docker_v != "17.03.2" ]
 then
     echo -e "\nOnly Docker versions 1.11.2, 1.12.6, 1.13.1, and 17.03.2 were validated on Kubernetes 1.8. More information here:"
@@ -119,7 +128,7 @@ kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/
 echo -e "\nInstalled versions"
 
 echo -e "\nDocker"
-docker version
+sudo docker version
 
 echo -e "\nKubectl"
 kubectl version --short
