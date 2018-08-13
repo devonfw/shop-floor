@@ -34,7 +34,7 @@
           "type": "Git",
           "git": {
             "uri": "https://github.com/devonfw/devonfw-shop-floor",
-            "ref": "master"
+            "ref": "v1.1"
           }
         },
         "strategy": {
