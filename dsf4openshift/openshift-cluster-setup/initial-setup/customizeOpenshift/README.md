@@ -34,7 +34,7 @@ webconsole-config.yaml: |
     scriptURLs:
       - https://cdn.rawgit.com/devonfw/devonfw-shop-floor/develop/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/scripts/catalog-categories.js
     stylesheetURLs:
-      - https://cdn.rawgit.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/stylesheet/icons.css
+      - https://cdn.rawgit.com/devonfw/devonfw-shop-floor/develop/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/stylesheet/icons.css
   [...]
 ```
 
