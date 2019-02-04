@@ -6,7 +6,7 @@
 
 The **Production Line** part of the devonfw-shop-floor corresponds with a guide of setting up or **prepare your PL instance** to be used by Devonfw projects.
 
-Moreover, 2 Jenkinsfile(s) are provided: one for Angular projects and another one for Java projects.
+// Moreover, 2 Jenkinsfile(s) are provided: one for Angular projects and another one for Java projects.
 
 More info in the **devonfw-shop-floor 4 Production Line** Wiki section.
 
