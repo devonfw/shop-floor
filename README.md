@@ -52,7 +52,6 @@ More specific info in the Wiki.
 ## What does **Devonfw Shop Floor** offers?
 
 ### Production Line:
-- Jenkinsfile(s) for both **Angular** and **Java**.
 - [How to configure](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-production-line-environment) your Production Line instance to run **devonfw** projects.
 
 ### Docker:
