@@ -14,29 +14,18 @@
 #    limitations under the License.
 ####################################################################################
 
-version: '2'
+FROM nginx:latest
 
-services:
-  reverse-proxy:
-    build: 'reverse-proxy/'
-    restart: always
-    container_name: 'app_reverse_proxy'
-    networks:
-      - app
-    ports:
-      - '8080:80'
-  angular:
-    build: 'angular/'
-    restart: always
-    container_name: 'app_angular'
-    networks:
-      - app
-  java:
-    build: 'java/'
-    restart: always
-    container_name: 'app_java'
-    networks:
-      - app
-networks:
-  app:
-    driver: bridge
+LABEL sumary="Reverse proxy for devonfw applications." \
+    description="" \
+    name="reverse-proxy" \
+    version="1.0.0" \
+    maintainer="Dario Rodriguez Gonzalez <dario.rodriguez-gonzalez@capgemini.com>" \
+    help="For more information visit https://github.com/sclorg/s2i-nodejs-container" \
+    usage="docker run -e FRONTEND_ENV=http://frontend:80 -e BACKEND_ENV=http://backend:8080 -p 80:80 -p 443:443 -d reverse-proxy"
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY start.sh /etc/nginx/start.sh
+RUN chmod +x /etc/nginx/start.sh
+
+ENTRYPOINT [ "bash", "/etc/nginx/start.sh" ]

@@ -15,14 +15,15 @@
 ####################################################################################
 
 # 1. Build
-FROM maven:3.5-jdk-8-alpine AS build
+FROM maven:3.6-jdk-8-alpine AS build
 WORKDIR /app
 COPY path/to/project/folder/. /app
 RUN ls -l
 RUN mvn install
 
 # 2. Deploy
-FROM tomcat:latest
+FROM java:8
 WORKDIR /app
-COPY --from=build /app/server/target/artifact.war /usr/local/tomcat/webapps/
+COPY --from=build /app/server/target/artifact-bootified.war /app/
+ENTRYPOINT ["java","-jar","/app/artifact-bootified.war"]
 EXPOSE 8080
