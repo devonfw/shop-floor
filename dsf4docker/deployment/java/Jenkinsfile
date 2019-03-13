@@ -1,0 +1,253 @@
+pipeline{
+    agent any
+
+    options {
+        buildDiscarder(logRotator(artifactDaysToKeepStr: '1', artifactNumToKeepStr: '1', daysToKeepStr: '5', numToKeepStr: '50'))
+        // Disable concurrent builds. It will wait until the pipeline finish before start a new one
+        disableConcurrentBuilds()
+        office365ConnectorWebhooks([[name: 'test', notifyAborted: true, notifyBackToNormal: true, notifyFailure: true, notifySuccess: true, notifyUnstable: true, url: 'https://test.url']])
+    }
+
+    environment {
+        // sonarQube
+        // Name of the sonarQube environment
+        sonarEnv = "SonarQube"
+
+        // Nexus 3
+        // Maven global settings configuration ID
+        globalSettingsId = 'MavenSettings'
+        // Maven tool id
+        mavenInstallation = 'Maven3'
+
+        // Docker
+        dockerFileName = 'Dockerfile'
+        dockerRegistryProtocol = 'https://'
+        dockerRegistry = 'docker-registry-devon.s2-eu.capgemini.com'
+        dockerRegistryCredentials = 'nexus-docker'
+        dockerTool = 'docker-global'
+        containerName = 'java_application'
+        networkName = 'application'
+    }
+
+    stages {
+        stage ('Setup pipeline') {
+            when {
+               anyOf {
+                   branch 'master'
+                   branch 'develop'
+                   branch 'release/*'
+                   branch 'feature/*'
+                   branch 'hotfix/*'
+               }
+            }
+            steps {
+                script {
+                    def pom = readMavenPom file: './pom.xml';
+                    version = pom.version
+
+                    if (!env.BRANCH_NAME.startsWith('release')) {
+                        sonarProjectKey = "-${env.BRANCH_NAME}"
+                    } else {
+                        dockerTag = "release"
+                        sonarProjectKey = "-release"
+                        dockerEnvironment = "_uat"
+                        
+                        if (!version.endsWith("-RC")) {
+                            version = "${version}-RC"
+                        }
+                    }
+
+                    if (env.BRANCH_NAME == 'develop') {
+                        dockerTag = "latest"
+                        repositoryName = 'maven-snapshots'
+                        dockerEnvironment = "_dev"
+
+                        if (!version.endsWith("-SNAPSHOT")) {
+                            version = "${version}-SNAPSHOT"
+                        }
+                    }
+
+                    if (env.BRANCH_NAME == 'master') {
+                        sonarProjectKey = ""
+                        dockerTag = "production"
+                        dockerEnvironment = "_prod"
+
+                        if (env.BRANCH_NAME == 'master' && (version.endsWith("-RC") || version.endsWith("-SNAPSHOT"))){
+                            version = version.replace("-RC", "")
+                            version = version.replace("-SNAPSHOT", "")
+                        }
+                    }
+
+                    pom.version = version
+                    writeMavenPom model: pom, file: 'pom.xml'
+
+                    def apiPom = readMavenPom file: 'api/pom.xml'
+                    apiPom.parent.version = version
+                    writeMavenPom model: apiPom, file: 'api/pom.xml'
+
+                    def corePom = readMavenPom file: 'core/pom.xml'
+                    corePom.parent.version = version
+                    writeMavenPom model: corePom, file: 'core/pom.xml'
+
+                    def serverPom = readMavenPom file: 'server/pom.xml'
+                    serverPom.parent.version = version
+                    writeMavenPom model: serverPom, file: 'server/pom.xml'
+                }
+            }
+        }
+
+        stage ('Fresh Dependency Installation') {
+            when {
+               anyOf {
+                   branch 'master'
+                   branch 'develop'
+                   branch 'release/*'
+                   branch 'feature/*'
+                   branch 'hotfix/*'
+               }
+            }
+            steps {
+                withMaven(globalMavenSettingsConfig: globalSettingsId, maven: mavenInstallation) {
+                    sh "mvn clean install -Dmaven.test.skip=true"
+                }
+            }
+        }
+
+        stage ('Unit Tests') {
+            when {
+               anyOf {
+                   branch 'master'
+                   branch 'develop'
+                   branch 'release/*'
+                   branch 'feature/*'
+                   branch 'hotfix/*'
+               }
+            }
+            steps {
+                withMaven(globalMavenSettingsConfig: globalSettingsId, maven: mavenInstallation) {
+                    sh "mvn clean test"
+                }
+            }
+        }
+
+        stage ('SonarQube code analysis') {
+            when {
+               anyOf {
+                   branch 'master'
+                   branch 'develop'
+                   branch 'release/*'
+                   branch 'feature/*'
+                   branch 'hotfix/*'
+               }
+            }
+            steps {
+                script {
+                    withMaven(globalMavenSettingsConfig: globalSettingsId, maven: mavenInstallation) {
+                        withSonarQubeEnv(sonarEnv) {
+                            // Change the project name (in order to simulate branches with the free version)
+                            sh "cp pom.xml pom.xml.bak"
+                            sh "cp api/pom.xml api/pom.xml.bak"
+                            sh "cp core/pom.xml core/pom.xml.bak"
+                            sh "cp server/pom.xml server/pom.xml.bak"
+
+                            def pom = readMavenPom file: './pom.xml';
+                            pom.artifactId = "${pom.artifactId}${sonarProjectKey}"
+                            writeMavenPom model: pom, file: 'pom.xml'
+
+                            def apiPom = readMavenPom file: 'api/pom.xml'
+                            apiPom.parent.artifactId = pom.artifactId
+                            apiPom.artifactId = "${pom.artifactId}-api"
+                            writeMavenPom model: apiPom, file: 'api/pom.xml'
+
+                            def corePom = readMavenPom file: 'core/pom.xml'
+                            corePom.parent.artifactId = pom.artifactId
+                            corePom.artifactId = "${pom.artifactId}-core"
+                            writeMavenPom model: corePom, file: 'core/pom.xml'
+
+                            def serverPom = readMavenPom file: 'server/pom.xml'
+                            serverPom.parent.artifactId = pom.artifactId
+                            serverPom.artifactId = "${pom.artifactId}-server"
+                            writeMavenPom model: serverPom, file: 'server/pom.xml'
+
+                            sh "mvn sonar:sonar"
+
+                            sh "mv pom.xml.bak pom.xml"
+                            sh "mv api/pom.xml.bak api/pom.xml"
+                            sh "mv core/pom.xml.bak core/pom.xml"
+                            sh "mv server/pom.xml.bak server/pom.xml"
+                        }
+                    }
+                    timeout(time: 1, unit: 'HOURS') {
+                        def qg = waitForQualityGate() 
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage ('Deliver application into Nexus') {
+            steps {
+                withMaven(globalMavenSettingsConfig: globalSettingsId, maven: mavenInstallation) {
+                    sh "mvn deploy -Dmaven.test.skip=true"
+                }
+            }
+        }
+
+        stage ('Create the Docker image') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps{
+                script {
+                    docker.withRegistry("""${dockerRegistryProtocol}${dockerRegistry}""", dockerRegistryCredentials) {
+                        def pom = readMavenPom file: 'pom.xml'
+                        sh "ls"
+                        sh "ls server"
+                        sh "ls server/target"
+                        def customImage = docker.build("${pom.artifactId}:${pom.version}", "-f ${dockerFileName} .")
+                        customImage.push()
+                        customImage.push(dockerTag);
+                    }
+                }
+            }
+        }
+
+        stage ('Deploy the new image') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps{
+                script {
+                    docker.withRegistry("""${dockerRegistryProtocol}${dockerRegistry}""", dockerRegistryCredentials) {
+                        def pom = readMavenPom file: 'pom.xml'
+                        docker.image("${pom.artifactId}:${pom.version}").pull()
+
+                        def containerId = sh returnStdout: true, script: """docker ps -aqf "name=${containerName}${dockerEnvironment}" """
+                        if (containerId?.trim()) {
+                            sh "docker rm -f ${containerId.trim()}"
+                        }
+
+                        println """docker run -d --name ${containerName}${dockerEnvironment} --network=${networkName} ${dockerRegistry}/${pom.artifactId}:${pom.version}"""
+                        sh """docker run -d --name ${containerName}${dockerEnvironment} --network=${networkName} ${dockerRegistry}/${pom.artifactId}:${pom.version}"""
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        cleanup {
+            cleanWs()
+        }
+    }
+}

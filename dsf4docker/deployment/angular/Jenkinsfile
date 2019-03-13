@@ -1,0 +1,281 @@
+pipeline{
+    agent any
+
+    options {
+        buildDiscarder(logRotator(artifactDaysToKeepStr: '1', artifactNumToKeepStr: '1', daysToKeepStr: '5', numToKeepStr: '50'))
+        // Disable concurrent builds. It will wait until the pipeline finish before start a new one
+        disableConcurrentBuilds()
+        office365ConnectorWebhooks([[name: 'test', notifyAborted: true, notifyBackToNormal: true, notifyFailure: true, notifySuccess: true, notifyUnstable: true, url: 'https://test.url']])
+    }
+
+    tools {
+        nodejs "NodeJS 10.14.0"
+    }
+
+    environment {
+        // Script for build the application. Defined at package.json
+        buildScript = 'build'
+        // Script for lint the application. Defined at package.json
+        lintScript = 'lint'
+        // Script for test the application. Defined at package.json
+        testScript = 'test:ci'
+        // SRC folder.
+        srcDir = 'src'
+        // Name of the custom tool for chrome stable
+        chrome = 'Chrome-stable'
+
+        // sonarQube
+        // Name of the sonarQube tool
+        sonarTool = 'SonarQube'
+        // Name of the sonarQube environment
+        sonarEnv = "SonarQube"
+
+        // Nexus
+        // Artifact groupId
+        groupId = 'com.devonfw.testci'
+        // Nexus repository ID
+        repositoryId = 'pl-nexus'
+        // Nexus internal URL
+        repositoryUrl = 'http://nexus3-core:8081/nexus3/repository/'
+        // Maven global settings configuration ID
+        globalSettingsId = 'MavenSettings'
+        // Maven tool id
+        mavenInstallation = 'Maven3'
+
+        // Docker
+        dockerFileName = 'Dockerfile'
+        dockerRegistryProtocol = 'https://'
+        dockerRegistry = 'docker-registry-devon.s2-eu.capgemini.com'
+        dockerRegistryCredentials = 'nexus-docker'
+        dockerTool = 'docker-global'
+        containerName = 'angular_application'
+        networkName = 'application'
+    }
+
+    stages {
+        stage ('Loading Custom Tools') {
+            when {
+               anyOf {
+                   branch 'master'
+                   branch 'develop'
+                   branch 'release/*'
+                   branch 'feature/*'
+                   branch 'hotfix/*'
+               }
+            }
+            steps {
+                tool chrome
+                tool dockerTool
+
+
+                script {
+                    if (!env.BRANCH_NAME.startsWith('release')) {
+                        sonarProjectKey = "-${env.BRANCH_NAME}"
+                    } else {
+                        dockerTag = "release"
+                        repositoryName = 'maven-releases'
+                        sonarProjectKey = "-release"
+                        dockerEnvironment = "_uat"
+                    }
+
+                    if (env.BRANCH_NAME == 'develop') {
+                        dockerTag = "latest"
+                        repositoryName = 'maven-snapshots'
+                        dockerEnvironment = "_dev"
+                    }
+
+                    if (env.BRANCH_NAME == 'master') {
+                        sonarProjectKey = ""
+                        dockerTag = "production"
+                        repositoryName = 'maven-releases'
+                        dockerEnvironment = "_prod"
+                    }
+                }
+            }
+        }
+
+        stage ('Fresh Dependency Installation') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
+                }
+            }
+            steps {
+                sh "yarn"
+            }
+        }
+
+        stage ('Code Linting') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
+                }
+            }
+            steps {
+                sh """yarn ${lintScript}"""
+            }
+        }
+
+        stage ('Execute Angular tests') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
+                }
+            }
+            steps {
+                sh """yarn ${testScript}"""
+            }
+        }
+
+        stage ('SonarQube code analysis') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
+                }
+            }
+            steps {
+                script {
+                    def scannerHome = tool sonarTool
+                    def props = readJSON file: 'package.json'
+                    withSonarQubeEnv(sonarEnv) {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.projectKey=${props.name}${sonarProjectKey} \
+                                -Dsonar.projectName=${props.name}${sonarProjectKey} \
+                                -Dsonar.projectVersion=${props.version} \
+                                -Dsonar.sources=${srcDir}
+                        """
+                    }
+                    timeout(time: 1, unit: 'HOURS') {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage ('Build Application') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps {
+                sh """yarn ${buildScript}"""
+            }
+        }
+
+        stage ('Deliver application into Nexus') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps {
+                script {
+                    def props = readJSON file: 'package.json'
+                    zip dir: 'dist/', zipFile: """${props.name}.zip"""
+                    version = props.version
+                    if (!version.endsWith("-SNAPSHOT") && env.BRANCH_NAME == 'develop') {
+                        version = "${version}-SNAPSHOT"
+                    }
+                    if (!version.endsWith("-RC") && env.BRANCH_NAME.startsWith('release')) {
+                        version = "${version}-RC"
+                    }
+
+                    if (env.BRANCH_NAME == 'master' && (version.endsWith("-RC") || version.endsWith("-SNAPSHOT"))){
+                        version = version.replace("-RC", "")
+                        version = version.replace("-SNAPSHOT", "")
+                    }
+
+                    withMaven(globalMavenSettingsConfig: globalSettingsId, maven: mavenInstallation) {
+                        sh """
+                            mvn deploy:deploy-file \
+                                -DgroupId=${groupId} \
+                                -DartifactId=${props.name} \
+                                -Dversion=${version} \
+                                -Dpackaging=zip \
+                                -Dfile=${props.name}.zip \
+                                -DrepositoryId=${repositoryId} \
+                                -Durl=${repositoryUrl}${repositoryName}
+                        """
+                    }
+                }
+            }
+        }
+
+        stage ('Create the Docker image') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps{
+                script {
+                    docker.withRegistry("""${dockerRegistryProtocol}${dockerRegistry}""", dockerRegistryCredentials) {
+                        def props = readJSON file: 'package.json'
+                        def customImage = docker.build("${props.name}:${props.version}", "-f ${dockerFileName} .")
+                        customImage.push()
+                        customImage.push(dockerTag);
+                    }
+                }
+            }
+        }
+
+        stage ('Deploy the new image') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'release/*'
+                }
+            }
+            steps{
+                script {
+                    docker.withRegistry("""${dockerRegistryProtocol}${dockerRegistry}""", dockerRegistryCredentials) {
+                        def props = readJSON file: 'package.json'
+                        docker.image("${props.name}:${props.version}").pull()
+
+                        def containerId = sh returnStdout: true, script: """docker ps -aqf "name=${containerName}${dockerEnvironment}" """
+                        if (containerId?.trim()) {
+                            sh "docker rm -f ${containerId.trim()}"
+                        }
+
+                        println """docker run -d --name ${containerName}${dockerEnvironment} --network=${networkName} ${dockerRegistry}/${props.name}:${props.version}"""
+                        sh """docker run -d --name ${containerName}${dockerEnvironment} --network=${networkName} ${dockerRegistry}/${props.name}:${props.version}"""
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        cleanup {
+            cleanWs()
+        }
+    }
+}
