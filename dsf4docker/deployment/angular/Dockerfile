@@ -17,4 +17,4 @@
 # 1. Deploy
 FROM nginx:latest
 COPY default.conf /etc/nginx/conf.d/default.conf
-COPY /app/dist/. /usr/share/nginx/html
+COPY ./dist/. /usr/share/nginx/html

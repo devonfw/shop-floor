@@ -17,13 +17,12 @@
 # 1. Build
 FROM maven:3.6-jdk-8-alpine AS build
 WORKDIR /app
-COPY path/to/project/folder/. /app
-RUN ls -l
+COPY . /app
 RUN mvn install
 
 # 2. Deploy
 FROM java:8
 WORKDIR /app
-COPY --from=build /app/server/target/artifact-bootified.war /app/
-ENTRYPOINT ["java","-jar","/app/artifact-bootified.war"]
+COPY --from=build /app/server/target/artifact-server-bootified.war /app/
+ENTRYPOINT ["java","-jar","/app/artifact-server-bootified.war"]
 EXPOSE 8080

@@ -16,6 +16,6 @@
 
 FROM java:8
 WORKDIR /app
-COPY /app/server/target/artifact-bootified.war /app/
+COPY server/target/artifact-bootified.war /app/
 ENTRYPOINT ["java","-jar","/app/artifact-bootified.war"]
 EXPOSE 8080

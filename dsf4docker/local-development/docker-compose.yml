@@ -1,12 +1,12 @@
 ####################################################################################
 #   Copyright 2015-2018 Capgemini SE.
-#   
+#
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
 #    You may obtain a copy of the License at
-#   
+#
 #        http://www.apache.org/licenses/LICENSE-2.0
-#   
+#
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the License is distributed on an "AS IS" BASIS,
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,23 +14,26 @@
 #    limitations under the License.
 ####################################################################################
 
-version: '3.0'
+version: "3.0"
 
 services:
   reverse-proxy:
-    build: 'reverse-proxy/'
+    image: "docker-registry-devon.s2-eu.capgemini.com/reverse-proxy:latest"
     restart: always
+    environment:
+      - FRONTEND_ENV=http://angular:80
+      - BACKEND_ENV=http://java:8081/mythaistar
     networks:
       - app
     ports:
-      - '8080:80'
+      - "8080:80"
   angular:
-    build: 'angular/'
+    build: "angular/"
     restart: always
     networks:
       - app
   java:
-    build: 'java/'
+    build: "java/"
     restart: always
     networks:
       - app
