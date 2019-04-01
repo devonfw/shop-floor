@@ -46,5 +46,4 @@ webconsole-config.yaml: |
 - [Openshift docs](https://docs.openshift.com/container-platform/latest/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets) about customization.
 
 ## Old versions
-
-- Customize Openshift for [version 3.7](https://docs.openshift.com/container-platform/3.9/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets).
+* Customize Openshift for [version 3.7](https://docs.openshift.com/container-platform/3.9/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets).
