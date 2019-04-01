@@ -6,8 +6,6 @@
 
 The **Production Line** part of the devonfw-shop-floor corresponds with a guide of setting up or **prepare your PL instance** to be used by Devonfw projects.
 
-Moreover, 2 Jenkinsfile(s) are provided: one for Angular projects and another one for Java projects.
-
 More info in the **devonfw-shop-floor 4 Production Line** Wiki section.
 
 ## devonfw-shop-floor 4 Docker
@@ -54,7 +52,6 @@ More specific info in the Wiki.
 ## What does **Devonfw Shop Floor** offers?
 
 ### Production Line:
-- Jenkinsfile(s) for both **Angular** and **Java**.
 - [How to configure](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-production-line-environment) your Production Line instance to run **devonfw** projects.
 
 ### Docker:
