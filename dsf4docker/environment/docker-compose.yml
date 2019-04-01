@@ -1,0 +1,180 @@
+############################################################################
+# Copyright 2015-2018 Capgemini SE.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+############################################################################
+
+version: '3'
+
+services:
+  reverse-proxy:
+    image: 'traefik'
+    restart: always
+    command: --api --docker
+    networks:
+      - devonfw-shop-floor
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - 'traefik.enable=false'
+
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - '$PWD/volumes/gitlab/etc/gilab:/etc/gitlab'
+      - '$PWD/volumes/gitlab/var/log:/var/log/gitlab'
+      - '$PWD/volumes/gitlab/var/opt:/var/opt/gitlab'
+    labels:
+      - traefik.frontend.rule=Host:gitlab.IP_ADDRESS.nip.io
+      - traefik.port=80
+
+  jenkins:
+    image: 'jenkins/jenkins'
+    restart: always
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - '$PWD/volumes/jenkins/jenkins_home:/var/jenkins_home'
+    labels:
+      - traefik.frontend.rule=Host:jenkins.IP_ADDRESS.nip.io
+      - traefik.port=8080
+  jenkins-slave1:
+    image: 'jenkins/ssh-slave'
+    networks:
+      - devonfw-shop-floor
+    command: "'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZRbx/u7ilHVZ/+l4HISNcUfrLXdqqdPxEbMtcCGET/bFtS6lREgsZmHWyfpSHw94xKWrHpcr9iKOsdHtlCDCiTAwFrp95v3JvwiiFhc9R1+hYBisxz65BIW04iY4kJhoOLDOwFtwZY2zYOi8bYYfLiMEtG3JjOiwCaF826kgIG/NTY64YZZgOdpQfPDT5GAMV3dIBFPiDOLeHiqu3fNx1Nir4sa+TBwAj5dXs8yjxCPHXf3F4xQ0Ign4Is409hAVMUexuoHDDlVKOH7ns0KjkMG8WWku6/jVKNuTWS8xCqWfmJNQHI7Tq3Rmk21MqAwhwZTz0nXqNP5lLzE3w5ZUD darrodri@LES003380'"
+    volumes:
+      - '$PWD/volumes/jenkins-slave1/jenkins_home:/home/devonfw'
+    labels:
+      - 'traefik.enable=false'
+  sonarqube:
+    image: 'sonarqube'
+    networks:
+      - devonfw-shop-floor
+    environment:
+      - sonar.jdbc.username=sonar
+      - sonar.jdbc.password=sonar123
+      - sonar.jdbc.url=jdbc:postgresql://sonarqube-db:5432/sonar
+    volumes:
+      - '$PWD/volumes/sonarqube/conf:/opt/sonarqube/conf'
+      - '$PWD/volumes/sonarqube/data:/opt/sonarqube/data'
+      - '$PWD/volumes/sonarqube/extensions:/opt/sonarqube/extensions'
+      - '$PWD/volumes/sonarqube/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins'
+    labels:
+      - traefik.frontend.rule=Host:sonarqube.IP_ADDRESS.nip.io
+      - traefik.port=9000
+  selenium-hub:
+    image: selenium/hub:3.141.59-mercury
+    networks:
+      - devonfw-shop-floor
+    labels:
+      - traefik.frontend.rule=Host:selenium.IP_ADDRESS.nip.io
+  chrome:
+    image: selenium/node-chrome:3.141.59-mercury
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    networks:
+      - devonfw-shop-floor
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+    labels:
+      - 'traefik.enable=false'
+  firefox:
+    image: selenium/node-firefox:3.141.59-mercury
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    networks:
+      - devonfw-shop-floor
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+    labels:
+      - 'traefik.enable=false'
+  sonarqube-db:
+    image: postgres
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - '$PWD/volumes/sonarqube-db/data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar123
+      - POSTGRES_DB=sonar
+      - PGDATA=/var/lib/postgresql/data
+    labels:
+      - 'traefik.enable=false'
+  nexus3:
+    image: 'sonatype/nexus3'
+    restart: always
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - '$PWD/volumes/nexus/nexus-data:/nexus-data'
+    labels:
+      - traefik.frontend.rule=Host:nexus.IP_ADDRESS.nip.io
+      - traefik.port=8081
+  portainer:
+    image: 'portainer/portainer'
+    restart: always
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - '$PWD/volumes/portainer/data:/data'
+    labels:
+      - traefik.frontend.rule=Host:portainer.IP_ADDRESS.nip.io
+      - traefik.port=9000
+  ldap:
+    image: mwaeckerlin/openldap
+    restart: always
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - '$PWD/volumes/ldap/ssl:/ssl'
+      - '$PWD/volumes/ldap/ldap:/etc/ldap'
+      - '$PWD/volumes/ldap/libldap:/var/lib/ldap'
+      - '$PWD/volumes/ldap/backups:/var/backups'
+      - '$PWD/volumes/ldap/restore:/var/restore'
+    environment:
+      - 'DOMAIN=IP_ADDRESS.nip.io'
+      - 'ORGANIZATION=Example organization'
+      - 'PASSWORD=ert456'
+    labels:
+      - 'traefik.enable=false'
+  lam:
+    image: mwaeckerlin/lam
+    restart: always
+    networks:
+      - devonfw-shop-floor
+    volumes:
+      - '$PWD/volumes/lam/config:/etc/ldap-account-manager'
+      - '$PWD/volumes/lam/data:/var/lib/ldap-account-manager'
+    labels:
+      - traefik.frontend.rule=Host:lam.IP_ADDRESS.nip.io
+      - traefik.port=80
+
+networks:
+  devonfw-shop-floor:
+    driver: bridge

@@ -9,9 +9,11 @@ $ sudo groupadd docker
 $ sudo usermod -aG docker $USER
 ```
 ### 1.2. Download Openshift Origin Client
-Download Openshift Origin Client from [here](https://www.openshift.org/download.html#oc-platforms)
+Download Openshift Origin Client v3.9.0 from [here](https://github.com/openshift/origin/releases/download/v3.9.0/openshift-origin-server-v3.9.0-191fece-linux-64bit.tar.gz)
 
 When the download it's complete, only extract it on the directory that you want, for example `/home/administrador/oc`
+
+**NOTE:** All our work is tested in version 3.9.0, but if the client does not have major changes it is probable that it works in future versions. You can download the latest Openshift Origin Client version from [here](https://www.openshift.org/download.html#oc-platforms), **but it is under your responsability**.
 
 <!-- 
 ````
@@ -50,10 +52,36 @@ To manage easier the cluster persistent, we are going to use oc cluster wrapper.
 cd /home/administrador/oc
 wget https://raw.githubusercontent.com/openshift-evangelists/oc-cluster-wrapper/master/oc-cluster
 ```
-oc-cluster up devonfw-shop-floor --public-hostname X.X.X.X
+When the download it's complete, only move it on the directory that you want, for example `/home/administrador/oc` and remember to add it to the path.
 
-### 3.1. Configure iptables
-We must create iptables rules to allow traffic from other machines.
+### 3.1 How to use Oc Cluster Wrapper
+With oc cluster wrapper we could have a different clusters with different context
+
+#### Create a new persistent cluster
+
+```
+$ oc-cluster up name_to_cluster --public-hostname X.X.X.X
+```
+for example:
+```
+$ oc-cluster up devonfw-shop-floor --public-hostname X.X.X.X
+```
+
+#### Cluster up of a persistent cluster
+```
+$ oc-cluster up devonfw-shop-floor
+```
+#### Cluster down
+```
+$ oc-cluster down
+```
+#### Use non-persistent cluster
+```
+oc cluster up --image openshift/origin --public-hostname X.X.X.X --routing-suffix apps.X.X.X.X.nip.io
+```
+
+## 4. Configure iptables
+It is probably that we must create iptables rules to allow traffic from other machines.
 
 ```diff
 - The next commands it's to let all traffic, don't do it on a real server.
@@ -67,20 +95,4 @@ We must create iptables rules to allow traffic from other machines.
 - $ iptables -P INPUT ACCEPT
 - $ iptables -P OUTPUT ACCEPT
 - $ iptables -P FORWARD ACCEPT
-```
-
-
-# How to use Oc Cluster Wrapper
-With oc cluster wrapper we could have a different clusters with different context
-## Cluster up
-```
-$ oc-cluster up devonfw-shop-floor --public-hostname X.X.X.X
-```
-## Cluster down
-```
-$ oc-cluster down
-```
-## Use non-persistent cluster
-```
-oc cluster up --image openshift/origin --public-hostname X.X.X.X --routing-suffix apps.X.X.X.X.nip.io
 ```

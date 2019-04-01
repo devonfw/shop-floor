@@ -1,0 +1,43 @@
+== Reverse Proxy
+
+This is a general purpose reverse proxy for devonfw projects. The architecture is the same as we used in link:https://github.com/devonfw/my-thai-star[MTS project]: image:https://user-images.githubusercontent.com/20857839/36028242-8998f41c-0d9e-11e8-93b3-6bfe50152bf8.png[]
+
+All incoming request staring with `/api` are sent to the backend container. The rest of request are sent to the frontend container. In that approach, you need to modify the nginx.conf in order to do that and build a new containter.
+
+With this new approach, you don't need to build a new reverse proxy for every project. You only need to use the `docker-registry-devon.s2-eu.capgemini.com/reverse-proxy` image and pass some environment variables.
+
+Those environment variables are:
+
+- FRONTEND_ENV: The url of the frontend container. For example, http://angular:80 for the link:https://github.com/devonfw/my-thai-star[MTS project].
+- BACKEND_ENV: The url of the backend container. For example, http://java:8081/mythaistar for the link:https://github.com/devonfw/my-thai-star[MTS project].
+
+=== Example of usage:
+
+==== docker-compose.yml
+
+Example of docker-compose.yml to run the reverse-proxy:
+
+.docker-compose.yml
+[source,yaml]
+----
+version: "3.0"
+
+services:
+  reverse-proxy:
+    image: "docker-registry-devon.s2-eu.capgemini.com/reverse-proxy:latest"
+    restart: always
+    environment:
+      - FRONTEND_ENV=http://angular:80
+      - BACKEND_ENV=http://java:8081/mythaistar
+    ports:
+      - "8090:80"
+----
+
+==== Run the docker container
+
+How to run the reverse-proxy using the docker run command:
+
+[source, bash]
+----
+docker run -e FRONTEND_ENV=http://angular:80 -e BACKEND_ENV=http://java:8081/mythaistar -p 8090:80 --restart always docker-registry-devon.s2-eu.capgemini.com/reverse-proxy:latest
+----

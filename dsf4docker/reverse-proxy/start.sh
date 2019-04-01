@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ####################################################################################
 #   Copyright 2015-2018 Capgemini SE.
 #   
@@ -14,19 +16,6 @@
 #    limitations under the License.
 ####################################################################################
 
-server {
-    server_name devonfw-reverse-proxy.dev;
-    root /usr/share/nginx/html;
-
-    location / {
-        proxy_pass http://angular:80;
-    }
-
-    location /api {
-        # example context "mythaistar"
-        proxy_pass http://java:8080/mythaistar;
-    }
-
-    error_log /var/log/nginx/devonfw_reverseproxy_error.log;
-    access_log /var/log/nginx/devonfw_reverseproxy_access.log;
-}
+sed "s|\$BACKEND_ENV|$BACKEND_ENV|g" -i /etc/nginx/nginx.conf
+sed "s|\$FRONTEND_ENV|$FRONTEND_ENV|g" -i /etc/nginx/nginx.conf
+exec nginx -g "daemon off;"

@@ -3,6 +3,7 @@
 This is a guide to customize Openshift cluster.
 
 # Images Styles
+
 The icons for templates must measure the same as below or the images don't show right:
 
 - `Openshift logo`: 230px x 40px.
@@ -19,7 +20,7 @@ $ oc login
 $ oc edit configmap/webconsole-config -n openshift-web-console
 ```
 
-After this, we can see in our shell the webconsole-config.yaml, we only need to navegate untill **extensions** and add the url for our own `css` in the **stylesheetURLs** and `javascript` in the *scriptURLs* section.
+After this, we can see in our shell the webconsole-config.yaml, we only need to navegate untill **extensions** and add the url for our own `css` in the **stylesheetURLs** and `javascript` in the _scriptURLs_ section.
 
 **IMPORTANT: Scripts and stylesheets must be served with the correct content type or they will not be run by the browser. Scripts must be served with Content-Type: application/javascript and stylesheets with Content-Type: text/css.**
 
@@ -40,9 +41,9 @@ webconsole-config.yaml: |
 
 ## More information
 
-* [Customize icons](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-openshift-customize-icons) for Openshift.
-* [Customize catalog](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-openshift-customize-catalog) for Openshift.
-* [Openshift docs](https://docs.openshift.com/container-platform/latest/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets) about customization.
+- [Customize icons](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-openshift-customize-icons) for Openshift.
+- [Customize catalog](https://github.com/devonfw/devonfw-shop-floor/wiki/devonfw-shop-floor-4-openshift-customize-catalog) for Openshift.
+- [Openshift docs](https://docs.openshift.com/container-platform/latest/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets) about customization.
 
 ## Old versions
 * Customize Openshift for [version 3.7](https://docs.openshift.com/container-platform/3.9/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets).

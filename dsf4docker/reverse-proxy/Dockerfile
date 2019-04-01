@@ -14,15 +14,18 @@
 #    limitations under the License.
 ####################################################################################
 
-# 1. Build
-FROM maven:3.5-jdk-8-alpine AS build
-WORKDIR /app
-COPY path/to/project/folder/. /app
-RUN ls -l
-RUN mvn install
+FROM nginx:latest
 
-# 2. Deploy
-FROM tomcat:latest
-WORKDIR /app
-COPY --from=build /app/server/target/artifact.war /usr/local/tomcat/webapps/
-EXPOSE 8080
+LABEL sumary="Reverse proxy for devonfw applications." \
+    description="" \
+    name="reverse-proxy" \
+    version="1.0.0" \
+    maintainer="Dario Rodriguez Gonzalez <dario.rodriguez-gonzalez@capgemini.com>" \
+    help="For more information visit https://github.com/sclorg/s2i-nodejs-container" \
+    usage="docker run -e FRONTEND_ENV=http://frontend:80 -e BACKEND_ENV=http://backend:8080 -p 80:80 -p 443:443 -d reverse-proxy"
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY start.sh /etc/nginx/start.sh
+RUN chmod +x /etc/nginx/start.sh
+
+ENTRYPOINT [ "bash", "/etc/nginx/start.sh" ]

@@ -19,7 +19,17 @@ This script do as follows:
 
 ## Known issues
 
-##### Failed to push image
+### When I run the script, I receive the following error message:
+```diff
+- deploy-app.sh: line 2: $'\r': command not found
+- deploy-app.sh: line 4: syntax error near unexpected token `$'\r''
+```
+It is because the script has been edited in windows, and the end line in windows is \r\n but in linux \r don't exist. To solve it execute the next command:
+```
+sed -i 's/\r$//' filename
+```
+
+### Failed to push image
 
 If you recive an error like this:
 ```
