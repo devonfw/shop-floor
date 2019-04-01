@@ -23,8 +23,3 @@ As well as for the installation, if we want to remove everything concerning **De
 # chmod +x dsf4docker-uninstall.sh
 # ./dsf4docker-uninstall.sh
 ```
-
-## v1/
-
-Docker compose file using syntax 1.x
-Simply go to the directory `cd v1/` and run `docker-compose up -d` from there.
