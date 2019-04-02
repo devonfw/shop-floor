@@ -26,4 +26,5 @@ As the installation will be perpetrated by using Docker, just the `docker-compos
 - ~~app_reverse_proxy (access to client and traffic redirection client-server)~~
 - ~~app_angular (Angular client application built and deployed)~~
 - ~~app_java (Java/OASP4j server application built and deployed)~~
+
 We are moving all files related to deployment to [cicdgen](https://github.com/devonfw/cicdgen)
