@@ -18,7 +18,7 @@ version: "3.0"
 
 services:
   reverse-proxy:
-    image: "docker-registry-devon.s2-eu.capgemini.com/reverse-proxy:latest"
+    image: "devonfwforge/reverse-proxy:latest"
     restart: always
     environment:
       - FRONTEND_ENV=http://angular:80
