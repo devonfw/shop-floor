@@ -1,0 +1,17 @@
+// NOT USED IN WIKI, IS OLD CONTENT
+
+The *Team Portal* is an Angular application that serves as entry point for the whole *OpenShift cluster* of the *devonfw-shop-floor 4 OpenShift*. The application is divided in two tabs: *CICD Services* and *My Apps*
+
+== CICD Services
+
+The development is intended to follow this original design:
+
+image::./images/dsf4openshift/devportal.PNG[]
+
+== My Apps
+
+In this tab of the application you will be able to deploy your Apps in the cluster by just pasting the URL of the RAW `openshift.json` file of your project:
+
+image::./images/dsf4openshift/deploy.png[]
+
+link:https://raw.githubusercontent.com/Jorge-Dacal/my-thai-star/develop/angular/openshift.json[Example of `openshift.json`].

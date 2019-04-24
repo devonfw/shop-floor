@@ -1,0 +1,90 @@
+= Steps
+
+[start=1]
+. Install the KVM binary as follows:
+
+[source,console]
+----
+$ sudo curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm -o /usr/local/bin/docker-machine-driver-kvm
+----
+
+[start=2]
+. Make the binary executable as follows:
+
+[source,console]
+----
+$ sudo chmod +x /usr/local/bin/docker-machine-driver-kvm
+----
+For more information, see the GitHub documentation of the link:https://github.com/dhiltgen/docker-machine-kvm#quick-start-instructions[docker machine KVM driver].
+
+[start=3]
+. Install libvirt and qemu-kvm on your system.
+
+[source,console]
+----
+$ sudo yum install libvirt qemu-kvm
+----
+
+[start=4]
+. Add yourself to the libvirt group so that you do not need to use sudo:
+
+[source,console]
+----
+$ sudo usermod -a -G libvirt <username>
+----
+
+[start=5]
+. Update your current session to apply the group change:
+
+[source,console]
+----
+$ newgrp libvirt
+----
+
+[start=6]
+. Start the libvirtd service:
+
+[source,console]
+----
+$ sudo systemctl start libvirtd
+$ sudo systemctl enable libvirtd
+----
+
+[start=7]
+. Download the CDK from link:https://developers.redhat.com/products/cdk/download/[Red Hat developers webpage] and copy it to the server. Using Filezilla is a easy way to copy files to a remote server.
+
+image::images/filezilla.PNG[filezilla]
+
+[start=8]
+. Copy the executable file to bin directory and add that folder to the system PATH.
+
+[source,console]
+----
+$ mkdir -p ~/bin
+$ cp ~/Downloads/cdk-3.1.0-1-minishift* ~/bin/minishift
+$ chmod +x ~/bin/minishift
+$ export PATH=$PATH:$HOME/bin
+$ echo ‘export PATH=$PATH:$HOME/bin’ >> ~/.bashrc
+----
+
+[start=9]
+. Setup cdk
+
+[source,console]
+----
+$ minishift setup-cdk
+----
+
+[start=10]
+. Configure red hat developer username and password.
+
+[source,console]
+----
+$ export MINISHIFT_USERNAME=<RED_HAT_USERNAME>
+$ export MINISHIFT_PASSWORD='<RED_HAT_PASSWORD>'
+$ echo export MINISHIFT_USERNAME=$MINISHIFT_USERNAME >> ~/.bashrc
+$ echo export MINISHIFT_PASSWORD=$MINISHIFT_PASSWORD >> ~/.bashrc
+----
+
+
+link:https://docs.docker.com/engine/installation/linux/docker-ce/centos/#install-using-the-repository[Install docker]

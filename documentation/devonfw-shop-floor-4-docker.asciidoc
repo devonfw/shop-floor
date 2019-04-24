@@ -1,0 +1,50 @@
+:hardbreaks:
+image::./images/dsf4docker/docker.png[]
+{nbsp}
+
+The *Docker* part of the shop floor is created based on the experience of the environment setup of the project *Mirabaud Advisory*, and intended to be updated to latest versions. Mirabaud Advisory is a web service developed with Devonfw (Java) that, alongside its own implementation, it needed an environment both for the team to follow CICD rules through their 1-week-long sprints and for the client (Mirabaud) to check the already done work.
+
+Once the Docker part of the *devonfw-shop-floor* is generalized, it ends up offering 2 assets (plus one from the *devonfw-shop-floor-4-pl*: Jenkinsfiles):
+
+image::./images/dsf4docker/devonfw-shop-floor-docker-assets.png[]
+
+At the end of the environment installation, you should have an architecture like this:
+
+image::./images/dsf4docker/devonfw-shop-floor-docker-arch.png[]
+
+== 1. Documentation
+
+The *devonfw-shop-floor* for *Docker* won't integrate all services for you. It's just intended to actually create them for you (Jenkins, GitLab, Nexus, etc.) in Docker containers, but the integration part must be do by yourself.
+
+This is the goal for the documentation, and it can be visited from link:devonfw-shop-floor-4-docker-service-integration[here].
+
+== 2. docker-compose.yml
+
+This file is the *devonfw-shop-flor 4 Docker* itself. Executing it (ideally in your remote machine for CICD):
+
+`# docker-compose up -d`
+
+All services will be accessible via the `nginx-proxy` service (also included in the file) by writing in your browser something like:
+
+```
+http://jenkins.${YOUR_SERVER_IP}.nip.io
+```
+```
+http://nexus.${YOUR_SERVER_IP}.nip.io
+```
+```
+http://gitlab.${YOUR_SERVER_IP}.nip.io
+```
+
+(...)
+
+link:https://github.com/devonfw/devonfw-shop-floor/blob/master/dsf4docker/docker-compose.yml[Visit the file].
+
+== 3. Jenkinsfile(s)
+
+After the correct set up following the documentation, link:https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4pl/jenkins[both 2 Jenkinsfile(s)] for the *devonfw shop floor 4 Production Line* would also fit into your new Docker environment.
+
+
+== Continue reading...
+* link:devonfw-shop-floor-4-docker-service-integration[Service Integration]
+* https://github.com/devonfw/devonfw-shop-floor/blob/master/dsf4docker/docker-compose.yml[docker-compose.yml]
