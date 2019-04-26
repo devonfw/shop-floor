@@ -16,48 +16,9 @@
 
 export IP=$(hostname -i|cut -f2 -d ' ')
 echo $IP
-mkdir -p ./volumes/jenkins/jenkins_home
-chown 1000:1000 ./volumes/jenkins/jenkins_home
-
-mkdir -p ./volumes/gitlab/etc/gitlab
-mkdir -p ./volumes/gitlab/var/log
-mkdir -p ./volumes/gitlab/var/opt
-
-mkdir -p ./volumes/jenkins-slave1/jenkins_home
-
-mkdir -p ./volumes/sonarqube/conf
-chown 999:999 ./volumes/sonarqube/conf
-mkdir -p ./volumes/sonarqube/data
-chown 999:999 ./volumes/sonarqube/data
-mkdir -p ./volumes/sonarqube/extensions
-chown 999:999 ./volumes/sonarqube/extensions
-mkdir -p ./volumes/sonarqube/lib/bundled-plugins
-chown 999:999 ./volumes/sonarqube/lib/bundled-plugins
-
-mkdir -p ./volumes/sonarqube-db/data
-chown 999 ./volumes/sonarqube-db/data
-
-mkdir -p ./volumes/nexus/nexus-data
-chown 200 ./volumes/nexus/nexus-data
-
-mkdir -p /volumes/portainer/data
-
-mkdir -p ./volumes/ldap/ssl
-chown 101:101 ./volumes/ldap/ssl
-mkdir -p ./volumes/ldap/ldap
-chown 101:101 ./volumes/ldap/ldap
-mkdir -p ./volumes/ldap/libldap
-chown 101:101 ./volumes/ldap/libldap
-mkdir -p ./volumes/ldap/backups
-chown 101:101 ./volumes/ldap/backups
-mkdir -p ./volumes/ldap/restore
-chown 101:101 ./volumes/ldap/restore
-
-mkdir -p ./volumes/lam/config
-chown 33:33 ./volumes/lam/config
-mkdir -p ./volumes/lam/data
-chown 33:33 ./volumes/lam/data
-
 sed -i 's/IP_ADDRESS/'$IP'/g' docker-compose.yml
-chmod +x images/jenkins-slave/setup-sshd
-docker-compose up -d --build
+docker-compose up -d
+chmod 777 volumes/jenkins/jenkins_home
+chmod 777 volumes/nexus/nexus-data
+chmod 777 volumes/jira/data
+chown -R 2000:2000 ./volumes/mattermost/app/
