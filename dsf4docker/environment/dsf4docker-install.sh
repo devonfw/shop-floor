@@ -17,7 +17,7 @@
 export IP=$(hostname -i|cut -f2 -d ' ')
 echo $IP
 mkdir -p ./volumes/jenkins/jenkins_home
-chgrp 1000 ./volumes/jenkins/jenkins_home
+chown 1000:1000 ./volumes/jenkins/jenkins_home
 
 mkdir -p ./volumes/gitlab/etc/gitlab
 mkdir -p ./volumes/gitlab/var/log
@@ -59,4 +59,5 @@ mkdir -p ./volumes/lam/data
 chown 33:33 ./volumes/lam/data
 
 sed -i 's/IP_ADDRESS/'$IP'/g' docker-compose.yml
-docker-compose up -d
+chmod +x images/jenkins-slave/setup-sshd
+docker-compose up -d --build
