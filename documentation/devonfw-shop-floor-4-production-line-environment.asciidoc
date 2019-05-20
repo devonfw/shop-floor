@@ -1,0 +1,158 @@
+== 1. Install needed Tools
+
+=== 1.1 Maven
+
+Before running any kind of Jenkins Job related to Devonfw, it is mandatory to provide our instance with the needed tools that they’re going to use. In this case, two versions of Maven: 3.3.3 and 3.3.9. If they are already installed, you can skip this step. These tools can be installed via the Jenkins’ *Maven plugin or via Custom Tool*.
+
+* Jenkins' Maven plugin
+
+In the main Jenkins view, go to *Manage Plugins* inside of *Manage Jenkins*, and look for the *Maven Integration plugin*. If it’s not installed, do it.
+
+image::./images/dsf4pl/maven-plugin.png[]
+
+* Maven as a Custom Tool
+
+Inside of Manage Jenkins as well, go to *Global Tool Configuration*. Click on *Custom tool*, and check what it is there. It is another way of installing some tools. For example, the *Angular CLI* has no Jenkins plugin, so it can be installed that way.
+
+=== 1.2 NodeJS LTS
+
+First, install the `NodeJS Plugin` from the *Manage Plugins* section of the Jenkins management menu. Then, go to *Global Tool configuration* and install the LTS version of NodeJS like this:
+
+image::./images/dsf4pl/nodejs-plugin.png[]
+
+=== 1.3 Chrome Headless
+
+This headless browser would let us to execute Karma tests (Angular tests) in Jenkins. As Jenkins has no plugins for it, it's necessary to install it as a *Custom Tool*:
+
+image::./images/dsf4pl/custom-tool-chrome-headless.png[]
+
+Shell Command:
+
+[source,bash]
+----
+if ! which google-chrome > /dev/null; then
+sudo su << EOF
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+apt-get update && apt-get -y install google-chrome-stable
+EOF
+fi
+----
+
+Tool Home:
+
+`/opt/chrome`
+
+== 2. Create Devonfw credentials
+
+Go to `Credentials > System > Global credentials (unrestricted)`. You will have an Add credentials option on the left side. Click on it and specify some CI credentials that your team provides to access to Devonfw repositories. Could be something like `devonfw-ci/\*\**\******`.
+
+== 3. Set up Maven Settings
+
+Next step will be creating the *Global Devonfw Maven Settings*. They will define where Maven is going to download dependencies from. For example, if we want to have a kind of closed cycle in our CI environment, we can tell Maven to download modules only from our instance’s Nexus, or from some Artifactory instance we may have, etc.
+
+Go to *Manage Jenkins* and *Managed files*, and click on *Add a new Config*. Select the option of Global Maven settings.xml and submit it.
+
+There will be 3 parts to be configured, one for settings’ name, ID (provided) and description, another one for Server Credentials (_who_ is going to download dependencies, usually done by a _Technical user_, which means some non-personal credentials) and the content itself. For example, to download from our instance’s Nexus, we can specify credentials for the Nexus in general and one particular Devon repository:
+
+image::./images/dsf4pl/roadmap2.png[]
+
+Create the mirror:
+[source,xml]
+----
+   <mirror>
+     <id>nexus.central</id>
+     <mirrorOf>central</mirrorOf>
+     <name>central-mirror</name>
+     <url>[PL_INSTANCE]/nexus/content/repositories/central</url>
+   </mirror>
+----
+
+Create the _profile_ and its repositories:
+
+[source,xml]
+----
+   <profile>
+       <id>devon.nexus</id>
+       <repositories>
+       <...>
+        <repository>
+         <id>devon.releases</id>
+         <name>Devon Releases</name>
+         <url>https://[PL_INSTANCE]/nexus/content/repositories/releases</url>
+         <releases>
+           <enabled>true</enabled>
+           <updatePolicy>always</updatePolicy>
+         </releases>
+         <snapshots>
+           <enabled>false</enabled>
+           <updatePolicy>always</updatePolicy>
+         </snapshots>
+       </repository>
+       <...>
+   </profile>
+----
+
+This configuration is the same we could have in the local Maven repository of the Devonfw distribution.
+
+== 4. Create the Devonfw Jenkins job
+
+This job will push all needed Devonfw modules to install Devonfw projects’ dependencies. It will be created in Jenkins (with optional name). In this case, two projects are created: one for the current develop branch of the repository and the other for the 2.0.0 version.
+
+image::./images/dsf4pl/roadmap1.png[]
+
+Let’s go to devon_develop Job, and click Configure. In this view all Job’s settings are shown.
+
+General (just some non-technical details about the Job)
+
+image::./images/dsf4pl/roadmap3.png[]
+
+In the *Source Code Management* we specify what do we want to run in Jenkins. In this case, the Devonfw’s GitHub repository in the *develop* branch. To access it from our PL instance, there will be necessary to set up some GitHub credentials that can actually find the repository. You may use the ones created in (2).
+
+image::./images/dsf4pl/roadmap4.png[]
+
+In the *Build Environment* we tell the Job which tools of the environment we are using to run all process that it’s going to execute. In this case, two versions of Maven.
+
+image::./images/dsf4pl/roadmap5.png[]
+
+Next step is defining what the devon_develop Job is actually doing. The Build step will be done by creating an Execute Shell section that will execute something like this:
+
+image::./images/dsf4pl/roadmap6.png[]
+
+This will add a `<distributionManagement>` section into the Devon project main pom.xml that will point to our instance’s Nexus container ( http://nexus:8081 ).
+
+See the code here:
+[source,xml]
+----
+   echo '<distributionManagement>
+       <repository>
+           <id>devon.releases</id>
+           <name>devon Releases</name>
+           <url>http://nexus:8081/nexus/content/repositories/releases/</url>
+       </repository>
+       <snapshotRepository>
+           <id>devon.artifactory</id>
+           <name>devon Snapshots</name>
+           <url>http://nexus:8081/nexus/content/repositories/snapshots/</url>
+       </snapshotRepository>
+   </distributionManagement>
+   </project>' > append
+
+   # Open XML structure
+   sed -i 's|</project>||g' pom.xml
+
+   # Close XML structure
+   cat append >> pom.xml
+----
+
+In the same _Build_ section, let’s _Invoke top-level Maven targets_. That will execute the needed Maven command to build the project and deploy all artifacts to Nexus.
+
+image::./images/dsf4pl/roadmap7.png[]
+
+In we click in the _Advanced…_ button, we will have the chance to set up some Global Maven Settings to be used by this Jenkins Job. We choose the already created *Global Devonfw Maven Settings*, and we can save the Jenkins Job. Nothing more. Just build it from the Job’s main view and you’ll have all you need in your Nexus afterwards.
+
+image::./images/dsf4pl/roadmap8.png[]
+
+You are ready to run the devon_develop Jenkins Job, and check your instance’s Nexus container to see the results.
+
+image::./images/dsf4pl/roadmap9.png[]

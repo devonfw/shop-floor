@@ -1,0 +1,7 @@
+= Service Integration
+
+After setting up the CICD environment of the Devonfw Shop Floor 4 Docker, some integration between services (Jenkins - Nexus, Jenkins - Nexus, etc.) must be done.
+
+* link:./Jenkins-Nexus-integration[Jenkins - Nexus]
+* link:./Jenkins-GitLab-integration[Jenkins - GitLab]
+* link:./Jenkins-Sonarqube-integration[Jenkins - SonarQube]

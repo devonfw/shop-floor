@@ -1,0 +1,510 @@
+= OpenShift Enterprise Installation
+
+[source]
+----
+# INFORMACION
+#--------------------------------------------------------------------------------------------------------
+#
+#    
+#
+#    KOSSERV00-master     10.80.89.150    master.internalarqval.es.capgemini.com
+#    KOSSERV01-node1     10.80.89.151    node1.internalarqval.es.capgemini.com
+#    KOSSERV02-node2     10.80.89.152    node2.internalarqval.es.capgemini.com
+#    KOSSERV03-node3     10.80.89.153    node3.internalarqval.es.capgemini.com
+#    KOSSERV04-infra     10.80.89.154    infra.internalarqval.es.capgemini.com
+#    KOSSERV05-bastion     10.80.89.146    bastion.internalarqval.es.capgemini.com
+#
+# gw : 10.80.89.129
+# dnis1: 10.68.55.100 ; 10.68.98.35
+# Mascara: 255.255.255.192/26
+# HAPROXY externos: 10.80.89.141
+#
+#
+#
+#    Bastion:     2CPU - 4GB - HD1 25GB - HD2 25GB
+#   		 HD1 -> SO
+#   		 HD  -> VOLUMENES NFS    <--------------------------------------|
+#   										 |
+#    Master:     4CPU - 8GB - HD1 60GB - HD2 25GB   			 |  registry
+#   		 HD1 -> SO   						 	 |
+#   		 HD2  -> Contenedores en ejecución   		 	 |
+#   										 |
+#    Infra:    	 4CPU - 8GB - HD1 20GB - HD2 30GB    ------------------------|
+#   		 HD1 -> SO
+#   		 HD2  -> Contenedores en ejecución
+#
+#    Node1:    	 4CPU - 8GB - HD1 23GB - HD2 25 - HD3 30B
+#   		 HD1 -> SO
+#   		 HD2 -> Contenedores en ejecución
+#   		 HD3 -> GlusterFS
+#
+#    Node2:    	 4CPU - 8GB - HD1 23GB - HD2 25 - HD3 30B
+#   		 HD1 -> SO
+#   		 HD3 -> GlusterFS
+#   		 HD  -> Contenedores en ejecución
+#
+#    Node3:    	 4CPU - 8GB - HD1 23GB - HD2 25 - HD3 30B
+#   		 HD1 -> SO
+#   		 HD3 -> GlusterFS
+#   		 HD2  -> Contenedores en ejecucion
+#
+#
+#
+#
+#
+#
+# PREREQUISITO
+#    Instalación base de RHEL7.4 de los nodo anteriormente descritos.
+#    Configurar las interfaces de red como se describen al inicio del documento
+#
+# PREREQUISITOS QUE NO CUMPLE
+#   Message:  One or more checks failed
+# 	Details:  check "disk_availability":
+#           	Available disk space in "/var" (36.4 GB) is below minimum recommended (40.0 GB)
+#
+#           	check "memory_availability":
+#           	Available memory (7.6 GiB) is too far below recommended value (16.0 GiB)
+#
+#
+# Validar que los nodos[1:3] existe: /dev/sdc
+#
+#
+#
+#
+#
+# INSTALACIÓN
+# --------------------------------------------------------------------------------------------------------
+# NODOS
+# Setear nombres de máquinas
+
+----
+
+`#MASTER`
+
+    nmcli general hostname master1.internalarqval.es.capgemini.com
+    systemctl restart systemd-hostnamed
+
+`#NODO1`
+
+    nmcli general hostname node1.internalarqval.es.capgemini.com
+    systemctl restart systemd-hostnamed
+
+`#NODO2`
+
+    nmcli general hostname node2.internalarqval.es.capgemini.com
+    systemctl restart systemd-hostnamed
+
+`#NODO3`
+
+    nmcli general hostname node3.internalarqval.es.capgemini.com
+    systemctl restart systemd-hostnamed
+
+`#INFRA`
+
+    nmcli general hostname infranode1.internalarqval.es.capgemini.com
+    systemctl restart systemd-hostnamed
+
+
+= BASTION:
+
+= Configurar /etc/hosts
+
+`$ cat <<EOF > /etc/hosts`
+
+```
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1     	localhost localhost.localdomain localhost6 localhost6.localdomain6
+10.80.89.150     	master master.arqval.es.capgemini.com master1 master1.arqval.es.capgemini.com master1.internalarqval.es.capgemini.com master.internalarqval.es.capgemini.com
+10.80.89.151     	node1 node1.arqval.es.capgemini.com node1.internalarqval.es.capgemini.com
+10.80.89.152     	node2 node2.arqval.es.capgemini.com node2.internalarqval.es.capgemini.com
+10.80.89.153     	node3 node3.arqval.es.capgemini.com node3.internalarqval.es.capgemini.com
+10.80.89.154     	infra infranode infra1 infranode.arqval.es.capgemini.com infranode1.arqval.es.capgemini.com infra.arqval.es.capgemini.com infra1.arqval.es.capgemini.com infra.internalarqval.es.capgemini.com infra1.internalarqval.es.capgemini.com infranode.internalarqval.es.capgemini.com infranode1.internalarqval.es.capgemini.com
+10.80.89.146     	bastion bastion.arqval.es.capgemini.com bastion.internalarqval.es.capgemini.com
+192.168.0.150     	master.osearvalcap.com
+192.168.0.151     	node1.osearvalcap.com
+192.168.0.152     	node2.osearvalcap.com
+192.168.0.153     	node3.osearvalcap.com
+192.168.0.154     	infra.osearvalcap.com
+192.168.0.146     	bastion.osearvalcap.com
+EOF
+
+```
+
+
+== COMPARTIR CLAVES
+[source]
+----
+ssh-keygen -f /root/.ssh/id_rsa -N ''
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+echo StrictHostKeyChecking no >> /etc/ssh/ssh_config
+ssh master  "echo StrictHostKeyChecking no >> /etc/ssh/ssh_config"
+for node in master node1 node2 node3 infra bastion; do  ssh-copy-id root@$node; done
+----
+
+
+== PREPARAR IPTABLES
+[source]
+----
+yum install -y wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct ansible screen;
+yum update -y;
+yum install -y iptables-services
+systemctl mask firewalld
+systemctl enable iptables
+systemctl stop firewalld
+systemctl start iptables
+iptables -I INPUT 1 -p tcp --dport 53 -s 0.0.0.0/0 -j ACCEPT ; iptables -I INPUT 1 -p udp --dport 53 -s 0.0.0.0/0 -j ACCEPT ; iptables-save > /etc/sysconfig/iptables
+----
+
+== MONTAR SERVIDOR DNS
+
+[source]
+----
+export GUID=`hostname|cut -f2 -d-|cut -f1 -d.`
+export guid=`hostname|cut -f2 -d-|cut -f1 -d.`
+domain=internalarqval.es.capgemini.com
+HostIP=10.80.89.154
+mkdir /var/named/zones
+echo "\$ORIGIN  .
+\$TTL 1  ;  1 seconds (for testing only)
+${domain} IN SOA master.${domain}.  root.${domain}.  (
+  2011112904  ;  serial
+  60  ;  refresh (1 minute)
+  15  ;  retry (15 seconds)
+  1800  ;  expire (30 minutes)
+  10  ; minimum (10 seconds)
+)
+  NS master.${domain}.
+\$ORIGIN ${domain}.
+test A ${HostIP}
+* A ${HostIP}"  >  /var/named/zones/${domain}.db
+
+echo "// named.conf
+options {
+  listen-on port 53 { any; };
+  directory \"/var/named\";
+  dump-file \"/var/named/data/cache_dump.db\";
+  statistics-file \"/var/named/data/named_stats.txt\";
+  memstatistics-file \"/var/named/data/named_mem_stats.txt\";
+  allow-query { any; };
+  recursion yes;
+  /* Path to ISC DLV key */
+  bindkeys-file \"/etc/named.iscdlv.key\";
+  forwarders {
+   10.80.89.146;
+   10.68.55.100;
+  };
+  allow-recursion { 10.80.89.0/16; };
+};
+logging {
+  channel default_debug {
+	file \"data/named.run\";
+	severity dynamic;
+  };
+};
+zone \"${domain}\" IN {
+  type master;
+  file \"zones/${domain}.db\";
+  allow-update { key ${domain} ; } ;
+};" > /etc/named.conf
+
+
+chgrp named -R /var/named
+chown named -Rv /var/named/zones
+restorecon -Rv /var/named
+chown -v root:named /etc/named.conf
+restorecon -v /etc/named.conf
+
+iptables -I INPUT 1 -p tcp --dport 53 -s 0.0.0.0/0 -j ACCEPT ; \
+iptables -I INPUT 1 -p udp --dport 53 -s 0.0.0.0/0 -j ACCEPT ; \
+iptables-save > /etc/sysconfig/iptables
+
+systemctl enable named
+systemctl start named
+
+----
+
+== PREPARAR ANSIBLE
+
+
+`cat << EOF > /etc/ansible/hosts`
+
+[source]
+----
+
+[masters]
+master.arqval.es.capgemini.com ansible_ssh_host=10.80.89.150
+
+[nodes]
+master.arqval.es.capgemini.com
+infranode.arqval.es.capgemini.com
+node1.arqval.es.capgemini.com
+node2.arqval.es.capgemini.com
+node3.arqval.es.capgemini.com
+EOF
+
+----
+
+== INSTALAR COMUNES
+
+[source]
+----
+ansible nodes -m copy -a 'src=hosts dest=/etc/hosts'
+
+ansible nodes -a "nmcli con mod ens192 +ipv4.dns 10.68.55.100 +ipv4.dns 10.80.100.12"
+ansible nodes -a "subscription-manager register --auto-attach"
+ansible nodes -a "subscription-manager attach --pool=8a85f9815ebc935e015ebcbaa8894b3b"
+ansible nodes -a 'subscription-manager repos --disable="*"; subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-fast-datapath-rpms"'
+ansible nodes -a 'yum install -y open-vm-tools perl open-vm-tools-deploypkg net-tools python-six'
+ansible nodes -a 'systemctl enable vmtoolsd.service'
+ansible nodes -a 'systemctl start vmtoolsd.service'
+ansible nodes -a "yum install -y vim wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct install atomic-openshift-utils atomic-openshift-excluder atomic-openshift-docker-excluder"
+ansible all -a "yum -y update"
+ansible nodes -m shell -a "yum install -y glusterfs-fuse"
+ansible nodes -m yum -a "name=docker"
+
+----
+
+= CONFIGURAR IPTABLES EN RESTO DE NODOS
+
+[source]
+----
+ansible nodes -m shell -a 'yum install -y iptables-services; systemctl mask firewalld; systemctl enable iptables; systemctl stop firewalld; systemctl start iptables'
+
+----
+
+=== ========================================================
+
+== PREPARAN LOS VOLUMENES
+
+[source]
+----
+ansible nodes -m shell -a "systemctl stop docker ; rm -rf /var/lib/docker/*"
+----
+
+= Se añade HD a master (o si existe uno libre mejor).
+
+[source]
+----
+
+ansible nodes -m shell -a "systemctl stop docker ; rm -rf /var/lib/docker/*"
+ansible nodes -m copy -a 'dest=/etc/sysconfig/docker-storage-setup content="DEVS=/dev/sdb\nVG=docker-vg\nDATA_SIZE=95%VG\nEXTRA_STORAGE_OPTIONS=\"--storage-opt dm.basesize=3G\""' ;
+ansible nodes -m shell -a "docker-storage-setup"
+ansible nodes -m shell -a  "systemctl enable docker; systemctl start docker"
+ansible nodes -m shell -a "systemctl status docker | grep Active"
+REGISTRY="registry.access.redhat.com";PTH="openshift3"; OSE_VERSION=$(yum info atomic-openshift | grep Version | awk '{print $3}'); ansible 'nodes:!masters:!infranode' -m shell -a " docker pull $REGISTRY/$PTH/ose-deployer:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ose-sti-builder:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ose-pod:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ose-keepalived-ipfailover:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ruby-20-rhel7 ; docker pull $REGISTRY/$PTH/mysql-55-rhel7 ; docker pull openshift/hello-openshift:v1.2.1 ;"
+REGISTRY="registry.access.redhat.com"; OSE_VERSION=$(yum info atomic-openshift | grep Version | awk '{print $3}'); PTH="openshift3"; ansible infranode.arqval.es.capgemini.com -m shell -a " docker pull $REGISTRY/$PTH/ose-haproxy-router:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ose-deployer:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ose-pod:v$OSE_VERSION ; docker pull $REGISTRY/$PTH/ose-docker-registry:v$OSE_VERSION;"
+
+----
+
+= Comienza la instalacion  # BASTION
+
+[source]
+----
+
+yum -y install atomic-openshift-utils
+
+export OSE_VERSION=3.6
+cat << EOF > /etc/ansible/hosts
+
+[OSEv3:children]
+masters
+nodes
+nfs
+#glusterfs_registry
+glusterfs
+
+[OSEv3:vars]
+ansible_user=root
+
+osm_use_cockpit=true
+
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=glusterstorageintranondes
+#openshift_hosted_registry_storage_kind=glusterfs
+
+----
+
+= Como nuestro entorno no cumple con los requisitos minimos
+
+[source]
+----
+openshift_disable_check=disk_availability,memory_availability
+----
+
+= enable ntp on masters to ensure proper failover
+
+[source]
+----
+openshift_clock_enabled=true
+
+deployment_type=openshift-enterprise
+openshift_release=v3.6
+
+openshift_metrics_install_metrics=true
+openshift_hosted_metrics_deploy=true
+openshift_metrics_hawkular_hostname="hawkular-metrics.apps.cloudapps.arqval.es.capgemini.com"
+
+openshift_hosted_logging_deploy=true
+
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=master.internalarqval.es.capgemini.com
+openshift_master_cluster_public_hostname=master.arqval.es.capgemini.com
+#openshift_master_overwrite_named_certificates=true
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+# admin:capgemini
+openshift_master_htpasswd_users={'admin': '$apr1$15mMlNM/$aXc77cJ1BLaDQoJKoMuR21'}
+
+# default project node selector
+osm_default_node_selector='region=primary'
+openshift_hosted_router_selector='region=infra'
+openshift_hosted_router_replicas=1
+#openshift_hosted_router_certificate={"certfile": "/path/to/router.crt", "keyfile": "/path/to/router.key", "cafile": "/path/to/router-ca.crt"}
+openshift_hosted_registry_selector='region=infra'
+openshift_hosted_registry_replicas=1
+
+openshift_master_default_subdomain=cloudapps.arqval.es.capgemini.com
+
+#openshift_use_dnsmasq=False
+#openshift_node_dnsmasq_additional_config_file=/home/bob/ose-dnsmasq.conf
+
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_host=bastion.internalarqval.es.capgemini.com
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=5Gi
+
+openshift_hosted_metrics_deploy=true
+openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_metrics_storage_nfs_directory=/exports
+openshift_hosted_metrics_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_metrics_storage_volume_name=metrics
+openshift_hosted_metrics_storage_volume_size=5Gi
+
+
+[nfs]
+bastion.internalarqval.es.capgemini.com
+
+[masters]
+master1.internalarqval.es.capgemini.com openshift_hostname=master1.internalarqval.es.capgemini.com openshift_public_hostname=master1.arqval.es.capgemini.com
+
+[nodes]
+master1.internalarqval.es.capgemini.com openshift_hostname=master1.internalarqval.es.capgemini.com openshift_public_hostname=master1.arqval.es.capgemini.com openshift_node_labels="{'region': 'infra'}"
+infranode1.internalarqval.es.capgemini.com openshift_hostname=infranode1.internalarqval.es.capgemini.com openshift_public_hostname=infranode1.arqval.es.capgemini.com openshift_node_labels="{'region': 'infra', 'zone': 'infranodes'}"
+node1.internalarqval.es.capgemini.com openshift_hostname=node1.internalarqval.es.capgemini.com openshift_public_hostname=node1.arqval.es.capgemini.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node2.internalarqval.es.capgemini.com openshift_hostname=node2.internalarqval.es.capgemini.com openshift_public_hostname=node2.arqval.es.capgemini.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node3.internalarqval.es.capgemini.com openshift_hostname=node3.internalarqval.es.capgemini.com openshift_public_hostname=node3.arqval.es.capgemini.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+
+#[glusterfs_registry]
+#infranode1.internalarqval.es.capgemini.com glusterfs_devices="[ '/dev/sdc' ]"
+
+[glusterfs]
+node1.internalarqval.es.capgemini.com glusterfs_devices="[ '/dev/sdc' ]"
+node2.internalarqval.es.capgemini.com glusterfs_devices="[ '/dev/sdc' ]"
+node3.internalarqval.es.capgemini.com glusterfs_devices="[ '/dev/sdc' ]"
+
+
+EOF
+
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+
+----
+
+
+= HAPROXY EXTERNO (doc: https://kb.novaordis.com/index.php/HAProxy_Configuration)
+
+[source]
+----
+
+/etc/haproxy/haproxy.conf
+
+global
+ log 127.0.0.1 local0
+ log 127.0.0.1 local1 notice
+defaults
+ log global
+ timeout connect     	10s
+ timeout client      	1m
+ timeout server      	1m
+ timeout check  20s
+ stats enable
+ stats auth usuario:password
+ stats uri /haproxyStats
+
+frontend ose-master-in
+ mode tcp
+ option tcplog
+ bind *:8443
+ timeout client 15m
+ use_backend ose-master-back
+
+backend ose-master-back
+ balance roundrobin
+ mode tcp
+ option tcplog
+ timeout server 15m
+ server ose_master_server 10.80.89.150:8443
+
+frontend oseapps-https-in
+ bind *:443
+ mode tcp
+ default_backend oseapps_https_back
+ option tcplog
+ option socket-stats
+ acl hosts_is_apps_ose_sec hdr_end(host) -i .cloudapps.arqval.es.capgemini.com
+ use_backend oseapps_https_back if hosts_is_apps_ose_sec
+
+backend oseapps_https_back
+ option httpclose
+ option tcplog
+ option ssl-hello-chk
+ server ose_infraproxy_https_server 10.80.89.154:443
+
+frontend http-cloudapps-in
+ bind *:80
+ mode http
+ option httplog
+ option dontlognull
+ option forwardfor
+ option http-server-close
+ acl hosts_is_apps_ose hdr_sub(host) -i .cloudapps.arqval.es.capgemini.com
+ use_backend oseapps_back if hosts_is_apps_ose
+
+backend oseapps_back
+ mode http
+ option forwardfor
+ balance roundrobin
+ option httpclose
+ server ose_infraproxy_server 10.80.89.154
+
+----
+
+
+= Asignar a adminc como administrador.
+
+[source]
+----
+oc adm policy add-cluster-role-to-user cluster-admin admin
+----
+
+= Configura el namespace default para que use la region infra.
+
+[source]
+----
+oc annotate namespace default openshift.io/node-selector='region=infra' --overwrite
+----
+
+= Añadir usuarios de despliegue
+
+[source]
+----
+[root@master1 ~]# htpasswd -cb /etc/origin/master/htpasswd usuario1 password
+[root@master1 ~]# htpasswd -b /etc/origin/master/htpasswd usuario1 password
+----
+
+
+
+
+

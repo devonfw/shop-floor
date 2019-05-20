@@ -1,0 +1,15 @@
+// NOT USED IN WIKI, IS OLD CONTENT
+
+= Team Portal
+
+The Team Portal is an application created to facilitate and accelerate several steps of the lifecycle of Devonfw projects.
+
+Its goal is to give users power to use an OpenShift Origin cluster with no actual of the platform.
+
+image::./images/dsf4openshift/devonfw-on-top.PNG[]
+
+By using the Team Portal, all users (always depending on permissions and the organization of the team itself) should be able to deploy services in the cluster following a specific navigation path.
+
+At the same time, the Team Portal is meant to be exactly this, a *portal* to access to CICD services for the *team*, i.e. Jenkins, Nexus or SonarQube:
+
+image::./images/dsf4openshift/devportal.PNG[]
