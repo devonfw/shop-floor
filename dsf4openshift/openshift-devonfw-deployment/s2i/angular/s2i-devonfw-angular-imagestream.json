@@ -34,7 +34,7 @@
           "type": "Git",
           "git": {
             "uri": "https://github.com/devonfw/devonfw-shop-floor",
-            "ref": "master"
+            "ref": "develop"
           }
         },
         "strategy": {
@@ -67,7 +67,7 @@
               "iconClass": "icon-nodejs",
               "tags": "builder,devonfw,microservices,javascript,angular",
               "supports": "devonfw:2.4",
-              "sampleRepo": "https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/openshift-devonfw-deployment/s2i.git",
+              "sampleRepo": "https://github.com/devonfw/devonfw-shop-floor/tree/develop/dsf4openshift/openshift-devonfw-deployment/s2i.git",
               "version": "1.0"
             }
           }
