@@ -38,7 +38,11 @@ services:
     networks:
       - devonfw-shop-floor
     volumes:
+<<<<<<< HEAD
+      - '$PWD/volumes/gitlab/etc/gitlab:/etc/gitlab'
+=======
       - '$PWD/volumes/gitlab/etc/gilab:/etc/gitlab'
+>>>>>>> a9a6a22135e203dfa6976be9afbe1454e3bc92fa
       - '$PWD/volumes/gitlab/var/log:/var/log/gitlab'
       - '$PWD/volumes/gitlab/var/opt:/var/opt/gitlab'
     labels:
@@ -56,7 +60,12 @@ services:
       - traefik.frontend.rule=Host:jenkins.IP_ADDRESS.nip.io
       - traefik.port=8080
   jenkins-slave1:
+<<<<<<< HEAD
+    build: './images/jenkins-slave'
+    image: 'devonfwforge/jenkins-ssh-slave'
+=======
     image: 'jenkins/ssh-slave'
+>>>>>>> a9a6a22135e203dfa6976be9afbe1454e3bc92fa
     networks:
       - devonfw-shop-floor
     command: "'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZRbx/u7ilHVZ/+l4HISNcUfrLXdqqdPxEbMtcCGET/bFtS6lREgsZmHWyfpSHw94xKWrHpcr9iKOsdHtlCDCiTAwFrp95v3JvwiiFhc9R1+hYBisxz65BIW04iY4kJhoOLDOwFtwZY2zYOi8bYYfLiMEtG3JjOiwCaF826kgIG/NTY64YZZgOdpQfPDT5GAMV3dIBFPiDOLeHiqu3fNx1Nir4sa+TBwAj5dXs8yjxCPHXf3F4xQ0Ign4Is409hAVMUexuoHDDlVKOH7ns0KjkMG8WWku6/jVKNuTWS8xCqWfmJNQHI7Tq3Rmk21MqAwhwZTz0nXqNP5lLzE3w5ZUD darrodri@LES003380'"
