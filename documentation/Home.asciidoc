@@ -1,73 +1,9 @@
-image::./images/devonfw-shop-floor-arch.png[]
+= devonfw shop floor
 
-== Devon Shop Floor for Production Line
+image::./images/devonfw-shop-floor.jpg[]
 
-* link:devonfw-shop-floor-4-production-line[Introduction]
-* link:devonfw-shop-floor-4-production-line-environment[Instance set up]
-// * link:devonfw-shop-floor-4-production-line-jenkinsfiles[Jenkinsfile(s)]
+devonfw shop floor is a set of documentation, tools and methodologies used to configure the provisioning, development and uat environments used in your projects. devonfw shop floor allows the administrators of those environments to apply CI/CD operations and enables automated application deployment.
 
-== Devon Shop Floor for Docker
+devonfw shop floor is mainly oriented to configure the provisioning environment provided by Production Line and deploy applications on an OpenShift cluster. In the cases where Production Line or OpenShift cluster are not available, there will be alternatives to achieve similar goals.
 
-* link:devonfw-shop-floor-4-docker[Introduction]
-
-== Devon Shop Floor for Openshift
-
-* link:devonfw-shop-floor-4-openshift[Introduction]
-* link:devonfw-shop-floor-4-openshift-how-to-install[How to install Openshift Origin]
-* link:devonfw-shop-floor-4-openshift-initial-setup[Initial setup]
-** link:devonfw-shop-floor-4-openshift-s2i[s2i]
-** link:devonfw-shop-floor-4-openshift-templates[templates]
-** link:devonfw-shop-floor-4-openshift-customize[Customize Openshift]
-*** link:devonfw-shop-floor-4-openshift-customize-icons[Customize icons]
-*** link:devonfw-shop-floor-4-openshift-customize-catalog[Customize catalog]
-* Custom Services
-** BitBucket
-*** link:bitbucket-basic-server-setup-in-openshift[Server setup in OpenShift]
-*** link:bitbucket-extra-server-configuration[Extra configuration]
-** link:selenium-basic-grid-setup-in-openshift[Selenium Basic Gird]
-////
-<!-- ## Deploy Devonfw Projects
-- Indentify deployable artifacts
-    - Angular projects
-    - Java projects
-- Using servers
-    - Devonfw distribution Tomcat software
-    - Install local Tomcat
-    - Install Tomcat in external server
-- Using Docker containers
-    - Server Docker container
-        - NGINX for Angular
-        - Tomcat for Java
-    - Process Docker container
-        - Angular
-        - Java
-- OpenShift (video) -->
-
-<!-- ## DevPortal
-- Purpose
-- Design
-- Deployment in OpenShift cluster
-- Demo of usage against CICD OpenShift cluster
-
-## CICD Environment Docker Solution
-- Isolated services / containers
-
-
-## CICD Environment OpenShift Solution
-- BitBucket
-    - [BitBucket server setup in OpenShift](BitBucket-Basic-server-setup-in-OpenShift)
-    - [Extra configuration](BitBucket-Extra-server-configuration)
-- [Selenium Basic Grid](Selenium-Basic-Grid-setup-in-OpenShift)
-
-## CICD Services Integration
-- [Jenkins - Nexus integration](Jenkins-Nexus-integration)
-- [Jenkins - GitLab integration](Jenkins-GitLab-integration)
-- [Jenkins - SonarQube integration](Jenkins-SonarQube-integration)
-
-## Practical Experiences / CookBook
-- [Spring Cloud Kubernetes](Spring-Cloud-Kubernetes)
-- OpenShift Installation
-    - [Install local OpenShift cluster in CentOS](Install-a-local-openshift-on-CentOS)
-    - [OpenShift Enterprise Installation](OpenShift-Enterprise-Installation)
-- [Mirabaud CICD environment setup](mirabaud-cicd-environment-setup) -->
-////
+link:devonfw-shop-floor-4-docker.asciidoc[Let's start].

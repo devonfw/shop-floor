@@ -1,0 +1,57 @@
+= How to use it
+
+This is the documentation about shop floor and its different tools. Here you are going to learn how to create new projects, so that they can include continuous integration and continuous delivery processes, and be deployed automatically in different environments.
+
+== Prerequisites - Provisioning environment
+
+To start working you need to have some services running in your provisioning environment, such as Jenkins (automation server), GitLab (git repository), SonarQube (program analysis), Nexus (software repository) or similar.
+
+To host those services we recommend to have a Production Line instance but you can use other platforms. Here is the list for the different options:
+
+  * link:dsf-provisioning-production-line.asciidoc[Production Line].
+// TODO: * link:dsf-provisioning-openshift.asciidoc[OpenShift].
+  * link:dsf-provisioning-dsf4docker.asciidoc[dsf4docker].
+
+== Step 1 - Configuration and service integration
+
+  * TODO: Manual Guide about configuration for services tools and plugins.
+
+=== Service Integration
+
+  * TODO: Manual Guide about how to integrate Jenkins with SonarQube, Nexus, OpenShift or Docker.
+
+== Step 2 - Create the project
+
+=== start new devonfw project
+
+  * TODO: devon4ng
+  * TODO: devon4j
+  * TODO: devon4node
+
+=== Service Integration
+
+  * TODO: Manual Guide about how to integrate Jenkins with Git Repository.
+
+=== cicdgen
+
+  * TODO: cicdgen
+
+=== Optional components
+
+  * TODO: Manual Guide about add things like config service for angular (Maybe it's going to be included in cicdgen)
+
+== Step 3 - Deployment
+
+  * TODO: dsf4OpenShift
+
+== Step 4 - Verification
+
+  * TODO: Manual Guide
+
+////
+link:devonfw-shop-floor-4-openshift-how-to-install[here].
+[source,Shell]
+----
+$ oc new-project devonfw --display-name='DevonFW' --description='DevonFW Application Standar Platform'
+----
+////

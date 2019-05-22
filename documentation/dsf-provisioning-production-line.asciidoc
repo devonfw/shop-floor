@@ -1,0 +1,15 @@
+= Provisioning environment: Production Line
+
+The Production Line Project is a set of server-side collaboration tools for Capgemini engagements. It has been developed for supporting project engagements with individual tools like issue tracking, continuous integration, continuous deployment, documentation, binary storage and much more!
+
+For aditional information https://km3.capgemini.com/community/1042857/home[click here].
+
+== How to obtain your Production Line
+
+You can order your Production Line environment instance following the https://km3.capgemini.com/book/1082360[official guide]. Remember that you need to order at least the next tools:
+ * Jenkins
+ * GitLab
+ * SonarQube
+ * Nexus
+
+link:dsf-how-to-use.asciidoc#Step-1---Configuration-and-service-integration[Back].
