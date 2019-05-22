@@ -9,7 +9,7 @@ To start working you need to have some services running in your provisioning env
 To host those services we recommend to have a Production Line instance but you can use other platforms. Here is the list for the different options:
 
   * link:dsf-provisioning-production-line.asciidoc[Production Line].
-// TODO: * link:dsf-provisioning-openshift.asciidoc[OpenShift].
+// TODO: * link:dsf-provisioning-dsf4openshift.asciidoc[dsf4openshift].
   * link:dsf-provisioning-dsf4docker.asciidoc[dsf4docker].
 
 == Step 1 - Configuration and service integration

@@ -6,4 +6,4 @@ devonfw shop floor is a set of documentation, tools and methodologies used to co
 
 devonfw shop floor is mainly oriented to configure the provisioning environment provided by Production Line and deploy applications on an OpenShift cluster. In the cases where Production Line or OpenShift cluster are not available, there will be alternatives to achieve similar goals.
 
-link:devonfw-shop-floor-4-docker.asciidoc[Let's start].
+link:dsf-how-to-use.asciidoc[Let's start].

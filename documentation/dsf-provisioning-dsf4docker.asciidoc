@@ -1,1 +1,13 @@
-= TODO
+= Provisioning environment: dsf4docker
+
+image::./images/dsf4docker/docker.png[]
+
+== A little history
+
+The *Docker* part of the shop floor is created based on the experience of the environment setup of the project *Mirabaud Advisory*, and intended to be updated to latest versions. Mirabaud Advisory is a web service developed with Devonfw (Java) that, alongside its own implementation, it needed an environment both for the team to follow CICD rules through their 1-week-long sprints and for the client (Mirabaud) to check the already done work.
+
+== Prerequisite
+
+You need 
+
+Once the Docker part of the *devonfw-shop-floor* is generalized, it ends up offering 2 assets (plus one from the *devonfw-shop-floor-4-pl*: Jenkinsfiles):
