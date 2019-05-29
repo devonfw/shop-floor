@@ -1,5 +1,23 @@
-= Devonfw Shop Floor Guide
+== Devonfw Shop Floor Guide
 
+* link:home.asciidoc[Introduction]
+* link:dsf-how-to-use.asciidoc[How to use it]
+
+=== Provisioning environments
+* link:dsf-provisioning-production-line.asciidoc[Production Line]
+* link:dsf-provisioning-dsf4docker.asciidoc[dsf 4 docker]
+
+=== Configuration and services integration
+* link:dsf-configure-nexus.asciidoc[Nexus]
+* link:dsf-configure-sonarqube.asciidoc[SonarQube]
+
+=== Annexes
+* link:dsf-mirabaud-cicd-environment-setup.asciidoc[Mirabaud experience]
+** link:dsf-mirabaud-jenkins-gitLab-integration.asciidoc[jenkins-gitlab integration]
+** link:dsf-mirabaud-jenkins-nexus-integration.asciidoc[jenkins-nexus integration]
+** link:dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[jenkins-sonarqube integration]
+
+////
 * link:home[Introduction]
 
 == DSF for Production Line
@@ -27,3 +45,5 @@
 *** link:bitbucket-basic-server-setup-in-openshift[Server setup in OpenShift]
 *** link:bitbucket-extra-server-configuration[Extra configuration]
 ** link:selenium-basic-grid-setup-in-openshift[Selenium Basic Gird]
+
+////

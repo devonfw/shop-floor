@@ -1,0 +1,47 @@
+= SonarQube Configuration
+
+To use SonarQube you need to use a token to connect, and to know the results of the analysis you need a webhook. Also, you need to install and configure SonarQube in Jenkins.
+
+== Generate user token
+
+To generate the user token, go to your account clicking in the left icon on the top menu bar.
+
+image::./images/configuration/sonarqube-administration.png[]
+
+Go to security tab and generate the token.
+
+image::./images/configuration/sonarqube-token.png[]
+
+== Webhook
+
+When you execute our SonarQube scanner in our pipeline job, you need to ask SonarQube if the quality gate has been passed. To do it you need to create a webhook.
+
+Go to administration clicking the option on the top bar menu and select the tab for Configuration.
+
+Then search in the left menu to go to webhook section and create your webhook.
+
+An example for Production Line:
+
+image::./images/configuration/sonarqube-webhook.png[]
+
+== Jenkins integration
+
+To use SonarQube in our pipelines you need to configure Jenkins to integrate SonarQube.
+
+=== SonarQube Scanner
+
+First, you need to configure the scanner. Go to Manage Jenkins clicking on left menu and enter in *_Global Tool Configuration_*.
+
+Go to SonarQube Scanner section and add a new SonarQube scanner like this.
+
+image::./images/configuration/sonarqube-jenkins-scanner.png[]
+
+=== SonarQube Server
+
+Now you need to configure where is our SonarQube server using the user token that you create before. Go to Manage Jenkins clicking on left menu and enter in *_Configure System_*.
+
+For example, in ProductionLine the server is the next:
+
+image::./images/configuration/sonarqube-jenkins-server.png[]
+
+NOTE: Remember, the token was created at the beginin of this SonarQube configuration.

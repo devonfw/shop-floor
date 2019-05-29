@@ -1,4 +1,6 @@
-= Provisioning environment: Production Line
+= Production Line provisioning environment
+
+image:./images/dsf4pl/pl.png[]
 
 The Production Line Project is a set of server-side collaboration tools for Capgemini engagements. It has been developed for supporting project engagements with individual tools like issue tracking, continuous integration, continuous deployment, documentation, binary storage and much more!
 
@@ -12,4 +14,6 @@ You can order your Production Line environment instance following the https://km
  * SonarQube
  * Nexus
 
-link:dsf-how-to-use.asciidoc#Step-1---Configuration-and-service-integration[Back].
+---
+
+link:dsf-how-to-use.asciidoc#Step-1---Configuration-and-services-integration[Back].

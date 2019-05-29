@@ -1,4 +1,4 @@
-= devonfw shop floor
+= What is devonfw shop floor?
 
 image::./images/devonfw-shop-floor.jpg[]
 

@@ -351,9 +351,11 @@ volumes/web/cert:/cert:ro
 
 All integrations had been done following *CICD Services Integration* guides:
 
-* link:Jenkins-Nexus-integration[Jenkins - Nexus integration]
-* link:Jenkins-GitLab-integration[Jenkins - GitLab integration]
-* link:Jenkins-SonarQube-integration[Jenkins - SonarQube integration]
+* link:dsf-mirabaud-jenkins-nexus-integration[Jenkins - Nexus integration]
+* link:dsf-mirabaud-jenkins-gitLab-integration[Jenkins - GitLab integration]
+* link:dsf-mirabaud-jenkins-sonarQube-integration[Jenkins - SonarQube integration]
 
-== 6. SSL Certification
+NOTE: These guides may be obsolete. You can find here the link:dsf-how-to-use.asciidoc#Step-1---Configuration-and-service-integration[official configuration guides],
 
+// TODO:
+// == 6. SSL Certification

@@ -8,37 +8,37 @@ Once our project's pipeline is triggered (it could also be triggered in a fancy 
 
 Typically in those integration cases, Jenkins plug-in installations become a *must*. Let's look for some available SonarQube plug-in(s) for Jenkins:
 
-image::./images/jenkins-sonarqube/jenkins-sonarqube-plugin.png[]
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-plugin.png[]
 
 == 2. SonarQube token
 
 Once installed let's create a *token* in SonarQube so that Jenkins can communicate with it to trigger their Jobs. Once we install SonarQube in our CI/CD machine (ideally a remote machine) let's login with `admin/admin` credentials:
 
-image::./images/jenkins-sonarqube/sonarqube-login.png[]
+image::./images/others/jenkins-sonarqube/sonarqube-login.png[]
 
 Afterwards, SonarQube itself asks you to create this token we talked about (the name is up to you):
 
-image::./images/jenkins-sonarqube/sonarqube-token-name.png[]
+image::./images/others/jenkins-sonarqube/sonarqube-token-name.png[]
 
 Then a token is generated:
 
-image::./images/jenkins-sonarqube/sonarqube-token-generation.png[]
+image::./images/others/jenkins-sonarqube/sonarqube-token-generation.png[]
 
 You click in "continue" and the token's generation is completed:
 
-image::./images/jenkins-sonarqube/sonarqube-token-done.png[]
+image::./images/others/jenkins-sonarqube/sonarqube-token-done.png[]
 
 == 3. Jenkins SonarQube Server setup
 
 Now we need to tell Jenkins where is SonarQube and how to communicate with it. In `Manage Jenkins >  Configure Settings`. We add a name for the server (up to you), where it is located (URL), version and the Server authentication token created in point 2.
 
-image::./images/jenkins-sonarqube/jenkins-sonarqube-server-setup.png[]
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-server-setup.png[]
 
 == 4. Jenkins SonarQube Scanner
 
 Install a SonarQube Scanner as a Global tool in Jenkins to be used in the project's pipeline.
 
-image::./images/jenkins-sonarqube/jenkins-sonarqube-scanner.png[]
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-scanner.png[]
 
 == 5. Pipeline code
 
@@ -62,11 +62,11 @@ Last step is to add the SonarQube process in our project's Jenkins pipeline. The
 
 After all this, you should end up having something like this in Jenkins:
 
-image::./images/jenkins-sonarqube/jenkins-sonarqube-feedback.png[]
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-feedback.png[]
 
 And in SonarQube:
 
-image::./images/jenkins-sonarqube/sonarqube-project-result.png[]
+image::./images/others/jenkins-sonarqube/sonarqube-project-result.png[]
 
 == 7. Changes in a Devonfw project to execute SonarQube tests with Coverage
 

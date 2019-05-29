@@ -1,0 +1,128 @@
+= dsf4openshift deployment environment
+
+In this section you will see how you can create a new environment instance in OpenShift and the things that you must add to the Jenkinsfiles of your repository to deploy a branch in this new environment. To conclude you are going to see how to add config files for environment in the source code of the applications.
+
+== Prerrequisite
+
+=== OpenShift Cluster
+
+To have your deployment environment with OpenShift you need to have an OpenShift Cluster.
+
+// TODO: For example, you can obtain it from ITAAS
+
+=== Download OpenShift Client Tools
+
+First of all you need to download the OpenShift client, you can find it https://www.okd.io/download.html[here].
+
+Remember that what you need to download *oc Client Tools* and not _OKD Server_.
+
+NOTE: This tutorial has been made with the version 3.10.0 of the client, it is recommended to use the most current client, but if it does not work, it is possible that the instructions have become obsolete or that the OpenShift used needs another older/newer version of the client. To download a specific version of the client you can find here the https://github.com/openshift/origin/releases/[older versions] and the https://github.com/openshift/origin/releases/tag/v3.10.0[version 3.10.0].
+
+=== Add oc client to path
+
+Once you have downloaded the client you have to add it to the *PATH* environment variable.
+
+=== Log into OpenShift with admin account
+
+You can log using a terminal and executing the next instructions:
+
+[source,Shell]
+----
+oc login $OpenShiftUrl
+----
+
+NOTE: You need a valid user to log in.
+
+=== Select the project where you are going to create the environment
+
+[source,Shell]
+----
+oc project $projectName
+----
+
+=== Add all the secrets that you need
+
+For example, to create a secret for a nexus repository you should execute the next commands:
+
+[source,Shell]
+----
+oc create secret docker-registry $nameForSecret --docker-server=${dockerRegistry} --docker-username=${user} --docker-password=${pass} --docker-email=no-reply@email.com
+
+oc secrets link default $nameForSecret --for=pull
+----
+
+If you need to use that secret, you need to add the next code to the instruction:
+
+[source,Shell]
+----
+--source-secret=$nameForSecret
+----
+
+== Configure builds to create docker image using OpenShift
+
+If you need to create docker images of your projects you could use OpenShift to do it _(Off course only if you have enough rights)_.
+
+To do it, follow the next steps.
+
+=== Create new builds configs
+
+The first thing you need to do for create a new environment is prepare the builds for the front and for the middleware and rise default memory limits for the middleware. You can do it using a terminal and executing the next instructions:
+
+These are a summary about the parameters used in our commands:
+
+* *${dockerRegistry}*: The url of the docker repository.
+* *${props.name}*: The name of the project (for example could be find on package.json)
+* *${dockerTag}*: The tag of the image
+
+NOTE: From now on you will refer to the name that you are going to give to the environment as *$enviroment*. Remember to modify it for the correct value in all instructions.
+
+==== devon4ng build config
+
+You need to create nginx build config with docker.
+
+[source,Shell]
+----
+oc new-build --strategy docker --binary --docker-image nginx:alpine-perl --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
+----
+
+NOTE: You need nginx:alpine-perl to read the environment config file in openshift, if you are not going to use it, devonfw recommend you to use nginx:latest instead.
+
+==== devon4node build config
+
+[source,Shell]
+----
+oc new-build --strategy docker --binary --docker-image node:lts --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
+----
+
+==== devon4j build config
+
+[source,Shell]
+----
+oc new-build --strategy docker --binary --docker-image openjdk:<version> --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
+----
+
+NOTE: You need to specify the <version> of java used for your project. Also you can use the -alpine image. This image is based on the popular https://alpinelinux.org/[Alpine Linux project]. Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general. More information on https://hub.docker.com/_/openjdk/[docker hub].
+
+== Configure new environment
+
+
+
+== Service integration with jenkins
+
+=== Prerrequisite
+
+To integrate it, you need to have installed the plugin OpenShift Client. To install it go to Manage Jenkins clicking on left menu and enter in *_Manage Plugins_*. Go to Available tab and search it using the filter textbox in the top right corner and install it.
+
+=== Configuration
+
+Second, you need to configure the OC Client. Go to Manage Jenkins clicking on left menu and enter in *_Global Tool Configuration_*.
+
+Go to OpenShift Client Tools section and add a new one like this.
+
+image::./images/configuration/openshift-jenkins-plugin.png[]
+
+== Upgrade your Jenkinsfile
+
+=== Add deployment stage
+
+=== Add check status

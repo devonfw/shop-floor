@@ -1,4 +1,44 @@
-image::./images/devonfw-shop-floor-arch.png[]
+= devonfw shop floor ${project.version}
+The devonfw community
+${project.version}, ${buildtime}: Subtitle {doctitle}
+:description: comprehensive documentation for the devonfw shop floor.
+:sectnums:
+:toc:
+:toc-title: Table of Contents
+ifdef::backend-pdf[]
+:title-logo-image: image:./images/devonfw.png[pdfwidth=5in,align=center]
+endif::[]
+:imagesdir: ./
+:footnote: test footnote
+:productname: test productname
+
+
+[preface]
+include::home.asciidoc[leveloffset=0]
+
+:toc:
+
+include::dsf-how-to-use.asciidoc[leveloffset=1]
+
+== Provisioning environments
+include::dsf-provisioning-production-line.asciidoc[leveloffset=2]
+
+include::dsf-provisioning-dsf4docker.asciidoc[leveloffset=2]
+
+== Configuration and services integration
+include::dsf-configuration-nexus.asciidoc[leveloffset=2]
+include::dsf-configuration-sonarqube.asciidoc[leveloffset=2]
+
+== Annexes
+include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=2]
+include::dsf-mirabaud-jenkins-gitLab-integration.asciidoc[leveloffset=3]
+include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
+include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
+
+
+
+
+////
 
 == Devon Shop Floor for Production Line
 
@@ -25,6 +65,9 @@ image::./images/devonfw-shop-floor-arch.png[]
 *** link:bitbucket-basic-server-setup-in-openshift[Server setup in OpenShift]
 *** link:bitbucket-extra-server-configuration[Extra configuration]
 ** link:selenium-basic-grid-setup-in-openshift[Selenium Basic Gird]
+
+////
+
 ////
 <!-- ## Deploy Devonfw Projects
 - Indentify deployable artifacts
