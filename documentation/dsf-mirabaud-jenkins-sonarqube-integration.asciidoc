@@ -68,9 +68,9 @@ And in SonarQube:
 
 image::./images/others/jenkins-sonarqube/sonarqube-project-result.png[]
 
-== 7. Changes in a Devonfw project to execute SonarQube tests with Coverage
+== 7. Changes in a devonfw project to execute SonarQube tests with Coverage
 
-The plugin used to have Coverage reports in the SonarQube for Devonfw projects is *Jacoco*. There are some changes in the project's parent `pom.xml` that are mandatory to use it.
+The plugin used to have Coverage reports in the SonarQube for devonfw projects is *Jacoco*. There are some changes in the project's parent `pom.xml` that are mandatory to use it.
 
 Inside of the `<properties>` tag:
 

@@ -5,6 +5,7 @@ ${project.version}, ${buildtime}: Subtitle {doctitle}
 :sectnums:
 :toc:
 :toc-title: Table of Contents
+:toclevels: 3
 ifdef::backend-pdf[]
 :title-logo-image: image:./images/devonfw.png[pdfwidth=5in,align=center]
 endif::[]
@@ -22,95 +23,50 @@ include::dsf-how-to-use.asciidoc[leveloffset=1]
 
 == Provisioning environments
 include::dsf-provisioning-production-line.asciidoc[leveloffset=2]
-
 include::dsf-provisioning-dsf4docker.asciidoc[leveloffset=2]
 
 == Configuration and services integration
 include::dsf-configuration-nexus.asciidoc[leveloffset=2]
 include::dsf-configuration-sonarqube.asciidoc[leveloffset=2]
 
+== Create project
+=== Create and integrate git repository
+include::dsf-configuration-gitlab.asciidoc[leveloffset=2].
+
+=== start new devonfw project
+
+It is time to create your devonfw project:
+
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
+  * visitr our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
+
+=== cicd configuration
+
+==== Manual configuration
+
+===== Jenkinsfile
+include::dsf-configuration-jenkins.asciidoc[leveloffset=2].
+
+== Deployment
+
+include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=2].
+
 == Annexes
+=== Custom Services
+
+==== BitBucket
+include::dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[leveloffset=3]
+include::dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[leveloffset=3]
 include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=2]
 include::dsf-mirabaud-jenkins-gitLab-integration.asciidoc[leveloffset=3]
 include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
 include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
-
-
-
-
-////
-
-== Devon Shop Floor for Production Line
-
-* link:devonfw-shop-floor-4-production-line[Introduction]
-* link:devonfw-shop-floor-4-production-line-environment[Instance set up]
-// * link:devonfw-shop-floor-4-production-line-jenkinsfiles[Jenkinsfile(s)]
-
-== Devon Shop Floor for Docker
-
-* link:devonfw-shop-floor-4-docker[Introduction]
-
-== Devon Shop Floor for Openshift
-
-* link:devonfw-shop-floor-4-openshift[Introduction]
-* link:devonfw-shop-floor-4-openshift-how-to-install[How to install Openshift Origin]
-* link:devonfw-shop-floor-4-openshift-initial-setup[Initial setup]
-** link:devonfw-shop-floor-4-openshift-s2i[s2i]
-** link:devonfw-shop-floor-4-openshift-templates[templates]
-** link:devonfw-shop-floor-4-openshift-customize[Customize Openshift]
-*** link:devonfw-shop-floor-4-openshift-customize-icons[Customize icons]
-*** link:devonfw-shop-floor-4-openshift-customize-catalog[Customize catalog]
-* Custom Services
-** BitBucket
-*** link:bitbucket-basic-server-setup-in-openshift[Server setup in OpenShift]
-*** link:bitbucket-extra-server-configuration[Extra configuration]
-** link:selenium-basic-grid-setup-in-openshift[Selenium Basic Gird]
-
-////
-
-////
-<!-- ## Deploy Devonfw Projects
-- Indentify deployable artifacts
-    - Angular projects
-    - Java projects
-- Using servers
-    - Devonfw distribution Tomcat software
-    - Install local Tomcat
-    - Install Tomcat in external server
-- Using Docker containers
-    - Server Docker container
-        - NGINX for Angular
-        - Tomcat for Java
-    - Process Docker container
-        - Angular
-        - Java
-- OpenShift (video) -->
-
-<!-- ## DevPortal
-- Purpose
-- Design
-- Deployment in OpenShift cluster
-- Demo of usage against CICD OpenShift cluster
-
-## CICD Environment Docker Solution
-- Isolated services / containers
-
-
-## CICD Environment OpenShift Solution
-- BitBucket
-    - [BitBucket server setup in OpenShift](BitBucket-Basic-server-setup-in-OpenShift)
-    - [Extra configuration](BitBucket-Extra-server-configuration)
-- [Selenium Basic Grid](Selenium-Basic-Grid-setup-in-OpenShift)
-
-## CICD Services Integration
-- [Jenkins - Nexus integration](Jenkins-Nexus-integration)
-- [Jenkins - GitLab integration](Jenkins-GitLab-integration)
-- [Jenkins - SonarQube integration](Jenkins-SonarQube-integration)
-
-## Practical Experiences / CookBook
-- [Spring Cloud Kubernetes](Spring-Cloud-Kubernetes)
-- OpenShift Installation
-    - [Install local OpenShift cluster in CentOS](Install-a-local-openshift-on-CentOS)
-    - [OpenShift Enterprise Installation](OpenShift-Enterprise-Installation)
-- [Mirabaud CICD environment setup](mirabaud-cicd-environment-setup) -->
-////
+include::dsf-okd.asciidoc[leveloffset=2]
+include::dsf-okd-how-to-install.asciidoc[leveloffset=3]
+include::dsf-okd-initial-setup.asciidoc[leveloffset=3]
+include::dsf-okd-s2i.asciidoc[leveloffset=3]
+include::dsf-okd-templates.asciidoc[leveloffset=3]
+include::dsf-okd-customize.asciidoc[leveloffset=3]
+include::dsf-okd-customize-icons.asciidoc[leveloffset=5]
+include::dsf-okd-customize-catalog.asciidoc[leveloffset=5]
+include::dsf-okd-customize-v3-7.asciidoc[leveloffset=5]

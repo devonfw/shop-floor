@@ -22,35 +22,49 @@ The first step is configure your services and integrate them with jenkins. Here 
 
 == Step 2 - Create the project
 
+=== Create and integrate git repository
+
+The second is create or git repository and integrate it with Jenkins.
+
+Here you can find a manual guide about how it:
+
+* link:dsf-configure-gitlab.asciidoc[GitLab] new project.
+
 === start new devonfw project
 
+It is time to create your devonfw project:
+
   * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
-  * https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j].
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
 //  * TODO: devon4node
-
-=== Service Integration
-
-Manual Guide about how to integrate Jenkins with Git Repository:
-
-//  * TODO: link:dsf-configure-gitlab.asciidoc[Jenkins].
 
 === cicd configuration
 
+Now you need to add cicd files in your project.
+
 ////
-=== cicdgen
+==== cicdgen
 
   * TODO: cicdgen
 
-=== Optional components
+===== Optional components
 
   * TODO: Manual Guide about add things like config service for angular (Maybe it's going to be included in cicdgen)
 ////
 
-=== Manual configuration
+==== Manual configuration
 
-==== Jenkinsfile
+===== Jenkinsfile
 
+Here you can find all that you need to know to do your link:dsf-configuration-jenkinsfile.asciidoc[Jenkinsfile].
+
+////
+TODO:
 ==== Dockerfile
+
+Here you can find all that you need to know to do your link:dsf-configuration-dockerfile.asciidoc[Dockerfile].
+
+////
 
 == Step 3 - Deployment
 
@@ -61,12 +75,4 @@ Manual Guide about how to integrate Jenkins with Git Repository:
 == Step 4 - Verification
 
   * TODO: Manual Guide
-////
-
-////
-link:devonfw-shop-floor-4-openshift-how-to-install[here].
-[source,Shell]
-----
-$ oc new-project devonfw --display-name='DevonFW' --description='DevonFW Application Standar Platform'
-----
 ////

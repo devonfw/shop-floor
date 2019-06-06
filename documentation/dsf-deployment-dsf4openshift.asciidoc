@@ -136,7 +136,7 @@ Now it is time to configure the environment.
 
 ==== Prerequisite
 
-You need a docker image of your application.
+You need a docker image of your application. You could created it using OpenShift as you see in the last step.
 
 ==== Create new app on OpenShift
 
@@ -147,8 +147,38 @@ To create new app you need to use the next command.
 oc new-app --docker-image=${artifactsPath} --name=${props.name}-$environment
 ----
 
-NOTE: You could add environment variables using -e $name=$value
+NOTE: You could add environment variables using `-e $name=$value`
 
+==== Create routes
+
+Finally, you need add a route to access the service.
+
+*Add http route*
+
+If tou want to create an http reoute execute the following command in a terminal:
+
+[source,Shell]
+----
+oc expose svc/${props.name}-$environment
+----
+
+*Add https route*
+
+If you want to create an https route you can do it executing the following command:
+
+[source,Shell]
+----
+oc create route edge --service=${props.name}-$environment
+----
+
+If you want to change the default route path you can use the command --hostname=$url. For example:
+
+[source,Shell]
+----
+oc expose svc/${props.name}-$environment --hostname=$url
+
+oc create route edge --service=${props.name}-$environment --hostname=$url
+----
 
 === Import new images from registry
 
@@ -188,7 +218,7 @@ Using command example:
 ----
 oc patch bc/$project-api-$environment --patch "{\"spec\":{\"resources\":{\"limits\":{\"memory\": \"400Mi\"},\"requests\":{\"memory\": \"400Mi\"}}}}"
 ----
- ////
+////
 
 == Service integration with jenkins
 
@@ -205,6 +235,8 @@ Go to OpenShift Client Tools section and add a new one like this.
 image::./images/configuration/openshift-jenkins-plugin.png[]
 
 == Upgrade your Jenkinsfile
+
+=== Add build stage
 
 === Add deployment stage
 

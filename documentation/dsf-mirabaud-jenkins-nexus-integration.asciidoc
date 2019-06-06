@@ -1,6 +1,6 @@
 = Jenkins - Nexus integration
 
-Nexus is used to both host dependencies for Devonfw projects to download (common Maven ones, custom ones such as `ojdb` and even Devonfw so-far-IP modules). Moreover, it will host our projects' build artifacts (`.jar`, `.war`, ...) and expose them for us to download, wget and so on. A team should have a bidirectional relation with its Nexus repository.
+Nexus is used to both host dependencies for devonfw projects to download (common Maven ones, custom ones such as `ojdb` and even devonfw so-far-IP modules). Moreover, it will host our projects' build artifacts (`.jar`, `.war`, ...) and expose them for us to download, wget and so on. A team should have a bidirectional relation with its Nexus repository.
 
 == 1. Jenkins credentials to access Nexus
 
@@ -26,9 +26,9 @@ image::./images/others/jenkins-nexus/jenkins-new-nexus-credentials-completed.png
 
 == 2. Jenkins Maven Settings
 
-Those settings are also configured (or maybe not-yet-configured) in our *Devonfw distributions* in:
+Those settings are also configured (or maybe not-yet-configured) in our *devonfw distributions* in:
 ```
-/${Devonfw-dist-path}
+/${devonfw-dist-path}
     /software
         /maven
             /conf
