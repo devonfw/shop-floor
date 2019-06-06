@@ -1,0 +1,72 @@
+= devonfw shop floor ${project.version}
+The devonfw community
+${project.version}, ${buildtime}: Subtitle {doctitle}
+:description: comprehensive documentation for the devonfw shop floor.
+:sectnums:
+:toc:
+:toc-title: Table of Contents
+:toclevels: 3
+ifdef::backend-pdf[]
+:title-logo-image: image:./images/devonfw.png[pdfwidth=5in,align=center]
+endif::[]
+:imagesdir: ./
+:footnote: test footnote
+:productname: test productname
+
+
+[preface]
+include::home.asciidoc[leveloffset=0]
+
+:toc:
+
+include::dsf-how-to-use.asciidoc[leveloffset=1]
+
+== Provisioning environments
+include::dsf-provisioning-production-line.asciidoc[leveloffset=2]
+include::dsf-provisioning-dsf4docker.asciidoc[leveloffset=2]
+
+== Configuration and services integration
+include::dsf-configuration-nexus.asciidoc[leveloffset=2]
+include::dsf-configuration-sonarqube.asciidoc[leveloffset=2]
+
+== Create project
+=== Create and integrate git repository
+include::dsf-configuration-gitlab.asciidoc[leveloffset=2].
+
+=== start new devonfw project
+
+It is time to create your devonfw project:
+
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
+  * visitr our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
+
+=== cicd configuration
+
+==== Manual configuration
+
+===== Jenkinsfile
+include::dsf-configuration-jenkins.asciidoc[leveloffset=2].
+
+== Deployment
+
+include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=2].
+
+== Annexes
+=== Custom Services
+
+==== BitBucket
+include::dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[leveloffset=3]
+include::dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[leveloffset=3]
+include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=2]
+include::dsf-mirabaud-jenkins-gitLab-integration.asciidoc[leveloffset=3]
+include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
+include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
+include::dsf-okd.asciidoc[leveloffset=2]
+include::dsf-okd-how-to-install.asciidoc[leveloffset=3]
+include::dsf-okd-initial-setup.asciidoc[leveloffset=3]
+include::dsf-okd-s2i.asciidoc[leveloffset=3]
+include::dsf-okd-templates.asciidoc[leveloffset=3]
+include::dsf-okd-customize.asciidoc[leveloffset=3]
+include::dsf-okd-customize-icons.asciidoc[leveloffset=5]
+include::dsf-okd-customize-catalog.asciidoc[leveloffset=5]
+include::dsf-okd-customize-v3-7.asciidoc[leveloffset=5]

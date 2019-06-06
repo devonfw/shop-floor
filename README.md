@@ -1,7 +1,21 @@
-# Devonfw Shop Floor
+# What is devonfw shop floor?
 
-![](./readme/devonfw-shop-floor-arch.png)
+![](./documentation/images/devonfw-shop-floor.jpg)
 
+devonfw shop floor is a set of documentation, tools and methodologies used to configure the provisioning, development and uat environments used in your projects. devonfw shop floor allows the administrators of those environments to apply CI/CD operations and enables automated application deployment.
+
+devonfw shop floor is mainly oriented to configure the provisioning environment provided by Production Line and deploy applications on an OpenShift cluster. In the cases where Production Line or OpenShift cluster are not available, there will be alternatives to achieve similar goals.
+
+The **devonfw shop floor 4 OpenShift** is a solution based on the experience of priming devonfw for OpenShift by RedHat.
+
+![](./documentation/images/dsf4openshift/primed.jpg)
+
+# How to use it
+
+You could find documentation about how to use it in the [wiki](./../../wiki).
+
+<!-- TODO: Review from here to the end of the readme -->
+<!--
 ## devonfw-shop-floor 4 Production Line
 
 The **Production Line** part of the devonfw-shop-floor corresponds with a guide of setting up or **prepare your PL instance** to be used by Devonfw projects.
@@ -67,3 +81,4 @@ More specific info in the Wiki.
 
 ### Backup:
 - Scripts to make backups of your databases in a remote machine (production-like machine).
+-->

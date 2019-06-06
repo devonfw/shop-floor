@@ -1,0 +1,127 @@
+= Basic Selenium Grid setup in OpenShift
+
+_[Under construction]_
+
+'''
+
+The purpose of the present document is to provide the basic steps carried out to setup a Selenium Grid (Hub + Nodes) in OpenShift.
+
+== Introduction
+Selenium is a tool to automate web browser across many platforms. It allows the automation of the testing in many different browsers, operating systems, programing laguages, or testing frameworks. (for further information pelase see link:http://www.seleniumhq.org/[Selenium])
+
+Selenium Grid is the platform provided by Selenium in order to perform the execution of tests in parallel and in a distributed way.
+
+It basically consists on a Selenium Server (also known as hub or simply server) which redirects the requests it receives to the appropriate node (Firefox node, Chrome node, ...) depending on how the Selenium WebDriver is configured or implemented (See link:http://www.seleniumhq.org/docs/[Selenium Doc.])
+
+=== Additional documentacion:
+* link:https://www.tutorialspoint.com/selenium/selenium_grids.htm[] 
+* link:http://www.softwaretestinghelp.com/selenium-ide-download-and-installation-selenium-tutorial-2[]
+* link:https://examples.javacodegeeks.com/enterprise-java/selenium/selenium-standalone-server-example[]
+* link:https://tripleqa.com/2016/09/26/hello-world-selenium[]
+* link:http://queirozf.com/entries/selenium-hello-world-style-tutorial[]
+
+== Prerequisites
+
+* OpenShift up & running
+
+== Procedure
+
+The present procedure is divided into two different main parts:
+* First part: Selenium Hub (server) installation
+* Second part: Selenium node installation (Firefox & Chrome)
+* Create persistent volumes for the hub and the node(s)
+
+=== Selenium Hub installation
+
+The followed approach consists on deploying new image from the OpenShift WenConsole.
+
+The image as well as its documentation and details can be found at link:https://hub.docker.com/r/selenium/hub/[Selenium Hub Docker Image]
+
+==== Step 1: Deploy Image
+image::./images/others/selenium/hub/step1.png[]
+
+==== Step 2: Image Name
+As it is specified in the link:https://hub.docker.com/r/selenium/hub/[documentation] _(selenium/hub)_
+
+_(Please notice that, as it is described in the additional documentation of the above links, the server will run by default on *4444* port)_
+
+image::./images/others/selenium/hub/step2.png[]
+
+==== Step 3: Introduce the appropriate resource name
+_(selenium-hub in this case)_
+
+_(No additional config. is required by the moment)_
+
+image::./images/others/selenium/hub/step3a.png[]
+
+Once the image is deployed, you will be able to check & review the config. of the container. Please notice by, by default, *no route is created for external traffic*, hence the application (the selenium server or hub) is not reachable from outside the cluster
+
+image::./images/others/selenium/hub/step3b.png[]
+
+==== Step 4: Create a route for external traffic
+image::./images/others/selenium/hub/step4.png[]
+
+==== Step 5: Change the default config. if necessary
+image::./images/others/selenium/hub/step5.png[]
+
+==== DONE !!
+The Selenium Server is now accesible from outside the cluster. Click on the link of the route and you will be able to see the server home page.
+
+image::./images/others/selenium/hub/done1.png[]
+
+==== console/view config to see the default server config.
+Please notice that the server is not detecting any node up & running, since we have not yet installed none of them.
+
+image::./images/others/selenium/hub/done2.png[]
+
+'''
+
+=== Selenium Node Firefox installation
+_(Same steps apply for Selenium Node Chrome with the selenium/node-chrome Docker image)_
+
+The key point of the nodes installation is to specify the host name and port of the hub. If this step is not correctly done, the container will be setup but the application will not run.
+
+The followed approach consists on deploying new image from the OpenShift WenConsole.
+
+The image as well as its documentation and details can be found at link:https://hub.docker.com/r/selenium/node-firefox/[Selenium Hub Docker Image] _(firefox node in this case)_
+
+==== Step 1: Deploy Image
+Introduce the appropriate Docker Imgage name as it is specified in the link:https://hub.docker.com/r/selenium/node-firefox/[documentation] _(selenium/node-firefox)_
+
+image::./images/others/selenium/node/step1.png[]
+
+==== Step 2: Introduce the appropriate resource name
+_(selenium-node-firefox in this case)_
+
+image::./images/others/selenium/node/step2.png[]
+
+==== Step 3: Introduce, as environment variables, the host name and port of the selenium hub previously created
+*Env. var. for selenium hub host name*
+
+* Name: HUB_PORT_4444_TCP_ADDR
+* Value: The Selenium hub host name. It's recommended to use the service name of the internal OpenShift service.
+
+*Env. var. for host selenium hub host port*
+
+* Name: HUB_PORT_4444_TCP_PORT
+* Value: 4444 _(by default)_, or the appropriate one if it was changed during the installation.
+
+image::./images/others/selenium/node/step3.png[]
+
+==== DONE !!
+If the creation of the contianer was correct, we will be able to see our new selenium-node-firefox application up & running, as well as we will be able to see that the firefox node has correctly detected the selenium hub _(in the log of the POD)_
+
+image::./images/others/selenium/node/done1.png[]
+
+image::./images/others/selenium/node/done2.png[]
+
+If we go back to the configuration of the SeleniumHub thourgh the WebConsole, we also will be able to see the our new firefox node
+
+image::./images/others/selenium/node/done3.png[]
+
+'''
+
+=== Persisten Volumes
+Last part of the installation of the Selenium Grid consists on creating persisten volumes for both, the hub container and the node container.
+
+Persisten Volumes can be easely created folling the the link:dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[BitBucket Extra server configuration]

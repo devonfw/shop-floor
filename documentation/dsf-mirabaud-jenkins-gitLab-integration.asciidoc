@@ -1,0 +1,99 @@
+= Jenkins - GitLab integration
+
+The first step to have a Continuous Integration system for your development is to make sure that all your changes to your team's remote repository are evaluated by the time they are pushed. That usually implies the usage of so-called _webhooks_. You'll find a fancy explanation about what Webhooks are in link:http://culttt.com/2014/01/22/webhooks/[here].
+
+To resume what we're doing here, we are going to prepare our Jenkins and our GitLab so when a developer pushes some changes to the GitLab repository, a pipeline in Jenkins gets triggered. Just like that, in an automatic way.
+
+== 1. Jenkins GitLab plugin
+
+As it usually happens, some Jenkins plug-in(s) must be installed. In this case, let's install those related with GitLab:
+
+image::./images/others/jenkins-gitlab/jenkins-gitlab-plugins.png[]
+
+== 2. GitLab API Token
+
+To communicate with GitLab from Jenkins, we will need to create an authentication token from your GitLab user settings. A good practice for this would be to create it from a _machine user_. Something like (i.e.) `devonfw-ci/\*\*****`.
+
+image::./images/others/jenkins-gitlab/gitlab-access-token.png[]
+
+Simply by adding a name to it and a date for it expire is enough:
+
+image::./images/others/jenkins-gitlab/gitlab-access-token-generation.png[]
+
+image::./images/others/jenkins-gitlab/gitlab-access-token-generated.png[]
+
+As GitLab saids, you should make sure you don't lose your token. Otherwise you would need to create a new one.
+
+This will allow Jenkins to connect with right permissions to our GitLab server.
+
+== 3. Create "GitLab API" Token credentials
+
+Thos credentials will use that token already generated in GitLab to connect once we declare the GitLab server in the Global Jenkins configuration. Obviously, those credentials must be *GitLab API token*-like.
+
+image::./images/others/jenkins-gitlab/jenkins-gitlab-api-token-credentials-kind.png[]
+
+Then, we add the generated token in the `API token` field:
+
+image::./images/others/jenkins-gitlab/jenkins-gitlab-api-token-credentials-complete.png[]
+
+Look in your Global credentials if they had been correctly created:
+
+image::./images/others/jenkins-gitlab/jenkins-gitlab-api-token-credentials.png[]
+
+== 4. Create GitLab connection in Jenkins
+
+Specify a GitLab connection in your Jenkins's `Manage Jenkins > Configure System` configuration. This will tell Jenkins where is our GitLab server, a user to access it from and so on.
+
+You'll need to give it a name, for example, related with what this GitLab is dedicated for (specific clients, internal projects...). Then, the `Gitlab host URL` is just where your GitLab server is. If you have it locally, that field should look similar to:
+
+* Connection name: `my-local-gitlab`
+* Gitlab host URL: `\http://localhost:[[PORT_NUMBER]]`
+
+Finally, we select our recently GitLab API token as credentials.
+
+image::./images/others/jenkins-gitlab/jenkins-gitlab-connection.png[]
+
+== 5. Jenkins Pipeline changes
+
+=== 5.1 Choose GitLab connection in Pipeline's General configuration
+
+First, our pipeline should allow us to add a GitLab connection to connect to (the already created one).
+
+image::./images/others/jenkins-gitlab/jenkins-pipeline-gitlab-connection.png[]
+
+In the case of the local example, could be like this:
+
+* GitLab connection: `my-local-gitlab`
+* GitLab Repository Name: `myusername/webhook-test` (for example)
+
+=== 5.2 Create a Build Trigger
+
+. You should already see your GitLab project's URL (as you stated in the General settings of the Pipeline).
+
+. Write `.\*build.*` in the comment for triggering a build
+
+. Specify or filter the branch of your repo you want use as target. That means, whenever a git action is done to that branch (for exapmle, `master`), this Pipeline is going to be built.
+
+. Generate a Secret token (to be added in the yet-to-be-created GitLab webhook).
+
+image::./images/others/jenkins-gitlab/jenkins-pipeline-build-trigger.png[]
+
+== 6. GitLab Webhook
+
+. Go to you GitLab project's `Settings > Integration` section.
+
+. Add the path to your Jenkins Pipeline. Make sure you add *project* instead of *job* in the path.
+
+. Paste the generated Secret token of your Jenkins pipeline
+
+. Select your git action that will trigger the build.
+
+image::./images/others/jenkins-gitlab/gitlab-webhook.png[]
+
+== 7. Results
+
+After all those steps you shoul have a result similar to this in your Pipeline:
+
+image::./images/others/jenkins-gitlab/jenkins-pipeline-result.png[]
+
+Enjoy the Continuous Integration! :)

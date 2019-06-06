@@ -1,0 +1,78 @@
+= How to use it
+
+This is the documentation about shop floor and its different tools. Here you are going to learn how to create new projects, so that they can include continuous integration and continuous delivery processes, and be deployed automatically in different environments.
+
+== Prerequisites - Provisioning environment
+
+To start working you need to have some services running in your provisioning environment, such as Jenkins (automation server), GitLab (git repository), SonarQube (program analysis), Nexus (software repository) or similar.
+
+To host those services we recommend to have a Production Line instance but you can use other platforms. Here is the list for the different options:
+
+  * link:dsf-provisioning-production-line.asciidoc[Production Line].
+// TODO:  * link:dsf-provisioning-dsf4openshift.asciidoc[dsf4openshift].
+  * link:dsf-provisioning-dsf4docker.asciidoc[dsf4docker].
+
+== Step 1 - Configuration and services integration
+
+The first step is configure your services and integrate them with jenkins. Here you have an example about how to manually configure the next services:
+
+  * link:dsf-configure-nexus.asciidoc[Nexus].
+  * link:dsf-configure-sonarqube.asciidoc[SonarQube].
+//  * link:dsf-configure-jenkins.asciidoc[Jenkins].
+
+== Step 2 - Create the project
+
+=== Create and integrate git repository
+
+The second is create or git repository and integrate it with Jenkins.
+
+Here you can find a manual guide about how it:
+
+* link:dsf-configure-gitlab.asciidoc[GitLab] new project.
+
+=== start new devonfw project
+
+It is time to create your devonfw project:
+
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
+//  * TODO: devon4node
+
+=== cicd configuration
+
+Now you need to add cicd files in your project.
+
+////
+==== cicdgen
+
+  * TODO: cicdgen
+
+===== Optional components
+
+  * TODO: Manual Guide about add things like config service for angular (Maybe it's going to be included in cicdgen)
+////
+
+==== Manual configuration
+
+===== Jenkinsfile
+
+Here you can find all that you need to know to do your link:dsf-configuration-jenkinsfile.asciidoc[Jenkinsfile].
+
+////
+TODO:
+==== Dockerfile
+
+Here you can find all that you need to know to do your link:dsf-configuration-dockerfile.asciidoc[Dockerfile].
+
+////
+
+== Step 3 - Deployment
+
+  * link:dsf-deployment-dsf4openshift.asciidoc[dsf4openshift].
+// TODO:  * link:dsf-deployment-dsf4docker.asciidoc[dsf4docker].
+
+////
+== Step 4 - Verification
+
+  * TODO: Manual Guide
+////

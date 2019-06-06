@@ -1,9 +1,0 @@
-= Jenkinsfile(s) for Devonfw projects in Production Line
-
-After you create your pipeline, you have to make sure that is parametrized. Check the `This project is parametrized` option in the Pipeline's configuration and add 2 specific ones, which values would change depending on (in this case) your external server for deployment:
-
-image::./images/dsf4pl/pipeline-params.png[]
-
-Those ones will be used as variables on the Jenkinsfile, that is way naming here is important.
-
-The only thing left here is paste the content of the link:https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4pl/jenkins[provided Jenkinsfile] in the *Pipeline* section, always according to the kind of your project (*Angular* or *Java*).

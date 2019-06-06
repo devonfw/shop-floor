@@ -20,27 +20,15 @@ RED="\033[31m"
 BLUE="\033[34m"
 NC="\033[0m"
 
-echo -e "${BLUE}
-      ____                         __            ____  _
-     |  _ \  _____   _____  _ __  / _|_      __ / ___|| |__   ___  _ __
-     | | | |/ _ \ \ / / _ \| '_ \| |_\ \ /\ / / \___ \| '_ \ / _ \| '_ \\
-     | |_| |  __/\ V / (_) | | | |  _|\ V  V /   ___) | | | | (_) | |_) |
-     |____/ \___| \_/ \___/|_| |_|_|   \_/\_/   |____/|_| |_|\___/| .__/
-                                                                  |_|
-                   _____ _                     __
-                  |  ___| | ___   ___  _ __   / _| ___  _ __
-                  | |_  | |/ _ \ / _ \| '__| | |_ / _ \| '__|
-                  |  _| | | (_) | (_) | |    |  _| (_) | |
-                  |_|   |_|\___/ \___/|_|    |_|  \___/|_|
-
-                   ___                   ____  _     _  __ _
-                  / _ \ _ __   ___ _ __ / ___|| |__ (_)/ _| |_
-                 | | | | '_ \ / _ \ '_ \\___ \| '_ \| | |_| __|
-                 | |_| | |_) |  __/ | | |___) | | | | |  _| |_
-                  \___/| .__/ \___|_| |_|____/|_| |_|_|_|  \__|
-                       |_|
-                                    _ _ _
-${NC}"
+echo -e " 
+         _      __ _  _    ___                       _     _  __ _   
+      __| |___ / _| || |  / _ \ _ __   ___ _ __  ___| |__ (_)/ _| |_ 
+     / _\` / __| |_| || |_| | | | '_ \ / _ \ '_ \/ __| '_ \| | |_| __|
+    | (_| \__ \  _|__   _| |_| | |_) |  __/ | | \__ \ | | | |  _| |_ 
+     \__,_|___/_|    |_|  \___/| .__/ \___|_| |_|___/_| |_|_|_|  \__|
+                               |_|                                   
+    Version 2.0
+"
 
 # STEP 1: cluster up, login with admin, and obtain the role of the admin to this account.
 # oc cluster up --host-data-dir=/devonfw-shop-floor --host-config-dir=/origin/master-config.yaml
@@ -55,8 +43,8 @@ oc new-project devonfw --display-name='DevonFW' --description='DevonFW'
 
 ## Create base-images and add them to DevonFW project
 ### this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/develop/dsf4openshift/openshift-devonfw-deployment/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/develop/dsf4openshift/openshift-devonfw-deployment/s2i/angular/s2i-devonfw-angular-imagestream.json --namespace=devonfw
 
 ## Build base-images in DevonFW project
 oc start-build s2i-devonfw-java --namespace=devonfw
@@ -75,8 +63,8 @@ oc policy add-role-to-group system:image-puller system:authenticated --namespace
 
 # STEP 4: Create DevonFW templates into openshift
 ### if this files are private, to share it, you must enter in Git with a valid user, open the file and press RAW Button to generate a valid token
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-java-template.json --namespace=openshift
-oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-angular-template.json --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/develop/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-java-template.json --namespace=openshift
+oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/develop/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-angular-template.json --namespace=openshift
 
 echo -e "\nCluster Initial Setup finish.\n"
 read -n1 -r -p "Press any key to close..." key

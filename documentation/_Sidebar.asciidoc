@@ -1,29 +1,46 @@
-= Devonfw Shop Floor Guide
+== devonfw Shop Floor Guide
 
-* link:home[Introduction]
+* link:home.asciidoc[Introduction]
+* link:dsf-how-to-use.asciidoc[How to use it]
 
-== DSF for Production Line
+=== Provisioning environments
+* link:dsf-provisioning-production-line.asciidoc[Production Line]
+* link:dsf-provisioning-dsf4docker.asciidoc[dsf 4 docker]
 
-* link:devonfw-shop-floor-4-production-line[Introduction]
-* link:devonfw-shop-floor-4-production-line-environment[Instance set up]
-// * link:devonfw-shop-floor-4-production-line-jenkinsfiles[Jenkinsfile(s)]
+=== Configuration and services integration
+* link:dsf-configure-nexus.asciidoc[Nexus]
+* link:dsf-configure-sonarqube.asciidoc[SonarQube]
 
-== DSF for Docker
+== Create project
+=== Create and integrate git repository
+* https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
+* https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
 
-* link:devonfw-shop-floor-4-docker[Introduction]
+=== cicd configuration
 
-== DSF for Openshift
+==== Manual configuration
 
-* link:devonfw-shop-floor-4-openshift[Introduction]
-* link:devonfw-shop-floor-4-openshift-how-to-install[How to install Openshift Origin]
-* link:devonfw-shop-floor-4-openshift-initial-setup[Initial setup]
-** link:devonfw-shop-floor-4-openshift-s2i[s2i]
-** link:devonfw-shop-floor-4-openshift-templates[templates]
-** link:devonfw-shop-floor-4-openshift-customize[Customize Openshift]
-*** link:devonfw-shop-floor-4-openshift-customize-icons[Customize icons]
-*** link:devonfw-shop-floor-4-openshift-customize-catalog[Customize catalog]
+* link:dsf-configuration-jenkinsfile.asciidoc[Jenkinsfile].
+
+== Deployment
+* link:dsf-deployment-dsf4openshift.asciidoc[dsf4openshift].
+
+=== Annexes
 * Custom Services
+// ** TODO: MongoDB
 ** BitBucket
-*** link:bitbucket-basic-server-setup-in-openshift[Server setup in OpenShift]
-*** link:bitbucket-extra-server-configuration[Extra configuration]
-** link:selenium-basic-grid-setup-in-openshift[Selenium Basic Gird]
+*** link:dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[Server setup in OpenShift]
+*** link:dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[Extra configuration]
+** link:dsf-openshift-services-selenium-basic-grid.asciidoc[Selenium Basic Gird]
+* link:dsf-mirabaud-cicd-environment-setup.asciidoc[Mirabaud experience]
+** link:dsf-mirabaud-jenkins-gitLab-integration.asciidoc[jenkins-gitlab integration]
+** link:dsf-mirabaud-jenkins-nexus-integration.asciidoc[jenkins-nexus integration]
+** link:dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[jenkins-sonarqube integration]
+* link:dsf-okd.asciidoc[OKD _(OpenShift Origin)_]
+** link:dsf-okd-how-to-install.asciidoc[How to install]
+** link:dsf-okd-initial-setup[Initial setup]
+*** link:dsf-okd-s2i[s2i]
+*** link:dsf-okd-templates[templates]
+*** link:dsf-okd-customize[Customize Openshift]
+**** link:dsf-okd-customize-icons[Customize icons]
+**** link:dsf-okd-customize-catalog[Customize catalog]
