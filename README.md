@@ -12,7 +12,7 @@ The **devonfw shop floor 4 OpenShift** is a solution based on the experience of 
 
 # How to use it
 
-You could find documentation about how to use it in the [wiki](./../../wiki).
+You could find documentation about how to use it in the [wiki](./../../wiki/dsf-how-to-use).
 
 <!-- TODO: Review from here to the end of the readme -->
 <!--
