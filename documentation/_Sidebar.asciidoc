@@ -20,7 +20,7 @@
 
 ==== Manual configuration
 
-* link:dsf-configuration-jenkinsfile.asciidoc[Jenkinsfile].
+* link:dsf-configure-jenkinsfile.asciidoc[Jenkinsfile].
 
 == Deployment
 * link:dsf-deployment-dsf4openshift.asciidoc[dsf4openshift].
