@@ -17,6 +17,7 @@ pipeline{
         
         // Git Repository
         string(name: 'GIT_REPOSITORY', defaultValue: 'http://gitlab-core:80/gitlab/boat/boat-frontend.git', description: 'NEEDS TO BE SET!. The url of your git repository') 
+        string(name: 'GIT_BRANCH', defaultValue: 'develop', description: 'NEEDS TO BE SET!. The branch of your git repository') 
         string(name: 'GIT_CREDENTIALS', defaultValue: 'ocadmin', description: 'NEEDS TO BE SET!. Credentials for your git repository') 
 
         // Docker Registry
@@ -66,8 +67,7 @@ pipeline{
         }
         stage('Download app repository') {
             steps{
-                git branch: 'develop', credentialsId: 'insere-gitlab-jenkins', url: 'http://gitlab-core:80/gitlab/insere/insereng.git'
-                git branch: 'develop', credentialsId: "${GIT_CREDENTIALS}", url: "${GIT_REPOSITORY}"
+                git branch: "${GIT_BRANCH}", credentialsId: "${GIT_CREDENTIALS}", url: "${GIT_REPOSITORY}"
             }
         }
 
