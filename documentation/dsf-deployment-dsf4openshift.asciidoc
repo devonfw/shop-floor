@@ -236,10 +236,14 @@ image::./images/configuration/openshift-jenkins-plugin.png[]
 
 == Upgrade your Jenkinsfile
 
-Now it is time to add/upgrade the next stages in to your Jenkinsfile
+Now it is time to add/upgrade the next stages in to your Jenkinsfile:
 
-Add link:dsf-configuration-jenkins.asciidoc#create-docker-image[create docker image] stage.
+Add link:dsf-configure-jenkins.asciidoc#create-docker-image[create docker image] stage.
 
-Add link:dsf-configuration-jenkins.asciidoc#deploy-docker-image[deploy docker image] stage.
+Add link:dsf-configure-jenkins.asciidoc#deploy-docker-image[deploy docker image] stage.
 
-Add link:dsf-configuration-jenkins.asciidoc#check-status[check status] stage.
+Add link:dsf-configure-jenkins.asciidoc#check-status[check status] stage.
+
+Upgrade link:dsf-configure-jenkins.asciidoc#setup-Jenkins-tools[Setup Jenkins tools] stage.
+
+NOTE: Remember to upgrade your parameters to diference which environment is used per branch.
