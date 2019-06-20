@@ -42,8 +42,6 @@ pipeline{
     }
     
 /*
-    oc new-build --strategy docker --binary --docker-image nginx:alpine-perl --name=${props.name}-$environment --to=${DOCKER_REGISTRY}/${props.name}:${dockerTag} --to-docker=true
-    oc new-build --strategy docker --binary --docker-image node:lts --name=${props.name}-$environment --to=${DOCKER_REGISTRY}/${props.name}:${dockerTag} --to-docker=true
     oc new-build --strategy docker --binary --docker-image openjdk:<version> --name=${props.name}-$environment --to=${DOCKER_REGISTRY}/${props.name}:${dockerTag} --to-docker=true
 */
 
