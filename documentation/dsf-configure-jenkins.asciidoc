@@ -319,7 +319,7 @@ link:dsf-deployment-dsf4openshift.asciidoc#configure-builds-to-create-docker-ima
 
 NOTE: if your project is a maven project you should read the _pom.xml_ file instead of the _package.json_, you could do it with the next command `def pom = readMavenPom file: 'pom.xml'`. Due to the fact that there are different variable names between those two files, remember to modify *${props.name}* for *${pom.artifactId}* and *${props.version}* for *${pom.version}* in the code.
 
-=== Deploy image
+=== Deploy docker image
 
 Once you have the docker image in the registry we only need to import it into your deployment environment. We can do it executing one of the next commands:
 

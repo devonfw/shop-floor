@@ -47,15 +47,6 @@ For example, to create a secret for a nexus repository you should execute the ne
 [source,Shell]
 ----
 oc create secret docker-registry $nameForSecret --docker-server=${dockerRegistry} --docker-username=${user} --docker-password=${pass} --docker-email=no-reply@email.com
-
-oc secrets link default $nameForSecret --for=pull
-----
-
-If you need to use that secret, you need to add the next code to the instruction:
-
-[source,Shell]
-----
---source-secret=$nameForSecret
 ----
 
 == Configure OpenShift
@@ -68,7 +59,7 @@ To do it, follow the next steps.
 
 ==== Create new builds configs
 
-The first thing you need to do for create a new environment is prepare the builds for the front and for the middleware and rise default memory limits for the middleware. You can do it using a terminal and executing the next instructions:
+The first thing you need to do for create a new environment is prepare the buildconfigs for the front and for the middleware and rise default memory limits for the middleware. You can do it using a terminal and executing the next instructions:
 
 These are a summary about the parameters used in our commands:
 
@@ -87,7 +78,7 @@ You need to create nginx build config with docker.
 oc new-build --strategy docker --binary --docker-image nginx:alpine-perl --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
 ----
 
-NOTE: You need nginx:alpine-perl to read the environment config file in openshift, if you are not going to use it, devonfw recommend you to use nginx:latest instead.
+NOTE: You need nginx:alpine-perl to read the environment config file in openshift, if you are not going to use it, you could use nginx:latest instead.
 
 ===== devon4node build config
 
@@ -119,7 +110,16 @@ image::./images/configuration/nexus-stored-artifacts.png[]
 
 ====== Build in OpenShift
 
-When you have the artifacts, you can send them to your openshift and build them using your buildconfig that you created on the previous step. This is going to create a new docker image and push it to your registry. To do it you need to use a terminal and execute the following:
+When you have the artifacts, you can send them to your openshift and build them using your buildconfig that you created on the previous step. This is going to create a new docker image and push it to your registry.
+
+If your docker registry need credentials you shold use a secret. You could add it to your buildconfig using the next command:
+
+[source,Shell]
+----
+oc set build-secret --push bc/${props.name}-$environment ${nameForSecret}
+----
+
+Now you can use your build config and push the docker image to your tegistry. To do it you need to use a terminal and execute the following:
 
 [source,Shell]
 ----
@@ -144,10 +144,12 @@ To create new app you need to use the next command.
 
 [source,Shell]
 ----
-oc new-app --docker-image=${artifactsPath} --name=${props.name}-$environment
+oc new-app --docker-image=${artifactsPath} --name=${props.name}-$environment --source-secret=${nameForSecret}
 ----
 
 NOTE: You could add environment variables using `-e $name=$value`
+
+NOTE: If you do not need to use a secret remove the end part of the command `--source-secret=${nameForSecret}`
 
 ==== Create routes
 
@@ -193,7 +195,11 @@ NOTE: Maybe you need to raise your memory or CPU limits. It is explained below.
 
 === Raise/decrease memory or CPU limits
 
-If you need to raise (or decrease) the memory or CPU limits that you need, you could do it in OpenShift using the user interface. To do it you should enter in OpenShift and go to deployments.
+If you need to raise (or decrease) the memory or CPU limits that you need you could do it for your deployments and bulders configurations following the next steps.
+
+==== For deployments
+
+You could do it in OpenShift using the user interface. To do it you should enter in OpenShift and go to deployments.
 
 image::./images/configuration/openshift-deployments-menu.png[]
 
@@ -209,16 +215,39 @@ image::./images/configuration/openshift-deployments-yaml-resources.png[]
 
 In the image, you could see that appear resources two times. One at the bottom of the image, this are the container resources that you modified on the previous paragraph and another one at the top of the image. The resources of the top are for the pod, you should give to it at least the same of the sum for all containers that the pod use.
 
-////
-Using the interface:
+Also you could do it using command line interface and executing the next command:
 
-Using command example:
+*To modify pod limits*
+[source,Shell]
+----
+oc patch dc/boat-frontend-test --patch '{"spec":{"strategy":{"resources":{"limits":{"cpu": "100m", "memory": "100Mi"}, "requests":{"cpu": "100m", "memory": "100Mi"}}}}}'
+----
+
+
+*To modify container limits*
+
+When this guide was wrotten Openshift have a bug and you cannot do it from command line interface.
+////
+[source,Shell]
+----
+oc patch dc/${props.name}${APP_NAME_SUFFIX} --patch '{"spec":{"template":{"containers":{"resources":{"limits":{"cpu": "125m", "memory": "400Mi"},"requests":{"cpu": "125m", "memory": "400Mi"}}}}}}'
+
+oc patch dc/boat-frontend-test --patch "{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"resources\":{\"limits\":{\"cpu\": \"100m\", \"memory\": \"100Mi\"},\"requests\":{\"cpu\": \"100m\", \"memory\": \"100Mi\"}}}]}}}}"
+----
+////
+
+NOTE: If that command did not work and you received an error like this `error: unable to parse "'{spec:...": yaml: found unexpected end of stream`, try to use the patch using "" instead of ''. It looks like this: `--patch "{\"spec\":...\"}}}}"`
+
+==== For builders
+
+You could do it using command line interface and executing the next command:
 
 [source,Shell]
 ----
-oc patch bc/$project-api-$environment --patch "{\"spec\":{\"resources\":{\"limits\":{\"memory\": \"400Mi\"},\"requests\":{\"memory\": \"400Mi\"}}}}"
+oc patch bc/${props.name}${APP_NAME_SUFFIX} --patch '{"spec":{"resources":{"limits":{"cpu": "125m", "memory": "400Mi"},"requests":{"cpu": "125m", "memory": "400Mi"}}}}'
 ----
-////
+
+NOTE: If that command did not work and you received an error like this `error: unable to parse "'{spec:...": yaml: found unexpected end of stream`, try to use the patch using "" instead of ''. It looks like this: `--patch "{\"spec\":...\"}}}}"`
 
 == Service integration with jenkins
 
@@ -236,8 +265,14 @@ image::./images/configuration/openshift-jenkins-plugin.png[]
 
 == Upgrade your Jenkinsfile
 
-=== Add build stage
+Now it is time to add/upgrade the next stages in to your Jenkinsfile:
 
-=== Add deployment stage
+Add link:dsf-configure-jenkins.asciidoc#create-docker-image[create docker image] stage.
 
-=== Add check status
+Add link:dsf-configure-jenkins.asciidoc#deploy-docker-image[deploy docker image] stage.
+
+Add link:dsf-configure-jenkins.asciidoc#check-status[check status] stage.
+
+Upgrade link:dsf-configure-jenkins.asciidoc#setup-Jenkins-tools[Setup Jenkins tools] stage.
+
+NOTE: Remember to upgrade your parameters to diference which environment is used per branch.

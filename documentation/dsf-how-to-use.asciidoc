@@ -56,13 +56,13 @@ Now you need to add cicd files in your project.
 
 ===== Jenkinsfile
 
-Here you can find all that you need to know to do your link:dsf-configuration-jenkinsfile.asciidoc[Jenkinsfile].
+Here you can find all that you need to know to do your link:dsf-configure-jenkinsfile.asciidoc[Jenkinsfile].
 
 ////
 TODO:
 ==== Dockerfile
 
-Here you can find all that you need to know to do your link:dsf-configuration-dockerfile.asciidoc[Dockerfile].
+Here you can find all that you need to know to do your link:dsf-configure-dockerfile.asciidoc[Dockerfile].
 
 ////
 
