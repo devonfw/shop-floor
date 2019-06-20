@@ -63,6 +63,7 @@ pipeline{
                 tool "${params.CHROME_TOOL}"
             }
         }
+        
         stage('Download app repository') {
             steps{
                 dir('dsf') {
@@ -80,7 +81,7 @@ pipeline{
         }
 
         stage('Build') {
-        when {
+            when {
                 expression {
                     return params.CREATE_DOCKER_BUILDER
                 }
