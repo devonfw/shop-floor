@@ -184,15 +184,15 @@ pipeline{
                             if (params.SECURED_PROTOCOL) {
                                 if ("${params.HOSTNAME}" != '') {
                                     sh "echo HOSTNAME: ${params.HOSTNAME}"
-                                    sh "oc create route edge --service=${props.name}${params.APP_NAME_SUFFIX}--port=${port} --hostname=${params.HOSTNAME}"
+                                    sh "oc create route edge --service=${props.name}${params.APP_NAME_SUFFIX} --port=${port} --hostname=${params.HOSTNAME}"
                                 } else {
                                     sh "echo HOSTNAME esta vacio"
-                                    sh "oc create route edge --service=${props.name}${params.APP_NAME_SUFFIX}--port=${port}"
+                                    sh "oc create route edge --service=${props.name}${params.APP_NAME_SUFFIX} --port=${port}"
                                 }
                             } else {
                                 if ("${params.HOSTNAME}" != '') {
                                     sh "echo HOSTNAME: ${params.HOSTNAME}"
-                                    sh "oc expose svc/${props.name}${params.APP_NAME_SUFFIX}--port=${port} --hostname=${params.HOSTNAME}"
+                                    sh "oc expose svc/${props.name}${params.APP_NAME_SUFFIX} --port=${port} --hostname=${params.HOSTNAME}"
                                 } else {
                                     sh "echo HOSTNAME esta vacio"
                                     sh "oc expose svc/${props.name}${params.APP_NAME_SUFFIX} --port=${port}"
