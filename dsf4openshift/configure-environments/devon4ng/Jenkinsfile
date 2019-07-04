@@ -46,6 +46,7 @@ pipeline{
 */
 
     environment {
+        dockerFileName = 'Dockerfile.ci'
         nameForSecret='docker-registry'
         artifactsPath='./dist'
         port='8080-tcp'
@@ -89,7 +90,12 @@ pipeline{
             steps{
                 dir('dsf') {
                     sh "yarn"
-                    sh """yarn ${params.BUILD_SCRIPT}"""
+                    sh """
+                        yarn ${params.BUILD_SCRIPT}
+                        cp ${dockerFileName} dist/Dockerfile
+                        cp nginx.conf dist/nginx.conf
+                    """
+                    
                 }
             }
         }

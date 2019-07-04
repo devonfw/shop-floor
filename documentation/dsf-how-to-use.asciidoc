@@ -56,7 +56,7 @@ Now you need to add cicd files in your project.
 
 ===== Jenkinsfile
 
-Here you can find all that you need to know to do your link:dsf-configure-jenkinsfile.asciidoc[Jenkinsfile].
+Here you can find all that you need to know to do your link:dsf-configure-jenkins.asciidoc[Jenkinsfile].
 
 ////
 TODO:
