@@ -40,10 +40,6 @@ pipeline{
         string(name: 'CHROME_TOOL', defaultValue: 'Chrome-stable', description: 'NEEDS TO BE SET!. Tool name of Chrome in Jenkins.')
 
     }
-    
-/*
-    oc new-build --strategy docker --binary --docker-image openjdk:<version> --name=${props.name}-$environment --to=${DOCKER_REGISTRY}/${props.name}:${dockerTag} --to-docker=true
-*/
 
     environment {
         dockerFileName = 'Dockerfile.ci'
