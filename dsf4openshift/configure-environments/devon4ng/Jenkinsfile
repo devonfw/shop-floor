@@ -92,8 +92,8 @@ pipeline{
                     sh "yarn"
                     sh """
                         yarn ${params.BUILD_SCRIPT}
-                        cp ${dockerFileName} dist/Dockerfile
-                        cp nginx.conf dist/nginx.conf
+                        cp ${dockerFileName} ${artifactsPath}/Dockerfile
+                        cp nginx.conf ${artifactsPath}/nginx.conf
                     """
                     
                 }

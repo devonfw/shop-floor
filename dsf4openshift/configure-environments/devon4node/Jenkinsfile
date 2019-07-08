@@ -89,9 +89,9 @@ pipeline{
                     sh "yarn"
                     sh """
                         yarn ${params.BUILD_SCRIPT}
-                        cp ${dockerFileName} dist/Dockerfile
-                        cp package.json dist/package.json
-                        cp yarn.lock dist/yarn.lock
+                        cp ${dockerFileName} ${artifactsPath}/Dockerfile
+                        cp package.json ${artifactsPath}/package.json
+                        cp yarn.lock ${artifactsPath}/yarn.lock
                     """
                 }
             }
