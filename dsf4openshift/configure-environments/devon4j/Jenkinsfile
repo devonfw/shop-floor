@@ -10,10 +10,10 @@ pipeline{
     //Jenkins Job Parameters
     parameters {
         // Options
-        booleanParam(name: 'CREATE_SECRET', defaultValue: true, description: 'OPTIONAL: This secrets is used to connect OpenShift with your docker-registry. If true, the secret will be add to your OpenShift. If more than one app use the same registry and openshift alredy have the secret added mark it as false.')
+        booleanParam(name: 'CREATE_SECRET', defaultValue: false, description: 'OPTIONAL: This secrets is used to connect OpenShift with your docker-registry. If true, the secret will be add to your OpenShift. If more than one app use the same registry and openshift alredy have the secret added mark it as false.')
         string(name: 'REGISTRY_SECRET_NAME_SUFFIX', defaultValue: '-test', description: 'OPTIONAL: suffix to add to your secret for the docker registry in OpenShift. The name is going to be docker-registry, if you use more than one docker-registry in the same namespace you need to add a suffix. For example you cuold add the name of your project, then to have the name as docker-registry-myprojectname you should use -myprojectname value')
         booleanParam(name: 'CREATE_DOCKER_BUILDER', defaultValue: true, description: 'OPTIONAL: If true, BuildConfig is going to be added in OpenShift to build the docker image for your application.')
-        string(name: 'BUILD_SCRIPT', defaultValue: 'build', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the bild script found in the package.json to be executed for generate the artifacts used to create the docker image.')
+        string(name: 'JDK_VERSION', defaultValue: '8', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the version of jdk used to create the docker image.')
         
         // Git Repository
         string(name: 'GIT_REPOSITORY', defaultValue: 'http://gitlab-core:80/gitlab/boat/boat-frontend.git', description: 'NEEDS TO BE SET!. The url of your git repository') 
@@ -35,16 +35,14 @@ pipeline{
 
         // Tools
         string(name: 'OPENSHIFT_TOOL', defaultValue: 'OpenShiftv3.11.0', description: 'NEEDS TO BE SET!. Tool name of openshift client in Jenkins.')
-        string(name: 'NODEJS_TOOL', defaultValue: 'NodeJS-10.15.3', description: 'NEEDS TO BE SET!. Tool name of NodeJS in Jenkins.')
-        string(name: 'YARN_TOOL', defaultValue: 'Yarn', description: 'NEEDS TO BE SET!. Tool name of Yarn in Jenkins.')
-        string(name: 'CHROME_TOOL', defaultValue: 'Chrome-stable', description: 'NEEDS TO BE SET!. Tool name of Chrome in Jenkins.')
-
+        string(name: 'GLOBAL_SETTINGS_ID', defaultValue: 'MavenSettings', description: 'NEEDS TO BE SET!. Maven global settings configuration ID.')
+        string(name: 'MAVEN_INSTALLATION', defaultValue: 'Maven3', description: 'NEEDS TO BE SET!. Maven tool id.')
     }
 
     environment {
         dockerFileName = 'Dockerfile.ci'
         nameForSecret='docker-registry'
-        artifactsPath='./dist'
+        artifactsPath='./server/target'
         port='8080-tcp'
     }
 
@@ -52,12 +50,9 @@ pipeline{
         stage('PL setup') {
             steps{
                 script {
-                    def node = tool name: "${params.NODEJS_TOOL}", type: 'nodejs'
                     def openshift = tool name: "${params.OPENSHIFT_TOOL}", type: 'oc'
-                    env.PATH = "${openshift}:${node}/bin:${env.PATH}"
+                    env.PATH = "${openshift}:${env.PATH}"
                 }
-                tool "${params.YARN_TOOL}"
-                tool "${params.CHROME_TOOL}"
             }
         }
         
@@ -85,11 +80,11 @@ pipeline{
             }
             steps{
                 dir('dsf') {
-                    sh "yarn"
+                    withMaven(globalMavenSettingsConfig: "${params.GLOBAL_SETTINGS_ID}", maven: "${params.MAVEN_INSTALLATION}") {
+                        sh "mvn install -Dmaven.test.skip=true"
+                    }
                     sh """
-                        yarn ${params.BUILD_SCRIPT}
                         cp ${dockerFileName} ${artifactsPath}/Dockerfile
-                        cp nginx.conf ${artifactsPath}/nginx.conf
                     """
                     
                 }
@@ -127,14 +122,14 @@ pipeline{
             steps{
                 script {
                     dir('dsf') {
-                        props = readJSON file: 'package.json'
+                        def pom = readMavenPom file: 'pom.xml'
                         withCredentials([usernamePassword(credentialsId: "${params.OPENSHIFT_CREDENTIALS}", passwordVariable: 'pass', usernameVariable: 'user')]) {
                             sh "oc login -u ${user} -p ${pass} ${params.OPENSHIFT_URL} --insecure-skip-tls-verify"
                             sh "oc project ${params.OPENSHIFT_NAMESPACE}"
                             sh """
-                                oc new-build --strategy docker --binary --docker-image nginx:alpine-perl --name=${props.name}${params.APP_NAME_SUFFIX} --to=${params.DOCKER_REGISTRY}/${props.name}:${params.DOCKER_TAG} --to-docker=true
-                                oc patch bc/${props.name}${params.APP_NAME_SUFFIX} --patch '{"spec":{"resources":{"limits":{"memory": "400Mi"},"requests":{"memory": "400Mi"}}}}'
-                                oc set build-secret --push bc/${props.name}${params.APP_NAME_SUFFIX} ${nameForSecret}${params.REGISTRY_SECRET_NAME_SUFFIX}
+                                oc new-build --strategy docker --binary --docker-image openjdk:${params.JDK_VERSION} --name=${pom.artifactId}${params.APP_NAME_SUFFIX} --to=${params.DOCKER_REGISTRY}/${pom.artifactId}:${params.DOCKER_TAG} --to-docker=true
+                                oc patch bc/${pom.artifactId}${params.APP_NAME_SUFFIX} --patch '{"spec":{"resources":{"limits":{"memory": "400Mi"},"requests":{"memory": "400Mi"}}}}'
+                                oc set build-secret --push bc/${pom.artifactId}${params.APP_NAME_SUFFIX} ${nameForSecret}${params.REGISTRY_SECRET_NAME_SUFFIX}
                             """
                         }
                     }
@@ -152,11 +147,11 @@ pipeline{
             steps{
                 script {
                     dir('dsf') {
-                        props = readJSON file: 'package.json'
+                        def pom = readMavenPom file: 'pom.xml'
                         withCredentials([usernamePassword(credentialsId: "${params.OPENSHIFT_CREDENTIALS}", passwordVariable: 'pass', usernameVariable: 'user')]) {
                             sh "oc login -u ${user} -p ${pass} ${params.OPENSHIFT_URL} --insecure-skip-tls-verify"
                             sh "oc project ${params.OPENSHIFT_NAMESPACE}"
-                            sh "oc start-build ${props.name}${params.APP_NAME_SUFFIX} --from-dir=${artifactsPath} --follow"
+                            sh "oc start-build ${pom.artifactId}${params.APP_NAME_SUFFIX} --from-dir=${artifactsPath} --follow"
                         }
                     }
                 }
@@ -167,11 +162,11 @@ pipeline{
             steps{
                 script {
                     dir('dsf') {
-                        props = readJSON file: 'package.json'
+                        def pom = readMavenPom file: 'pom.xml'
                         withCredentials([usernamePassword(credentialsId: "${params.OPENSHIFT_CREDENTIALS}", passwordVariable: 'pass', usernameVariable: 'user')]) {
                             sh "oc login -u ${user} -p ${pass} ${params.OPENSHIFT_URL} --insecure-skip-tls-verify"
                             sh "oc project ${params.OPENSHIFT_NAMESPACE}"
-                            sh "oc new-app --docker-image=${params.DOCKER_REGISTRY}/${props.name}:${params.DOCKER_TAG} --name=${props.name}${params.APP_NAME_SUFFIX} --source-secret=${nameForSecret}${params.REGISTRY_SECRET_NAME_SUFFIX}"
+                            sh "oc new-app --docker-image=${params.DOCKER_REGISTRY}/${pom.artifactId}:${params.DOCKER_TAG} --name=${pom.artifactId}${params.APP_NAME_SUFFIX} --source-secret=${nameForSecret}${params.REGISTRY_SECRET_NAME_SUFFIX}"
                         }
                     }
                 }
@@ -181,7 +176,7 @@ pipeline{
             steps{
                 script {
                     dir('dsf') {
-                        props = readJSON file: 'package.json'
+                        def pom = readMavenPom file: 'pom.xml'
                         withCredentials([usernamePassword(credentialsId: "${params.OPENSHIFT_CREDENTIALS}", passwordVariable: 'pass', usernameVariable: 'user')]) {
                             sh "oc login -u ${user} -p ${pass} ${params.OPENSHIFT_URL} --insecure-skip-tls-verify"
                             sh "oc project ${params.OPENSHIFT_NAMESPACE}"
@@ -189,18 +184,18 @@ pipeline{
                             if (params.SECURED_PROTOCOL) {
                                 if ("${params.HOSTNAME}" != '') {
                                     sh "echo HOSTNAME: ${params.HOSTNAME}"
-                                    sh "oc create route edge --service=${props.name}${params.APP_NAME_SUFFIX} --port=${port} --hostname=${params.HOSTNAME}"
+                                    sh "oc create route edge --service=${pom.artifactId}${params.APP_NAME_SUFFIX} --port=${port} --hostname=${params.HOSTNAME}"
                                 } else {
                                     sh "echo HOSTNAME esta vacio"
-                                    sh "oc create route edge --service=${props.name}${params.APP_NAME_SUFFIX} --port=${port}"
+                                    sh "oc create route edge --service=${pom.artifactId}${params.APP_NAME_SUFFIX} --port=${port}"
                                 }
                             } else {
                                 if ("${params.HOSTNAME}" != '') {
                                     sh "echo HOSTNAME: ${params.HOSTNAME}"
-                                    sh "oc expose svc/${props.name}${params.APP_NAME_SUFFIX} --port=${port} --hostname=${params.HOSTNAME}"
+                                    sh "oc expose svc/${pom.artifactId}${params.APP_NAME_SUFFIX} --port=${port} --hostname=${params.HOSTNAME}"
                                 } else {
                                     sh "echo HOSTNAME esta vacio"
-                                    sh "oc expose svc/${props.name}${params.APP_NAME_SUFFIX} --port=${port}"
+                                    sh "oc expose svc/${pom.artifactId}${params.APP_NAME_SUFFIX} --port=${port}"
                                 }
                             }
                         }

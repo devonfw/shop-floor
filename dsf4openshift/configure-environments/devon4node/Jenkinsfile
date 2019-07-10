@@ -38,12 +38,9 @@ pipeline{
         string(name: 'NODEJS_TOOL', defaultValue: 'NodeJS-10.15.3', description: 'NEEDS TO BE SET!. Tool name of NodeJS in Jenkins.')
         string(name: 'YARN_TOOL', defaultValue: 'Yarn', description: 'NEEDS TO BE SET!. Tool name of Yarn in Jenkins.')
     }
-    
-/*
-    oc new-build --strategy docker --binary --docker-image openjdk:<version> --name=${props.name}-$environment --to=${DOCKER_REGISTRY}/${props.name}:${dockerTag} --to-docker=true
-*/
 
     environment {
+        dockerFileName = 'Dockerfile.ci'
         nameForSecret='docker-registry'
         artifactsPath='./dist'
         port='3000-tcp'
@@ -86,7 +83,12 @@ pipeline{
             steps{
                 dir('dsf') {
                     sh "yarn"
-                    sh """yarn ${params.BUILD_SCRIPT}"""
+                    sh """
+                        yarn ${params.BUILD_SCRIPT}
+                        cp ${dockerFileName} ${artifactsPath}/Dockerfile
+                        cp package.json ${artifactsPath}/package.json
+                        cp yarn.lock ${artifactsPath}/yarn.lock
+                    """
                 }
             }
         }
