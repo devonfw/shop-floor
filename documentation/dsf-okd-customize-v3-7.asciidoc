@@ -1,6 +1,6 @@
 = Customize Openshift Origin v3.7 for devonfw
 
-This is a guide to customize Openshift cluster. For more informaticon read the next:
+This is a guide to customize Openshift cluster. For more information read the next:
 
 * https://docs.openshift.com/container-platform/3.7/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets[Openshift docs customization] for the version 3.7.
 
@@ -40,7 +40,7 @@ Now we have a file with the configuration of our openshift cluster.
 === Copy all customize files inside the openshift container
 To use our customization of devonfw Openshift, we need to copy our files inside the openshift container. 
 
-To do this we  need to copy the images, scripts and stylesheets from https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift[here] inside openshift
+To do this we need to copy the images, scripts and stylesheets from https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift[here] inside openshift
 container, for example, we could put it all inside a folder called openshift.local.devonfw. On the step one we obtain the name of this container, for this example we assume that it's called origin. Then our images are located inside openshift container and we can see an access it in `/var/lib/origin/openshift.local.devonfw/images`.
 
 [source,Shell]
@@ -49,7 +49,7 @@ $ docker cp ./openshift.local.devonfw origin:/var/lib/origin/
 ----
 
 === Edit and copy the master-config.yaml to use our customize files
-The master-config.yaml have a sections to charge our custom files. All this sections are inside the `assetConfig` and their names are the next:
+The master-config.yaml have a sections to charge our custom files. All these sections are inside the `assetConfig` and their names are the next:
 
 - The custom stylessheets are into `extensionStylesheets`.
 - The custom scripts are into `extensionScripts`.

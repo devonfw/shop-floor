@@ -86,7 +86,7 @@ The followed approach consists on deploying new image from the OpenShift WenCons
 The image as well as its documentation and details can be found at link:https://hub.docker.com/r/selenium/node-firefox/[Selenium Hub Docker Image] _(firefox node in this case)_
 
 ==== Step 1: Deploy Image
-Introduce the appropriate Docker Imgage name as it is specified in the link:https://hub.docker.com/r/selenium/node-firefox/[documentation] _(selenium/node-firefox)_
+Introduce the appropriate Docker Image name as it is specified in the link:https://hub.docker.com/r/selenium/node-firefox/[documentation] _(selenium/node-firefox)_
 
 image::./images/others/selenium/node/step1.png[]
 
@@ -109,19 +109,19 @@ image::./images/others/selenium/node/step2.png[]
 image::./images/others/selenium/node/step3.png[]
 
 ==== DONE !!
-If the creation of the contianer was correct, we will be able to see our new selenium-node-firefox application up & running, as well as we will be able to see that the firefox node has correctly detected the selenium hub _(in the log of the POD)_
+If the creation of the container was correct, we will be able to see our new selenium-node-firefox application up & running, as well as we will be able to see that the firefox node has correctly detected the selenium hub _(in the log of the POD)_
 
 image::./images/others/selenium/node/done1.png[]
 
 image::./images/others/selenium/node/done2.png[]
 
-If we go back to the configuration of the SeleniumHub thourgh the WebConsole, we also will be able to see the our new firefox node
+If we go back to the configuration of the SeleniumHub through the WebConsole, we also will be able to see the our new firefox node
 
 image::./images/others/selenium/node/done3.png[]
 
 '''
 
-=== Persisten Volumes
-Last part of the installation of the Selenium Grid consists on creating persisten volumes for both, the hub container and the node container.
+=== Persistent Volumes
+Last part of the installation of the Selenium Grid consists on creating persistent volumes for both, the hub container and the node container.
 
-Persisten Volumes can be easely created folling the the link:dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[BitBucket Extra server configuration]
+Persistent Volumes can be easely created folling the the link:dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[BitBucket Extra server configuration]

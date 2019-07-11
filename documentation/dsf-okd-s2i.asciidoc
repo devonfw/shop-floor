@@ -1,6 +1,6 @@
 = s2i devonfw
 
-This are the s2i souce and templates to build an s2i images. It provides OpenShift builder images for components of the devonfw (at this momento only for angular and java).
+This are the s2i source and templates to build an s2i images. It provides OpenShift builder images for components of the devonfw (at this moment only for angular and java).
 
 This work is totally based on the implementation of  https://github.com/Mickuehl[Michael Kuehl] from RedHat for Oasp s2i.
 
@@ -19,7 +19,7 @@ Before using the builder images, add them to the OpenShift cluster.
 First, create a dedicated `devonfw` project as admin.
 [source,Shell]
 ----
-$ oc new-project devonfw --display-name='devonfw' --description='devonfw Application Standar Platform'
+$ oc new-project devonfw --display-name='devonfw' --description='devonfw Application Standard Platform'
 ----
 
 Now add the builder image configuration and start their build.
@@ -37,7 +37,7 @@ Make sure other projects can access the builder images:
 oc policy add-role-to-group system:image-puller system:authenticated --namespace=devonfw
 ----
 
-That's all !
+That's all!
 
 === Deploy devonfw templates
 
@@ -59,7 +59,7 @@ More information about what this script does https://raw.githubusercontent.com/d
 
 == Links & References
 
-This is a list of useful articels etc I found while creating the templates.
+This is a list of useful articles, etc, that I found while creating the templates.
 
 * https://github.com/openshift/openshift-docs/issues/1329[Template Icons]
 * https://github.com/jbossdemocentral/coolstore-microservice[Red Hat Cool Store Microservice Demo]

@@ -4,7 +4,7 @@ image:./images/dsf4pl/pl.png[]
 
 The Production Line Project is a set of server-side collaboration tools for Capgemini engagements. It has been developed for supporting project engagements with individual tools like issue tracking, continuous integration, continuous deployment, documentation, binary storage and much more!
 
-For aditional information use the https://km3.capgemini.com/community/1042857/home[official documentation].
+For additional information use the https://km3.capgemini.com/community/1042857/home[official documentation].
 
 == How to obtain your Production Line
 

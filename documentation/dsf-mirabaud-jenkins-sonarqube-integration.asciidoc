@@ -30,7 +30,7 @@ image::./images/others/jenkins-sonarqube/sonarqube-token-done.png[]
 
 == 3. Jenkins SonarQube Server setup
 
-Now we need to tell Jenkins where is SonarQube and how to communicate with it. In `Manage Jenkins >  Configure Settings`. We add a name for the server (up to you), where it is located (URL), version and the Server authentication token created in point 2.
+Now we need to tell Jenkins where is SonarQube and how to communicate with it. In `Manage Jenkins > Configure Settings`. We add a name for the server (up to you), where it is located (URL), version and the Server authentication token created in point 2.
 
 image::./images/others/jenkins-sonarqube/jenkins-sonarqube-server-setup.png[]
 

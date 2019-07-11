@@ -18,7 +18,7 @@ Remember that this templates need a build image from s2i-devonfw-angular and s2i
 
 ==== Customize Openshift
 
-Remeber that this templates also have a custom icons, and to use it, we must modify the master-config.yml inside openshift. More information:
+Remember that this templates also have custom icons, and to use it, we must modify the master-config.yml inside openshift. More information:
 
 * link:dsf-okd-customize[Customize Openshift].
 
@@ -26,7 +26,7 @@ Remeber that this templates also have a custom icons, and to use it, we must mod
 
 Now, it's time to create devonfw templates to use this s2i and add it to the browse catalog.
 
-To let all user to use this templates in all openshift projects, we should create it in an openshift namespace. To do that, we must log in as an admin.
+To let all user to use these templates in all openshift projects, we should create it in an openshift namespace. To do that, we must log in as an admin.
 
 [source,Shell]
 ----
@@ -34,7 +34,7 @@ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master
 oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/templates/devonfw-angular-template.json --namespace=openshift
 ----
 
-When it finish, remember to logout as an admin and enter with our normal user.
+When it finishes, remember to logout as an admin and enter with our normal user.
 [source,Shell]
 ----
 $ oc login
@@ -42,7 +42,7 @@ $ oc login
 	
 === How to use devonfw templates in openshift
 
-To use this templates with openshift, we can override any parameter values defined in the file by adding the --param-file=paramfile option.
+To use these templates with openshift, we can override any parameter values defined in the file by adding the --param-file=paramfile option.
 
 This file must be a list of <name>=<value> pairs. A parameter reference may appear in any text field inside the template items.
 
