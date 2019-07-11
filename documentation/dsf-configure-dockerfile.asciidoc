@@ -1,0 +1,11 @@
+= Dockerfile
+
+You have examples of dockerfiles in cicdgen repository.
+
+inside this folders you could find all the files that you need to use those dockerfiles. Two dockerfiles are provaided, _Dockerfile_ and _Dockerfile.ci_, the first one is to compile the code and create the docker image used normally in local, and _Dockerfile.ci_ is to use in Jenkins or similar, after building the application.
+
+  * visit our https://github.com/Jorge-Dacal/cicdgen/tree/develop/schematics/src/devon4ng/docker[devon4ng] Dockerfiles.
+  * visit our https://github.com/Jorge-Dacal/cicdgen/tree/develop/schematics/src/devon4j/docker[devon4j] Dockerfiles.
+  * visit our https://github.com/Jorge-Dacal/cicdgen/tree/develop/schematics/src/devon4node/docker[devon4node] Dockerfiles.
+
+NOTE: Dockerfile.ci should be copied to de artifacts and renamed as Dockerfile to work. In the case or _devon4ng_ and _devon4node_ this is the `dist` folder, in case of _devon4ng_ is on `server/target` folder.

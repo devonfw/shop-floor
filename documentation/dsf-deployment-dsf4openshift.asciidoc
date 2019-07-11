@@ -2,252 +2,23 @@
 
 In this section you will see how you can create a new environment instance in OpenShift and the things that you must add to the Jenkinsfiles of your repository to deploy a branch in this new environment. To conclude you are going to see how to add config files for environment in the source code of the applications.
 
-== Prerrequisite
+== Configure your OpenShift to deploy your devonfw projects
 
-=== OpenShift Cluster
+=== Prerrequisite
+
+==== OpenShift Cluster
 
 To have your deployment environment with OpenShift you need to have an OpenShift Cluster.
 
 // TODO: For example, you can obtain it from ITAAS
 
-=== Download OpenShift Client Tools
+=== Manual configuration
 
-First of all you need to download the OpenShift client, you can find it https://www.okd.io/download.html[here].
+Here you can find all that you need to know to link:dsf-deployment-dsf4openshift-manual-configuration.asciidoc[configure OpenShift] manually.
 
-Remember that what you need to download *oc Client Tools* and not _OKD Server_.
+=== Automatic configuration
 
-NOTE: This tutorial has been made with the version 3.10.0 of the client, it is recommended to use the most current client, but if it does not work, it is possible that the instructions have become obsolete or that the OpenShift used needs another older/newer version of the client. To download a specific version of the client you can find here the https://github.com/openshift/origin/releases/[older versions] and the https://github.com/openshift/origin/releases/tag/v3.10.0[version 3.10.0].
-
-=== Add oc client to path
-
-Once you have downloaded the client you have to add it to the *PATH* environment variable.
-
-=== Log into OpenShift with admin account
-
-You can log using a terminal and executing the next instructions:
-
-[source,Shell]
-----
-oc login $OpenShiftUrl
-----
-
-NOTE: You need a valid user to log in.
-
-=== Select the project where you are going to create the environment
-
-[source,Shell]
-----
-oc project $projectName
-----
-
-=== Add all the secrets that you need
-
-For example, to create a secret for a nexus repository you should execute the next commands:
-
-[source,Shell]
-----
-oc create secret docker-registry $nameForSecret --docker-server=${dockerRegistry} --docker-username=${user} --docker-password=${pass} --docker-email=no-reply@email.com
-----
-
-== Configure OpenShift
-
-=== Configure builds to create docker image using OpenShift
-
-If you need to create docker images of your projects you could use OpenShift to do it _(Off course only if you have enough rights)_.
-
-To do it, follow the next steps.
-
-==== Create new builds configs
-
-The first thing you need to do for create a new environment is prepare the buildconfigs for the front and for the middleware and rise default memory limits for the middleware. You can do it using a terminal and executing the next instructions:
-
-These are a summary about the parameters used in our commands:
-
-* *${dockerRegistry}*: The url of the docker repository.
-* *${props.name}*: The name of the project (for example could be find on package.json)
-* *${dockerTag}*: The tag of the image
-
-NOTE: From now on you will refer to the name that you are going to give to the environment as *$enviroment*. Remember to modify it for the correct value in all instructions.
-
-===== devon4ng build config
-
-You need to create nginx build config with docker.
-
-[source,Shell]
-----
-oc new-build --strategy docker --binary --docker-image nginx:alpine-perl --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
-----
-
-NOTE: You need nginx:alpine-perl to read the environment config file in openshift, if you are not going to use it, you could use nginx:latest instead.
-
-===== devon4node build config
-
-[source,Shell]
-----
-oc new-build --strategy docker --binary --docker-image node:lts --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
-----
-
-===== devon4j build config
-
-[source,Shell]
-----
-oc new-build --strategy docker --binary --docker-image openjdk:<version> --name=${props.name}-$environment --to=${dockerRegistry}/${props.name}:${dockerTag} --to-docker=true
-----
-
-NOTE: You need to specify the <version> of java used for your project. Also you can use the -alpine image. This image is based on the popular https://alpinelinux.org/[Alpine Linux project]. Alpine Linux is much smaller than most distribution base images (~5MB), and thus leads to much slimmer images in general. More information on https://hub.docker.com/_/openjdk/[docker hub].
-
-===== How to use the build
-
-In this step is where you will build a docker image from a compiled application.
-
-====== Prerequisite
-
-To build the source in OpenShift, first of all you need to compile your source and *obtain the artifacts* _"dist folder"_ or download it from a repository. Normally the artifacts have been built on Jenkins and have been stored in Nexus.
-
-To download it, you can access to your registry, select the last version and download the _".tar"_. The next image show an example of where is the link to download it, marked in yellow:
-
-image::./images/configuration/nexus-stored-artifacts.png[]
-
-====== Build in OpenShift
-
-When you have the artifacts, you can send them to your openshift and build them using your buildconfig that you created on the previous step. This is going to create a new docker image and push it to your registry.
-
-If your docker registry need credentials you shold use a secret. You could add it to your buildconfig using the next command:
-
-[source,Shell]
-----
-oc set build-secret --push bc/${props.name}-$environment ${nameForSecret}
-----
-
-Now you can use your build config and push the docker image to your tegistry. To do it you need to use a terminal and execute the following:
-
-[source,Shell]
-----
-oc start-build ${props.name}-$environment --from-dir=${artifactsPath} --follow
-----
-
-NOTE: ${artifactsPath} is the path where you have the artifacts of the prerequisite (On jenkins is the dist folder generated by the build).
-
-NOTE: Maybe you need to link:dsf-deployment-dsf4openshift.asciidoc#Raise/decrease-memory-or-CPU-limits[raise your memory or CPU limits].
-
-=== Configure new environment
-
-Now it is time to configure the environment.
-
-==== Prerequisite
-
-You need a docker image of your application. You could created it using OpenShift as you see in the last step.
-
-==== Create new app on OpenShift
-
-To create new app you need to use the next command.
-
-[source,Shell]
-----
-oc new-app --docker-image=${artifactsPath} --name=${props.name}-$environment --source-secret=${nameForSecret}
-----
-
-NOTE: You could add environment variables using `-e $name=$value`
-
-NOTE: If you do not need to use a secret remove the end part of the command `--source-secret=${nameForSecret}`
-
-==== Create routes
-
-Finally, you need add a route to access the service.
-
-*Add http route*
-
-If tou want to create an http reoute execute the following command in a terminal:
-
-[source,Shell]
-----
-oc expose svc/${props.name}-$environment
-----
-
-*Add https route*
-
-If you want to create an https route you can do it executing the following command:
-
-[source,Shell]
-----
-oc create route edge --service=${props.name}-$environment
-----
-
-If you want to change the default route path you can use the command --hostname=$url. For example:
-
-[source,Shell]
-----
-oc expose svc/${props.name}-$environment --hostname=$url
-
-oc create route edge --service=${props.name}-$environment --hostname=$url
-----
-
-=== Import new images from registry
-
-When you have new images in the registry you must import them to OpenShift. You could do it executing the next commands:
-
-[source,Shell]
-----
-oc import-image ${props.name}-$environment --from=${dockerRegistry}/${props.name}:${dockerTag} --confirm
-----
-
-NOTE: Maybe you need to raise your memory or CPU limits. It is explained below.
-
-=== Raise/decrease memory or CPU limits
-
-If you need to raise (or decrease) the memory or CPU limits that you need you could do it for your deployments and bulders configurations following the next steps.
-
-==== For deployments
-
-You could do it in OpenShift using the user interface. To do it you should enter in OpenShift and go to deployments.
-
-image::./images/configuration/openshift-deployments-menu.png[]
-
-At the right top, you could see a drop down actions, click on it and you could edit the resource limits of the container.
-
-image::./images/configuration/openshift-deployments-actions.png[]
-
-image::./images/configuration/openshift-deployments-resource-limits.png[]
-
-Maybe you should modify the resource limits of the pod too. To do it you should click on drop down actions and go to edit YAML. Then you could see something like the next image.
-
-image::./images/configuration/openshift-deployments-yaml-resources.png[]
-
-In the image, you could see that appear resources two times. One at the bottom of the image, this are the container resources that you modified on the previous paragraph and another one at the top of the image. The resources of the top are for the pod, you should give to it at least the same of the sum for all containers that the pod use.
-
-Also you could do it using command line interface and executing the next command:
-
-*To modify pod limits*
-[source,Shell]
-----
-oc patch dc/boat-frontend-test --patch '{"spec":{"strategy":{"resources":{"limits":{"cpu": "100m", "memory": "100Mi"}, "requests":{"cpu": "100m", "memory": "100Mi"}}}}}'
-----
-
-
-*To modify container limits*
-
-When this guide was wrotten Openshift have a bug and you cannot do it from command line interface.
-////
-[source,Shell]
-----
-oc patch dc/${props.name}${APP_NAME_SUFFIX} --patch '{"spec":{"template":{"containers":{"resources":{"limits":{"cpu": "125m", "memory": "400Mi"},"requests":{"cpu": "125m", "memory": "400Mi"}}}}}}'
-
-oc patch dc/boat-frontend-test --patch "{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"resources\":{\"limits\":{\"cpu\": \"100m\", \"memory\": \"100Mi\"},\"requests\":{\"cpu\": \"100m\", \"memory\": \"100Mi\"}}}]}}}}"
-----
-////
-
-NOTE: If that command did not work and you received an error like this `error: unable to parse "'{spec:...": yaml: found unexpected end of stream`, try to use the patch using "" instead of ''. It looks like this: `--patch "{\"spec\":...\"}}}}"`
-
-==== For builders
-
-You could do it using command line interface and executing the next command:
-
-[source,Shell]
-----
-oc patch bc/${props.name}${APP_NAME_SUFFIX} --patch '{"spec":{"resources":{"limits":{"cpu": "125m", "memory": "400Mi"},"requests":{"cpu": "125m", "memory": "400Mi"}}}}'
-----
-
-NOTE: If that command did not work and you received an error like this `error: unable to parse "'{spec:...": yaml: found unexpected end of stream`, try to use the patch using "" instead of ''. It looks like this: `--patch "{\"spec\":...\"}}}}"`
+Here you can find all that you need to know to link:dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[configure OpenShift] automatically.
 
 == Service integration with jenkins
 
@@ -267,12 +38,12 @@ image::./images/configuration/openshift-jenkins-plugin.png[]
 
 Now it is time to add/upgrade the next stages in to your Jenkinsfile:
 
-Add link:dsf-configure-jenkins.asciidoc#create-docker-image[create docker image] stage.
+Add link:dsf-configure-jenkinsfile.asciidoc#create-docker-image[create docker image] stage.
 
-Add link:dsf-configure-jenkins.asciidoc#deploy-docker-image[deploy docker image] stage.
+Add link:dsf-configure-jenkinsfile.asciidoc#deploy-docker-image[deploy docker image] stage.
 
-Add link:dsf-configure-jenkins.asciidoc#check-status[check status] stage.
+Add link:dsf-configure-jenkinsfile.asciidoc#check-status[check status] stage.
 
-Upgrade link:dsf-configure-jenkins.asciidoc#setup-Jenkins-tools[Setup Jenkins tools] stage.
+Upgrade link:dsf-configure-jenkinsfile.asciidoc#setup-Jenkins-tools[Setup Jenkins tools] stage.
 
 NOTE: Remember to upgrade your parameters to diference which environment is used per branch.

@@ -37,21 +37,33 @@ include::dsf-configure-gitlab.asciidoc[leveloffset=2].
 
 It is time to create your devonfw project:
 
-  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
-  * visitr our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
+include::dsf-create-new-devonfw-project[leveloffset=2].
 
 === cicd configuration
 
 ==== Manual configuration
 
 ===== Jenkinsfile
-include::dsf-configure-jenkins.asciidoc[leveloffset=2].
+include::dsf-configure-jenkinsfile.asciidoc[leveloffset=2].
 
-== Deployment
+===== Dockerfiles
 
-include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=2].
+include::dsf-configure-dockerfile.asciidoc[leveloffset=2].
+
+==== Automatic configuration
+
+===== cicdgen
+
+If you are using prodcution line for provisioning you could use cicdgen to configure automatically almost everything explained in the manual configuration. To do it see the https://github.com/devonfw/cicdgen/wiki[cicdgen] documentation.
+
+== Deployment environments
+=== OpenShift
+include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=5].
+include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=5].
+include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=5].
 
 == Annexes
+
 === Custom Services
 
 ==== BitBucket

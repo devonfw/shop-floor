@@ -1,0 +1,7 @@
+= How to create new devonfw project
+
+Here you can find the official guides to start new devonfw projects:
+
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
+  * visit our https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
+//  * TODO: devon4node

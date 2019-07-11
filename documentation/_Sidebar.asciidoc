@@ -5,25 +5,31 @@
 
 === Provisioning environments
 * link:dsf-provisioning-production-line.asciidoc[Production Line]
-* link:dsf-provisioning-dsf4docker.asciidoc[dsf 4 docker]
+* link:dsf-provisioning-dsf4docker.asciidoc[Docker]
 
 === Configuration and services integration
 * link:dsf-configure-nexus.asciidoc[Nexus]
 * link:dsf-configure-sonarqube.asciidoc[SonarQube]
 
-== Create project
-=== Create and integrate git repository
-* https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4ng-application[devon4ng] guide.
-* https://github.com/devonfw/devonfw-tutorial-sources/wiki/build-devon4j-application[devon4j] guide.
+=== Create project
 
-=== cicd configuration
+* link:dsf-configure-gitlab.asciidoc[Create and integrate git repository]
 
-==== Manual configuration
+* link:dsf-create-new-devonfw-project[Create new devonfw project]
 
-* link:dsf-configure-jenkinsfile.asciidoc[Jenkinsfile].
+* cicd configuration
 
-== Deployment
-* link:dsf-deployment-dsf4openshift.asciidoc[dsf4openshift].
+** Manual configuration
+
+*** link:dsf-configure-jenkinsfile.asciidoc[Jenkinsfile].
+*** link:dsf-configure-dockerfile.asciidoc[Dockerfile].
+
+** Automatic configuration
+
+*** https://github.com/devonfw/cicdgen/wiki[cicdgen documentation].
+
+=== Deployment environments
+* link:dsf-deployment-dsf4openshift.asciidoc[OpenShift].
 
 === Annexes
 * Custom Services
