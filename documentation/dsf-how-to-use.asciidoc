@@ -14,7 +14,7 @@ To host those services we recommend to have a Production Line instance but you c
 
 == Step 1 - Configuration and services integration
 
-The first step is configure your services and integrate them with jenkins. Here you have an example about how to manually configure the next services:
+The first step is configuring your services and integrate them with jenkins. Here you have an example about how to manually configure the next services:
 
   * link:dsf-configure-nexus.asciidoc[Nexus].
   * link:dsf-configure-sonarqube.asciidoc[SonarQube].
@@ -54,7 +54,7 @@ Here you can find all that you need to know to do your link:dsf-configure-docker
 
 ===== cicdgen
 
-If you are using prodcution line for provisioning you could use cicdgen to configure automatically almost everything explained in the manual configuration. To do it see the https://github.com/devonfw/cicdgen/wiki[cicdgen] documentation.
+If you are using production line for provisioning you could use cicdgen to configure automatically almost everything explained in the manual configuration. To do it see the https://github.com/devonfw/cicdgen/wiki[cicdgen] documentation.
 
 ////
 ===== Optional components

@@ -54,7 +54,7 @@ include::dsf-configure-dockerfile.asciidoc[leveloffset=2].
 
 ===== cicdgen
 
-If you are using prodcution line for provisioning you could use cicdgen to configure automatically almost everything explained in the manual configuration. To do it see the https://github.com/devonfw/cicdgen/wiki[cicdgen] documentation.
+If you are using production line for provisioning you could use cicdgen to configure automatically almost everything explained in the manual configuration. To do it see the https://github.com/devonfw/cicdgen/wiki[cicdgen] documentation.
 
 == Deployment environments
 === OpenShift

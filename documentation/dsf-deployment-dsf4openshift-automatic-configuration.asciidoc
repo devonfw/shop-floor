@@ -2,7 +2,7 @@
 
 In this section you will see how you can create a new environment instance in your OpenShift cluster to deploy devonfw projects using docker images.
 
-== Prerrequisite
+== Prerequisites
 
 === Add OpenShift Client to Jenkins
 
@@ -18,7 +18,7 @@ image::./images/configuration/openshift-jenkins-plugin.png[]
 
 === devonfw project
 
-Yo need to have a devonfw project in a git repository or a docker image uploaded to a docker registry.
+You need to have a devonfw project in a git repository or a docker image uploaded to a docker registry.
 
 === Comunication between components
 
@@ -45,13 +45,13 @@ Note: In the script path section you should use the Jenkinsfile of the technolog
 
 === Build with parameters
 
-The first time that you execute the pipeline is going to fail because Jenkins does not know that this pipeline need parameters to execute. The better that you can do is stop it manually when _Declarative: Checkout SCM_ is over.
+The first time that you execute the pipeline is going to fail because Jenkins does not know that this pipeline needs parameters to execute. The better that you can do is stop it manually when _Declarative: Checkout SCM_ is over.
 
 Then you could see a button to Build with Parameters, click on it and fill the next form, these are the parameters:
 
 *Docker registry credentials for OpenShift*
 
-`CREATE_SECRET`: This option allow you to add the credentials of your docker registry in your OpenShift and stored it as a secret called docker-registry + registry_secret_name_suffix value.
+`CREATE_SECRET`: This option allows you to add the credentials of your docker registry in your OpenShift and stored it as a secret called docker-registry + registry_secret_name_suffix value.
 
 Remember that you only need one secret to connect with your registry per namespace, if you are going to add more than one application in the same namespace that use the same registry, use the same name suffix and please do not create more than one secret in the same namespace. The namespace is the OpenShift project when you are going to deploy your application.
 
@@ -61,19 +61,19 @@ image::./images/configuration/openshift-secrets-menu.jpg[]
 
 NOTE: If the secret exists, you should uncheck the checkbox and fill the name suffix to use it.
 
-`REGISTRY_SECRET_NAME_SUFFIX`: This is the suffix of the name for your docker registry credentials stored in OpenShift as a secret. The name is going to be docker-registry + this suffix, if you use more than one docker-registry in the same namespace you need to add a suffix. For example you cuold add the name of your project, then to have the name as docker-registry-myprojectname you should use -myprojectname value.
+`REGISTRY_SECRET_NAME_SUFFIX`: This is the suffix of the name for your docker registry credentials stored in OpenShift as a secret. The name is going to be docker-registry + this suffix, if you use more than one docker-registry in the same namespace you need to add a suffix. For example you could add the name of your project, then to have the name as docker-registry-myprojectname you should use -myprojectname value.
 
 *Build your docker image using OpenShift and store it in your docker registry*
 
-`CREATE_DOCKER_BUILDER`: This option allow you to create a build configuration in your OpenShift to create the docker images of your project and store them in your docker registry. If you are going to create the builder, your application is needed, you need to specify where is your git repository and which is the branch and credentials to use it.
+`CREATE_DOCKER_BUILDER`: This option allows you to create a build configuration in your OpenShift to create the docker images of your project and store them in your docker registry. If you are going to create the builder, your application is needed, you need to specify where is your git repository and which is the branch and credentials to use it.
 
 The following parameters of this section are only necessary if a builder is to be created.
 
 `GIT_REPOSITORY`: This is the url of your git repository.
 
-NOTE: If you are using production line, remember to use the internal rout of your repository, to use it you must change the base url of your production line for the internal route `http://gitlab-core:80/gitlab`. For example, if your production line repository is for examnple `https://shared-services.pl.s2-eu.capgemini.com/gitlab/boat/boat-frontend.git` use `http://gitlab-core:80/gitlab/boat/boat-frontend.git`)
+NOTE: If you are using production line, remember to use the internal rout of your repository, to use it you must change the base url of your production line for the internal route `http://gitlab-core:80/gitlab`. For example, if your production line repository is for example `https://shared-services.pl.s2-eu.capgemini.com/gitlab/boat/boat-frontend.git` use `http://gitlab-core:80/gitlab/boat/boat-frontend.git`)
 
-`GIT_BRANCH`: This is the branch that we are going to use for create the first docker image. The next tima that you are going to use the builder you could use another branches.
+`GIT_BRANCH`: This is the branch that we are going to use for creating the first docker image. The next time that you are going to use the builder you could use another branches.
 
 `GIT_CREDENTIALS`: This is the credentials id stored in your jenkins to download the code from your git repository.
 
@@ -111,7 +111,7 @@ image::./images/configuration/openshift-namespace-name.jpg[]
 * For release branch we use `-uat`
 * For master branch we use `-prod`
 
-`HOSTNAME`: If you do not specify nothing, openshift is going to autogenerate a valid url for your application. You could modify the value by default but be sure that you configure everything to server your application in the route that you specify.
+`HOSTNAME`: If you do not specify nothing, OpenShift is going to autogenerate a valid url for your application. You could modify the value by default but be sure that you configure everything to server your application in the route that you specify.
 
 `SECURED_PROTOCOL`: If true, the protocol for the route will be https otherwise will be http.
 

@@ -6,14 +6,14 @@ The purpose of the present document is to provide the basic steps carried out to
 
 The improved configuration consists on:
 
-* Persisten Volume Claims
+* Persistent Volume Claims
 * Health Checks _(pending to be completed)_
 
-== Persisten Volume Claims.
+== Persistent Volume Claims.
 Please notice that the BitBucket server container does not use persistent volume claims by default, which means that the data (e.g.: BitBucket server config.) will be lost from one deployment to another.
 
 image::./images/others/bitbucket/xtraconfig/pvc0.png[]
-*It is very important to create a persisten volume claim in order to prevent the mentioned loss of data.*
+*It is very important to create a persistent volume claim in order to prevent the mentioned loss of data.*
 
 === Step 1: Add storage
 image::./images/others/bitbucket/xtraconfig/pvc1.png[]

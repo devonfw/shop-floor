@@ -4,11 +4,11 @@ This is a guide to add custom `Catalog Categories` into an Openshift cluster.
 
 https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift/scripts[Here] we can find a catalog-categories.js example to use the devonfw catalog categories.
 
-== Create a scrip to add custom lengauges and custom catalog categories
+== Create a scrip to add custom langauges and custom catalog categories
 
 === Custom language
 
-For this example, we are going add a new language into the languages category. To do that we must created a script and we named as catalog-categories.js
+For this example, we are going add a new language into the languages category. To do that we must create a script and we named as catalog-categories.js
 [source,Javascript]
 ----
 // Find the Languages category.
@@ -33,7 +33,7 @@ category.subCategories.splice(2,0,{ // Insert at the third spot.
 
 === Custom category
 
-For this example, we are going add a new category into the category tab. To do that we must created a script and we named as catalog-categories.js
+For this example, we are going add a new category into the category tab. To do that we must create a script and we named as catalog-categories.js
 [source,Javascript]
 ----
 // Add a Featured category as the first category tab.
@@ -71,7 +71,7 @@ $ oc login
 $ oc edit configmap/webconsole-config -n openshift-web-console
 ----
 
-After this, we can see in our shell the webconsole-config.yaml, we only need to navegate untill *extensions* and add the url for our own `javascript` in the *scriptURLs* section.
+After this, we can see in our shell the webconsole-config.yaml, we only need to navigate until *extensions* and add the url for our own `javascript` in the *scriptURLs* section.
 
 *IMPORTANT: Scripts and stylesheets must be served with the correct content type or they will not be run by the browser. Scripts must be served with Content-Type: application/javascript.*
 

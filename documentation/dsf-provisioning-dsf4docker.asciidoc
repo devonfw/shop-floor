@@ -12,7 +12,7 @@ To use dsf4docker provisioning environment you need a remote server and you must
 
 == How to use it
 
-Navigate to `./devonfw-shop-floor/dsf4docker/environment` and here you can find one scripts to install it, and another one to unistall it.
+Navigate to `./devonfw-shop-floor/dsf4docker/environment` and here you can find one scripts to install it, and another one to uninstall it.
 
 === Install devonfw shop floor 4 Docker
 

@@ -2,7 +2,7 @@
 
 You have examples of dockerfiles in cicdgen repository.
 
-inside this folders you could find all the files that you need to use those dockerfiles. Two dockerfiles are provaided, _Dockerfile_ and _Dockerfile.ci_, the first one is to compile the code and create the docker image used normally in local, and _Dockerfile.ci_ is to use in Jenkins or similar, after building the application.
+inside these folders you could find all the files that you need to use those dockerfiles. Two dockerfiles are provaided, _Dockerfile_ and _Dockerfile.ci_, the first one is to compile the code and create the docker image used normally in local, and _Dockerfile.ci_ is to use in Jenkins or similar, after building the application.
 
   * visit our https://github.com/Jorge-Dacal/cicdgen/tree/develop/schematics/src/devon4ng/docker[devon4ng] Dockerfiles.
   * visit our https://github.com/Jorge-Dacal/cicdgen/tree/develop/schematics/src/devon4j/docker[devon4j] Dockerfiles.

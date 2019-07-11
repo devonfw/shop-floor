@@ -2,7 +2,7 @@
 
 In this section you will see how you can create a new environment instance in your OpenShift cluster to deploy devonfw projects using docker images.
 
-== Prerrequisite
+== Prerequisites
 
 === devonfw project
 
@@ -106,7 +106,7 @@ In this step is where you will build a docker image from a compiled application.
 
 To build the source in OpenShift, first of all you need to compile your source and *obtain the artifacts* _"dist folder"_ or download it from a repository. Normally the artifacts have been built on Jenkins and have been stored in Nexus.
 
-To download it, you can access to your registry, select the last version and download the _".tar"_. The next image show an example of where is the link to download it, marked in yellow:
+To download it, you can access to your registry, select the last version and download the _".tar"_. The next image shows an example of where is the link to download it, marked in yellow:
 
 image::./images/configuration/nexus-stored-artifacts.png[]
 
@@ -114,14 +114,14 @@ image::./images/configuration/nexus-stored-artifacts.png[]
 
 When you have the artifacts, you can send them to your openshift and build them using your buildconfig that you created on the previous step. This is going to create a new docker image and push it to your registry.
 
-If your docker registry need credentials you shold use a secret. You could add it to your buildconfig using the next command:
+If your docker registry need credentials you should use a secret. You could add it to your buildconfig using the next command:
 
 [source,Shell]
 ----
 oc set build-secret --push bc/${props.name}-$environment ${nameForSecret}
 ----
 
-Now you can use your build config and push the docker image to your tegistry. To do it you need to use a terminal and execute the following:
+Now you can use your build config and push the docker image to your registry. To do it you need to use a terminal and execute the following:
 
 [source,Shell]
 ----
@@ -138,7 +138,7 @@ Now it is time to configure the environment.
 
 ==== Prerequisite
 
-You need a docker image of your application. You could created it using OpenShift as you see in the last step.
+You need a docker image of your application. You could create it using OpenShift as you see in the last step.
 
 ==== Create new app on OpenShift
 
@@ -159,7 +159,7 @@ Finally, you need add a route to access the service.
 
 *Add http route*
 
-If tou want to create an http reoute execute the following command in a terminal:
+If you want to create an http route execute the following command in a terminal:
 
 [source,Shell]
 ----
@@ -197,7 +197,7 @@ NOTE: Maybe you need to raise your memory or CPU limits. It is explained below.
 
 === Raise/decrease memory or CPU limits
 
-If you need to raise (or decrease) the memory or CPU limits that you need you could do it for your deployments and bulders configurations following the next steps.
+If you need to raise (or decrease) the memory or CPU limits that you need you could do it for your deployments and builders configurations following the next steps.
 
 ==== For deployments
 
@@ -228,7 +228,7 @@ oc patch dc/boat-frontend-test --patch '{"spec":{"strategy":{"resources":{"limit
 
 *To modify container limits*
 
-When this guide was wrotten Openshift have a bug and you cannot do it from command line interface.
+When this guide was written Openshift have a bug and you cannot do it from command line interface.
 ////
 [source,Shell]
 ----
