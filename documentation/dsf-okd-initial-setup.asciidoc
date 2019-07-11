@@ -1,6 +1,6 @@
 = devonfw Openshift Origin Initial Setup
 
-This is a scripts to customize an Openshift cluster to be a devonfw Openshift.
+These are scripts to customize an Openshift cluster to be a devonfw Openshift.
 
 == How to use
 
@@ -20,7 +20,7 @@ More information about what this script does https://raw.githubusercontent.com/d
 
 === Failed to push image
 
-If you recive an error like this:
+If you receive an error like this:
 ```
 error: build error: Failed to push image: After retrying 6 times, Push image still failed due to error: Get http://172.30.1.1:5000/v2/:  dial tcp 172.30.1.1:5000: getsockopt: connection refused
 ```

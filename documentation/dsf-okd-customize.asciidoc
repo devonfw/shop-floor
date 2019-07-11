@@ -20,7 +20,7 @@ $ oc login
 $ oc edit configmap/webconsole-config -n openshift-web-console
 ----
 
-After this, we can see in our shell the webconsole-config.yaml, we only need to navegate untill *extensions* and add the url for our own `css` in the *stylesheetURLs* and `javascript` in the *scriptURLs* section.
+After this, we can see in our shell the webconsole-config.yaml, we only need to navigate until *extensions* and add the url for our own `css` in the *stylesheetURLs* and `javascript` in the *scriptURLs* section.
 
 *IMPORTANT: Scripts and stylesheets must be served with the correct content type or they will not be run by the browser. Scripts must be served with Content-Type: application/javascript and stylesheets with Content-Type: text/css.*
 

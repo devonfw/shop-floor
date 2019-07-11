@@ -129,7 +129,7 @@ withMaven(globalMavenSettingsConfig: globalSettingsId, maven: mavenInstallation)
 sh """yarn test:ci"""
 ----
 
-NOTE: Remeber that your project should have the tests created and in case of do it with yarn or npm, you package.json should have the script declared. This is an example `"test:ci": "ng test --browsers ChromeHeadless --watch=false"`.
+NOTE: Remember that your project should have the tests created and in case of do it with yarn or npm, you package.json should have the script declared. This is an example `"test:ci": "ng test --browsers ChromeHeadless --watch=false"`.
 
 === SonarQube Analisys
 
@@ -222,7 +222,7 @@ NOTE: If you are using devon4j this and the next step _Store in Nexus_ are makin
 
 === Store in Nexus
 
-One time the application has been built the code of the application you could find the the artifacts stored in the dist folder. You should push these artifacts to store them in Nexus.
+One time the application has been built the code of the application you could find the artifacts stored in the dist folder. You should push these artifacts to store them in Nexus.
 
 You can do it following one of the next options:
 

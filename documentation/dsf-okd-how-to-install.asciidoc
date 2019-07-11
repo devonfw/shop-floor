@@ -71,7 +71,7 @@ We must create iptables rules to allow traffic from other machines.
 ```
 
 = How to use Oc Cluster Wrapper
-With oc cluster wrapper we could have a different clusters with different context.
+With oc cluster wrapper we could have different clusters with different context.
 
 == Cluster up
 [source,Shell]
