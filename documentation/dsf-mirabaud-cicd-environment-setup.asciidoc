@@ -1,0 +1,361 @@
+= Mirabaud CICD Environment Setup
+
+Initial requirements:
+
+* **OS**: RHEL 6.5
+
+Remote setup in CI machine (located in the Netherlands)
+```
+    - Jenkins
+    - Nexus
+    - GitLab
+    - Mattermost
+    - Atlassian Crucible
+    - SonarQube
+```
+
+== 1. Install Docker and Docker Compose in RHEL 6.5
+
+=== Docker
+
+Due to that OS version, the only way to have Docker running in the CI machine is by installing it from the *EPEL* repository (Extra Packages for Enterprise Linux).
+
+[start=1]
+. Add EPEL
+
+[source]
+----
+# rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+----
+
+[start=2]
+. Install `docker.io` from that repository
+
+[source]
+----
+# yum -y install docker-io
+----
+
+[start=3]
+. Start Docker daemon
+
+[source]
+----
+# service docker start
+----
+
+[start=4]
+. Check the installation
+
+[source]
+----
+# docker -v
+Docker version 1.7.1, build 786b29d/1.7.1
+----
+
+=== Docker Compose
+
+Download and install it via *curl*. It will use link:https://github.com/docker/compose/releases?after=1.7.0-rc2[this site].
+
+[source]
+----
+# curl -L https://github.com/docker/compose/releases/download/1.5.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+
+# chmod +x /usr/local/bin/docker-compose
+----
+
+Add it to your `sudo` path:
+
+[start=1]
+. Find out where it is:
+[source]
+----
+# echo $PATH
+----
+
+[start=2]
+. Copy the `docker-compose` file from `/usr/local/bin/` to your `sudo` PATH.
+
+[source]
+----
+# docker-compose -v
+docker-compose version 1.5.2, build 7240ff3
+----
+
+== 2. Directories structure
+
+Several directories had been added to organize some files related to docker (like `docker-compose.yml`) and docker volumes for each service. Here's how it looks:
+
+[source,yaml]
+----
+/home
+    /[username]
+        /jenkins
+            /volumes
+                /jenkins_home
+        /sonarqube
+            /volumes
+                /conf
+                /data
+                /extensions
+                /lib
+                    /bundled-plugins
+        /nexus
+            /volumes
+                /nexus-data
+        /crucible
+            /volumes
+                /
+        /gitlab
+            docker-compose.yml
+            /volumes
+                /etc
+                    /gitlab
+                /var
+                    /log
+                    /opt
+        /mattermost
+            docker-compose.yml
+            /volumes
+                /db
+                    /var
+                        /lib
+                            /postgresql
+                                /data
+                /app
+                    /mattermost
+                        /config
+                        /data
+                        /logs
+                /web
+                    /cert
+                
+----
+
+== 3. CICD Services with Docker
+
+Some naming conventions had been followed as naming containers as `mirabaud_[service]`.
+
+Several folders have been created to store each service's volumes, `docker-compose.yml`(s), extra configuration settings and so on:
+
+=== Jenkins
+
+==== Command
+[source]
+----
+# docker run -d -p 8080:8080 -p 50000:50000 --name=mirabaud_jenkins \
+    -v /home/[username]/jenkins/volumes/jenkins_home:/var/jenkins_home \
+    jenkins
+----
+
+==== Generate keystore
+[source]
+----
+keytool -importkeystore -srckeystore server.p12 -srcstoretype pkcs12 -srcalias 1 -destkeystore newserver.jks -deststoretype jks -destalias server
+----
+
+==== Start jekins with SSL (TODO: make a docker-compose.yml for this):
+[source]
+----
+sudo docker run -d --name mirabaud_jenkins -v /jenkins:/var/jenkins_home -p 8080:8443 jenkins --httpPort=-1 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/certs/keystore.jks --httpsKeyStorePassword=Mirabaud2017
+----
+
+
+==== Volumes
+```
+volumes/jenkins_home:/var/jenkins_home
+```
+
+=== SonarQube
+
+==== Command
+[source]
+----
+# docker run -d -p 9000:9000 -p 9092:9092 --name=mirabaud_sonarqube \
+    -v /home/[username]/sonarqube/volumes/conf:/opt/sonarqube/conf \
+    -v /home/[username]/sonarqube/volumes/data:/opt/sonarqube/data \
+    -v /home/[username]/sonarqube/volumes/extensions:/opt/sonarqube/extensions \
+    -v /home/[username]/sonarqube/volumes/lib/bundled-plugins:/opt/sonarqube//lib/bundled-plugins \
+    sonarqube
+----
+
+==== Volumes
+```
+volumes/conf:/opt/sonarqube/conf
+volumes/data:/opt/sonarqube/data
+volumes/extensions:/opt/sonarqube/extensions
+volumes/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins                                                    
+```
+
+=== Nexus
+
+==== Command
+[source]
+----
+# docker run -d -p 8081:8081 --name=mirabaud_nexus\
+    -v /home/[username]/nexus/nexus-data:/sonatype-work
+    sonatype/nexus
+----
+
+==== Volumes
+```
+volumes/nexus-data/:/sonatype-work                         
+```
+
+=== Atlassian Crucible
+
+==== Command
+[source]
+----
+# docker run -d -p 8084:8080 --name=mirabaud_crucible \
+    -v /home/[username]/crucible/volumes/data:/atlassian/data/crucible
+    mswinarski/atlassian-crucible:latest
+----
+
+==== Volumes
+```
+volumes/data:/atlassian/data/crucible                                                   
+```
+
+
+== 4. CICD Services with Docker Compose
+
+Both Services had been deploying by using the `# docker-compose up -d` command from their root directories (`/gitlab` and `/mattermost`). The syntax of the two `docker-compose.yml` files is the one corresponding with the 1st version (due to the `docker-compose v1.5`).
+
+=== GitLab
+
+==== `docker-compose.yml`
+[source,yaml]
+----
+mirabaud:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    ports:
+            - '8888:80'
+    volumes:
+            - '/home/[username]/gitlab/volumes/etc/gilab:/etc/gitlab'
+            - '/home/[username]/gitlab/volumes/var/log:/var/log/gitlab'
+            - '/home/[username]/gitlab/volumes/var/opt:/var/opt/gitlab'
+----
+
+==== Command (docker)
+[source]
+----
+docker run -d -p 8888:80 --name=mirabaud_gitlab \
+    -v /home/[username]/gitlab/volumes/etc/gitlab/:/etc/gitlab \
+    -v /home/[username]/gitlab/volumes/var/log:/var/log/gitlab \
+    -v /home/[username]/gitlab/volumes/var/opt:/var/opt/gitlab \
+    gitlab/gitlab-ce
+----
+
+==== Volumes
+```
+volumes/etc/gitlab:/etc/gitlab
+volumes/var/opt:/var/log/gitlab
+volumes/var/log:/var/log/gitlab
+```
+
+=== Mattermost
+
+==== `docker-compose.yml`:
+[source,yaml]
+----
+db:
+  image: mattermost/mattermost-prod-db
+  restart: unless-stopped
+  volumes:
+    - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+    - /etc/localtime:/etc/localtime:ro
+  environment:
+    - POSTGRES_USER=mmuser
+    - POSTGRES_PASSWORD=mmuser_password
+    - POSTGRES_DB=mattermost
+
+app:
+  image: mattermost/mattermost-prod-app
+  links:
+    - db:db
+  restart: unless-stopped
+  volumes:
+    - ./volumes/app/mattermost/config:/mattermost/config:rw
+    - ./volumes/app/mattermost/data:/mattermost/data:rw
+    - ./volumes/app/mattermost/logs:/mattermost/logs:rw
+    - /etc/localtime:/etc/localtime:ro
+  environment:
+    - MM_USERNAME=mmuser
+    - MM_PASSWORD=mmuser_password
+    - MM_DBNAME=mattermost
+
+web:
+  image: mattermost/mattermost-prod-web
+  ports:
+    - "8088:80"
+    - "8089:443"
+  links:
+    - app:app
+  restart: unless-stopped
+  volumes:
+    - ./volumes/web/cert:/cert:ro
+    - /etc/localtime:/etc/localtime:ro
+----
+
+==== SSL Certificate
+
+How to generate the certificates:
+
+Get the *crt* and *key* from CA or *generate a new one self-signed*. Then:
+
+[source]
+----
+// 1. create the p12 keystore
+# openssl pkcs12 -export -in cert.crt -inkey mycert.key -out certkeystore.p12
+
+// 2. export the pem certificate with password
+# openssl pkcs12 -in certkeystore.p12 -out cert.pem
+
+// 3. export the pem certificate without password
+# openssl rsa -in cert.pem -out key-no-password.pem
+----
+
+SSL:
+
+Copy the cert and the key without password at:
+
+`./volumes/web/cert/cert.pem` 
+
+and
+
+`./volumes/web/cert/key-no-password.pem` 
+
+Restart the server and the SSL should be enabled at port *8089* using *HTTPS*.
+
+==== Volumes
+
+```
+-- db --
+volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+/etc/localtime:/etc/localtime:ro                                # absolute path
+
+-- app --
+volumes/app/mattermost/config:/mattermost/config:rw
+volumes/app/mattermost/data:/mattermost/data:rw
+volumes/app/mattermost/logs:/mattermost/logs:rw
+/etc/localtime:/etc/localtime:ro                                # absolute path
+
+-- web --
+volumes/web/cert:/cert:ro
+/etc/localtime:/etc/localtime:ro                                # absolute path
+```
+
+== 5. Service Integration
+
+All integrations had been done following *CICD Services Integration* guides:
+
+* link:dsf-mirabaud-jenkins-nexus-integration[Jenkins - Nexus integration]
+* link:dsf-mirabaud-jenkins-gitLab-integration[Jenkins - GitLab integration]
+* link:dsf-mirabaud-jenkins-sonarQube-integration[Jenkins - SonarQube integration]
+
+NOTE: These guides may be obsolete. You can find here the link:dsf-how-to-use.asciidoc#Step-1---Configuration-and-service-integration[official configuration guides],
+
+// TODO:
+// == 6. SSL Certification

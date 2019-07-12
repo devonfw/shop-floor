@@ -30,7 +30,7 @@ Before using the builder images, add them to the OpenShift cluster.
 
 First, create a dedicated `devonfw` project as admin.
 
-    $ oc new-project devonfw --display-name='DevonFW' --description='DevonFW Application Standar Platform'
+    $ oc new-project devonfw --display-name='DevonFW' --description='DevonFW Application Standard Platform'
 
 Now add the builder image configuration and start their build.
 

@@ -1,0 +1,94 @@
+_[Under construction]_
+
+'''
+
+The purpose of the present document is to provide the basic steps carried out to setup a BitBucket server in OpenShift.
+
+== Introduction
+BitBucket is the Atlassian tool that extends the Git functionality, by adding integration with JIRA, Confluence, or Trello, as well as incorporates extra features for security or management of user accounts (See link:https://www.atlassian.com/software/bitbucket/features[BitBucket]).
+
+BitBucket server is the Atlassian tool that runs the BitBucket services (See link:https://www.atlassian.com/software/bitbucket/server[BitBucket server]).
+
+The followed approach has been not using command line, but OpenShift Web Console, by deploying the Docker image *atlassian/bitbucket-server* (available in link:https://hub.docker.com/r/atlassian/bitbucket-server/[Docker Hub]) in the existing project *Deployment*.
+
+The procedure below exposed consists basically in three main steps:
+
+. Deploy the BitBucket server image (from OpenShift web console)
+. Add a route for the external traffic (from OpenShift web console)
+. Configure the BitBucket server (from BitBucket server web console)
+
+== Prerequisites
+* OpenShift up & running
+* Atlassian account (with personal account key). Not required for OpenShift, but for the initial BitBucket server configuration.
+
+== Procedure
+=== Step 0: Log into our link:https://10.68.26.163:8443/console/logout[OpenShift Web console]
+image::./images/others/bitbucket/step0.png[]
+
+=== Step 1: Get into Development project
+image::./images/others/bitbucket/step1.png[]]
+
+=== Step 2.1: Deploy a new image to the project
+image::./images/others/bitbucket/step2.1.png[]
+
+=== Step 2.2: Introduce the image name (available in link:https://hub.docker.com/r/atlassian/bitbucket-server/[Docker Hub]) and search
+Image name: *atlassian/bitbucket-server*
+
+image::./images/others/bitbucket/step2.2.png[]
+
+=== Step 2.3: Leave by the moment the default config. since it is enough for the basic setup. Press Create
+image::./images/others/bitbucket/step2.3.png[]
+
+=== Step 2.4: Copy the oc commands in case it is required to work via command line, and Go to overview
+image::./images/others/bitbucket/step2.4.png[]
+
+=== Step 2.5: Wait until OpenShift deploys and starts up the image. All the info will be available.
+Please notice that there are no pre-configured routes, hence the application is not accessible from outside the cluster.
+
+image::./images/others/bitbucket/step2.5.png[]
+
+=== Step 3: Create a route in order for the application to be accessible from outside the cluster (external traffic). Press Create
+Please notice that there are different fields that can be specified (hostname, port). If required, the value of those fields can be modified later.
+
+image::./images/others/bitbucket/step3a.png[]
+
+Leave by the moment the default config. as it is enough for the basic setup.
+
+The route for external traffic is now available.
+
+image::./images/others/bitbucket/step3b.png[]
+
+'''
+Now the BitBucker server container is up & running in our cluster.
+
+The below steps correspond to the basic configuration of our BitBucket server.
+
+'''
+
+=== Step 4.1: Click on the link of the external traffic route. This will open our BitBucket server setup wizard
+
+=== Step 4.2: Leave by the moment the Internal database since it is enough for the basic setup (and it can be modified later), and click Next
+image::./images/others/bitbucket/step4.2.png[]
+
+=== Step 4.3: Select the evaluation license, and click I have an account
+image::./images/others/bitbucket/step4.3.png[]
+
+=== Step 4.4: Select the option Bitbucker (Server)
+image::./images/others/bitbucket/step4.4.png[]
+
+=== Step 4.5: Introduce your organization (Capgemini), and click Generate License
+
+=== Step 4.6: Confirm that you want to install the license on the BitBucket server
+image::./images/others/bitbucket/step4.6.png[]
+
+The license key will be automatically generated. Click *Next*
+
+=== Step 4.7: Introduce the details of the Administration account.
+Since our BitBucket server is not going to be integrated with JIRA, click on Go to Bitbucket. The integration with JIRA can be configured later.
+
+image::./images/others/bitbucket/step4.7.png[]
+
+=== Step 4.8: Log in with the admin account that has been just created
+
+=== DONE !!
+image::./images/others/bitbucket/done.png[]

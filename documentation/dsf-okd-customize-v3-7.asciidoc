@@ -1,0 +1,85 @@
+= Customize Openshift Origin v3.7 for devonfw
+
+This is a guide to customize Openshift cluster. For more information read the next:
+
+* https://docs.openshift.com/container-platform/3.7/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets[Openshift docs customization] for the version 3.7.
+
+== Images Styles
+The icons for templates must measure the same as below or the images don't show right:
+
+- `Openshift logo`: 230px x 40px.
+- `Template logo`: 50px x 50px.
+- `Category logo`: 110px x 36px.
+
+== Quick Use
+
+This is a quick example to add custom icons and categories inside openshift.
+
+To modify the icons inside openshift, we must to modify our master-config.yaml of our openshift cluster. This file is inside the openshift container and to obtain a copy of it, we must to know what's our openshift container name.
+
+=== Obtain the master-config.yaml of our openshift cluster
+
+==== Obtain the name of our openshift container
+To obtain it, we can know it executing the next:
+[source,Shell]
+----
+$ docker container ls
+CONTAINER ID        IMAGE                                           COMMAND                  CREATED             STATUS              PORTS                                     NAMES
+83a4e3acda5b        openshift/origin:v3.7.0                         "/usr/bin/openshift …"   6 days ago          Up 6 days                                                     origin
+----
+Here we can see that the name of the container is origin. Normaly the container it's called as origin.
+
+==== Copy the master-config.yaml of our openshift container to our directory
+This file is inside the openshift container in the next directory: /var/lib/origin/openshift.local.config/master/`master-config.yaml` and we can copy it with the next command:
+[source,Shell]
+----
+$ docker cp origin:/var/lib/origin/openshift.local.config/master/master-config.yaml ./
+----
+Now we have a file with the configuration of our openshift cluster.
+
+=== Copy all customize files inside the openshift container
+To use our customization of devonfw Openshift, we need to copy our files inside the openshift container. 
+
+To do this we need to copy the images, scripts and stylesheets from https://github.com/devonfw/devonfw-shop-floor/tree/master/dsf4openshift/openshift-cluster-setup/initial-setup/customizeOpenshift[here] inside openshift
+container, for example, we could put it all inside a folder called openshift.local.devonfw. On the step one we obtain the name of this container, for this example we assume that it's called origin. Then our images are located inside openshift container and we can see an access it in `/var/lib/origin/openshift.local.devonfw/images`.
+
+[source,Shell]
+----
+$ docker cp ./openshift.local.devonfw origin:/var/lib/origin/
+----
+
+=== Edit and copy the master-config.yaml to use our customize files
+The master-config.yaml have a sections to charge our custom files. All these sections are inside the `assetConfig` and their names are the next:
+
+- The custom stylessheets are into `extensionStylesheets`.
+- The custom scripts are into `extensionScripts`.
+- The custom images are into `extensions`.
+
+To use all our custom elements only need to add the directory routes of each element in their appropriate section of the master-config.yaml
+[source,yaml]
+----
+...
+assetConfig:
+  ...
+  extensionScripts:
+  - /var/lib/origin/openshift.local.devonfw/scripts/catalog-categories.js
+  extensionStylesheets:
+  - /var/lib/origin/openshift.local.devonfw/stylesheet/icons.css
+  extensions:
+  - name: images
+    sourceDirectory: /var/lib/origin/openshift.local.devonfw/images
+  ...
+...
+----
+Now we only need to copy that master-config.yaml inside openshift, and restart it to load the new configuration. To do that execute the next:
+[source,Shell]
+----
+$ docker cp ./master-config.yaml origin:/var/lib/origin/openshift.local.config/master/master-config.yaml
+----
+To re-start openshift do `oc cluster down` and start again your persistent openshift cluster.
+
+== More information
+
+* link:dsf-okd-customize-icons[Customize icons] for Openshift.
+* link:dsf-okd-customize-catalog[Customize catalog] for Openshift.
+* https://docs.openshift.com/container-platform/latest/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets[Openshift docs] about customization.

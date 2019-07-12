@@ -1,0 +1,52 @@
+== devonfw Shop Floor Guide
+
+* link:home.asciidoc[Introduction]
+* link:dsf-how-to-use.asciidoc[How to use it]
+
+=== Provisioning environments
+* link:dsf-provisioning-production-line.asciidoc[Production Line]
+* link:dsf-provisioning-dsf4docker.asciidoc[Docker]
+
+=== Configuration and services integration
+* link:dsf-configure-nexus.asciidoc[Nexus]
+* link:dsf-configure-sonarqube.asciidoc[SonarQube]
+
+=== Create project
+
+* link:dsf-configure-gitlab.asciidoc[Create and integrate git repository]
+
+* link:dsf-create-new-devonfw-project[Create new devonfw project]
+
+* cicd configuration
+
+** Manual configuration
+
+*** link:dsf-configure-jenkinsfile.asciidoc[Jenkinsfile].
+*** link:dsf-configure-dockerfile.asciidoc[Dockerfile].
+
+** Automatic configuration
+
+*** https://github.com/devonfw/cicdgen/wiki[cicdgen documentation].
+
+=== Deployment environments
+* link:dsf-deployment-dsf4openshift.asciidoc[OpenShift].
+
+=== Annexes
+* Custom Services
+// ** TODO: MongoDB
+** BitBucket
+*** link:dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[Server setup in OpenShift]
+*** link:dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[Extra configuration]
+** link:dsf-openshift-services-selenium-basic-grid.asciidoc[Selenium Basic Gird]
+* link:dsf-mirabaud-cicd-environment-setup.asciidoc[Mirabaud experience]
+** link:dsf-mirabaud-jenkins-gitLab-integration.asciidoc[jenkins-gitlab integration]
+** link:dsf-mirabaud-jenkins-nexus-integration.asciidoc[jenkins-nexus integration]
+** link:dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[jenkins-sonarqube integration]
+* link:dsf-okd.asciidoc[OKD _(OpenShift Origin)_]
+** link:dsf-okd-how-to-install.asciidoc[How to install]
+** link:dsf-okd-initial-setup[Initial setup]
+*** link:dsf-okd-s2i[s2i]
+*** link:dsf-okd-templates[templates]
+*** link:dsf-okd-customize[Customize Openshift]
+**** link:dsf-okd-customize-icons[Customize icons]
+**** link:dsf-okd-customize-catalog[Customize catalog]

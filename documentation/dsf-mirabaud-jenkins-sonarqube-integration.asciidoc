@@ -1,0 +1,255 @@
+= Jenkins - SonarQube integration
+
+First thing is installing both tools by, for example, Docker or Docker Compose. Then, we have to think about how they should collaborate to create a more efficient Continuous Integration process.
+
+Once our project's pipeline is triggered (it could also be triggered in a fancy way, such as when a merge to the `develop` branch is done).
+
+== 1. Jenkins SonarQube plugin
+
+Typically in those integration cases, Jenkins plug-in installations become a *must*. Let's look for some available SonarQube plug-in(s) for Jenkins:
+
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-plugin.png[]
+
+== 2. SonarQube token
+
+Once installed let's create a *token* in SonarQube so that Jenkins can communicate with it to trigger their Jobs. Once we install SonarQube in our CI/CD machine (ideally a remote machine) let's login with `admin/admin` credentials:
+
+image::./images/others/jenkins-sonarqube/sonarqube-login.png[]
+
+Afterwards, SonarQube itself asks you to create this token we talked about (the name is up to you):
+
+image::./images/others/jenkins-sonarqube/sonarqube-token-name.png[]
+
+Then a token is generated:
+
+image::./images/others/jenkins-sonarqube/sonarqube-token-generation.png[]
+
+You click in "continue" and the token's generation is completed:
+
+image::./images/others/jenkins-sonarqube/sonarqube-token-done.png[]
+
+== 3. Jenkins SonarQube Server setup
+
+Now we need to tell Jenkins where is SonarQube and how to communicate with it. In `Manage Jenkins > Configure Settings`. We add a name for the server (up to you), where it is located (URL), version and the Server authentication token created in point 2.
+
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-server-setup.png[]
+
+== 4. Jenkins SonarQube Scanner
+
+Install a SonarQube Scanner as a Global tool in Jenkins to be used in the project's pipeline.
+
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-scanner.png[]
+
+== 5. Pipeline code
+
+Last step is to add the SonarQube process in our project's Jenkins pipeline. The following code will trigger a SonarQube process that will evaluate our code's quality looking for bugs, duplications, and so on.
+
+[source,groovy]
+----
+    stage 'SonarQube Analysis'
+        def scannerHome = tool 'SonarQube scanner';
+        sh "${scannerHome}/bin/sonar-scanner \
+             -Dsonar.host.url=http://url-to-your-sq-server:9000/ \
+             -Dsonar.login=[SONAR_USER] -Dsonar.password=[SONAR_PASS] \
+             -Dsonar.projectKey=[PROJECT_KEY] \
+             -Dsonar.projectName=[PROJECT_NAME] -Dsonar.projectVersion=[PROJECT_VERSION] \
+             -Dsonar.sources=. -Dsonar.java.binaries=. \
+             -Dsonar.java.source=1.8 -Dsonar.language=java"
+    
+----
+
+== 6. Results
+
+After all this, you should end up having something like this in Jenkins:
+
+image::./images/others/jenkins-sonarqube/jenkins-sonarqube-feedback.png[]
+
+And in SonarQube:
+
+image::./images/others/jenkins-sonarqube/sonarqube-project-result.png[]
+
+== 7. Changes in a devonfw project to execute SonarQube tests with Coverage
+
+The plugin used to have Coverage reports in the SonarQube for devonfw projects is *Jacoco*. There are some changes in the project's parent `pom.xml` that are mandatory to use it.
+
+Inside of the `<properties>` tag:
+
+[source,xml]
+----
+<properties>
+
+    (...)
+
+    <sonar.jacoco.version>3.8</sonar.jacoco.version>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.language>java</sonar.language>
+    <sonar.java.source>1.7</sonar.java.source>
+    <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
+    <sonar.jacoco.reportPaths>target/jacoco.exec</sonar.jacoco.reportPaths>
+    <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+    <sonar.exclusions>
+        **/generated-sources/**/*,
+        **io/oasp/mirabaud/general/**/*,
+        **/*Dao.java,
+        **/*Entity.java,
+        **/*Cto.java,
+        **/*Eto.java,
+        **/*SearchCriteriaTo.java,
+        **/*management.java,
+        **/*SpringBootApp.java,
+        **/*SpringBootBatchApp.java,
+        **/*.xml,
+        **/*.jsp
+    </sonar.exclusions>
+    <sonar.coverage.exclusions>
+        **io/oasp/mirabaud/general/**/*,
+        **/*Dao.java,
+        **/*Entity.java,
+        **/*Cto.java,
+        **/*Eto.java,
+        **/*SearchCriteriaTo.java,
+        **/*management.java,
+        **/*SpringBootApp.java,
+        **/*SpringBootBatchApp.java,
+        **/*.xml,
+        **/*.jsp
+    </sonar.coverage.exclusions>
+    <sonar.host.url>http://${YOUR_SONAR_SERVER_URL}/</sonar.host.url>
+    <jacoco.version>0.7.9</jacoco.version>
+
+    <war.plugin.version>3.2.0</war.plugin.version>
+    <assembly.plugin.version>3.1.0</assembly.plugin.version>
+</properties>
+----
+
+Of course, those `sonar` amd `sonar.coverage` can/must be changed to fit with other projects.
+
+Now add the *Jacoco Listener* as a dependency:
+
+[source,xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>org.sonarsource.java</groupId>
+        <artifactId>sonar-jacoco-listeners</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+----
+
+Plugin Management declarations:
+
+[source,xml]
+----
+<pluginManagement>
+    <plugins>
+        <plugin>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.2</version>
+        </plugin>
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+        </plugin>
+    </plugins>
+<pluginManagement>
+----
+
+Plugins:
+
+[source,xml]
+----
+<plugins>
+
+    (...)
+
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.20.1</version>
+        <configuration>
+            <argLine>-XX:-UseSplitVerifier -Xmx2048m ${surefireArgLine}</argLine>
+            <testFailureIgnore>false</testFailureIgnore>
+            <useFile>false</useFile>
+            <reportsDirectory>${project.basedir}/${sonar.junit.reportPaths}</reportsDirectory>
+            <argLine>${jacoco.agent.argLine}</argLine>
+            <excludedGroups>${oasp.test.excluded.groups}</excludedGroups>
+            <alwaysGenerateSurefireReport>true</alwaysGenerateSurefireReport>
+            <aggregate>true</aggregate>
+            <properties>
+                <property>
+                    <name>listener</name>
+                    <value>org.sonar.java.jacoco.JUnitListener</value>
+                </property>
+            </properties>
+        </configuration>
+    </plugin>
+    <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+            <argLine>-Xmx128m</argLine>
+            <append>true</append>
+            <propertyName>jacoco.agent.argLine</propertyName>
+            <destFile>${sonar.jacoco.reportPath}</destFile>
+            <excludes>
+                <exclude>**/generated-sources/**/*,</exclude>
+                <exclude>**io/oasp/${PROJECT_NAME}/general/**/*</exclude>
+                <exclude>**/*Dao.java</exclude>
+                <exclude>**/*Entity.java</exclude>
+                <exclude>**/*Cto.java</exclude>
+                <exclude>**/*Eto.java</exclude>
+                <exclude>**/*SearchCriteriaTo.java</exclude>
+                <exclude>**/*management.java</exclude>
+                <exclude>**/*SpringBootApp.java</exclude>
+                <exclude>**/*SpringBootBatchApp.java</exclude>
+                <exclude>**/*.class</exclude>
+            </excludes>
+        </configuration>
+        <executions>
+            <execution>
+                <id>prepare-agent</id>
+                <phase>initialize</phase>
+                <goals>
+                    <goal>prepare-agent</goal>
+                </goals>
+                <configuration>
+                    <destFile>${sonar.jacoco.reportPath}</destFile>
+                    <append>true</append>
+                </configuration>
+            </execution>
+            <execution>
+                <id>report-aggregate</id>
+                <phase>verify</phase>
+                <goals>
+                    <goal>report-aggregate</goal>
+                </goals>
+            </execution>
+            <execution>
+                <id>jacoco-site</id>
+                <phase>verify</phase>
+                <goals>
+                    <goal>report</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+</plugins>
+----
+
+== Jenkins SonarQube execution
+
+If the previous configuration is already setup, once Jenkins execute the sonar maven plugin, it will automatically execute coverage as well.
+
+This is an example of a block of code from a devonfw project's `Jenkinsfile`:
+
+[source,groovy]
+----
+    withMaven(globalMavenSettingsConfig: 'YOUR_GLOBAL_MAVEN_SETTINGS', jdk: 'OpenJDK 1.8', maven: 'Maven_3.3.9') {
+        sh "mvn sonar:sonar -Dsonar.login=[USERNAME] -Dsonar.password=[PASSWORD]"
+    }
+----

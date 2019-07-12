@@ -1,0 +1,48 @@
+= dsf4docker provisioning environment
+
+image::./images/dsf4docker/docker.png[]
+
+== Architecture overview
+
+image:./images/dsf4docker/dsf-docker-arch.png[]
+
+== Prerequisite
+
+To use dsf4docker provisioning environment you need a remote server and you must clone or download devonfw shop floor.
+
+== How to use it
+
+Navigate to `./devonfw-shop-floor/dsf4docker/environment` and here you can find one scripts to install it, and another one to uninstall it.
+
+=== Install devonfw shop floor 4 Docker
+
+There is an installation script to do so, so the complete installation should be completed by running it. Make sure this script has execution permissions in the Docker Host:
+
+[source,bash]
+----
+# chmod +x dsf4docker-install.sh
+# sudo ./dsf4docker-install.sh
+----
+
+
+This script, besides the container "installation" itself, will also adapt the `docker-compose.yml` file to your host (using `sed` to replace the **IP_ADDRESS** word of the file for your real Docker Host's IP address).
+
+=== Uninstall devonfw shop floor 4 Docker
+
+As well as for the installation, if we want to remove everything concerning **devonfw shop floor 4 Docker** from our Docker Host, we'll run this script:
+
+[source,bash]
+----
+# chmod +x dsf4docker-uninstall.sh
+# sudo ./dsf4docker-uninstall.sh
+----
+
+== A little history
+
+The *Docker* part of the shop floor is created based on the experience of the environment setup of the project *Mirabaud Advisory*, and intended to be updated to latest versions. Mirabaud Advisory is a web service developed with devonfw (Java) that, alongside its own implementation, it needed an environment both for the team to follow CICD rules through their 1-week-long sprints and for the client (Mirabaud) to check the already done work.
+
+There is a practical experience about the link:dsf-mirabaud-cicd-environment-setup.asciidoc[Mirabaud Case].
+
+---
+
+link:dsf-how-to-use.asciidoc#Step-1---Configuration-and-services-integration[Back].
