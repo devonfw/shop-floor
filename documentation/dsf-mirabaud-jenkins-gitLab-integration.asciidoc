@@ -47,7 +47,7 @@ Specify a GitLab connection in your Jenkins's `Manage Jenkins > Configure System
 You'll need to give it a name, for example, related with what this GitLab is dedicated for (specific clients, internal projects...). Then, the `Gitlab host URL` is just where your GitLab server is. If you have it locally, that field should look similar to:
 
 * Connection name: `my-local-gitlab`
-* Gitlab host URL: `\http://localhost:[[PORT_NUMBER]]`
+* Gitlab host URL: `\http://localhost:${PORT_NUMBER}`
 
 Finally, we select our recently GitLab API token as credentials.
 
