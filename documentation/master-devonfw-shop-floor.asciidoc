@@ -1,5 +1,4 @@
 = devonfw shop floor ${project.version}
-
 The devonfw community
 ${project.version}, ${buildtime}: Subtitle {doctitle}
 :description: comprehensive documentation for the devonfw shop floor.
@@ -52,7 +51,7 @@ include::dsf-create-new-devonfw-project[leveloffset=2].
 
 ===== Jenkinsfile
 
-include::dsf-configure-jenkinsfile.asciidoc[leveloffset=2].
+include::dsf-configure-jenkinsfile.asciidoc[leveloffset=1].
 
 ===== Dockerfiles
 
@@ -73,6 +72,10 @@ include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=5].
 include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=5].
 
 include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=5].
+
+== Monitoring
+
+include::dsf-configure-jenkins-build-monitor-view.asciidoc[leveloffset=5].
 
 == Annexes
 
