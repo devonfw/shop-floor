@@ -3,6 +3,7 @@
 This is a guide to customize Openshift cluster.
 
 == Images Styles
+
 The icons for templates must measure the same as below or the images don't show right:
 
 * `Openshift logo`: 230px x 40px.

@@ -2,6 +2,7 @@
 = Jenkinsfile
 
 == Introduction
+
 image::./images/configuration/jenkinsfile-cicd-activity-diagram.jpg[]
 
 Here you are going to learn how you should configure the jenkinsfile of your project to apply CI/CD operations and enables automated application deployment.

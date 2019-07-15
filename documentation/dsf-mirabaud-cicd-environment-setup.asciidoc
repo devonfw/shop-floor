@@ -141,6 +141,7 @@ Several folders have been created to store each service's volumes, `docker-compo
 === Jenkins
 
 ==== Command
+
 [source]
 ----
 # docker run -d -p 8080:8080 -p 50000:50000 --name=mirabaud_jenkins \
@@ -149,12 +150,14 @@ Several folders have been created to store each service's volumes, `docker-compo
 ----
 
 ==== Generate keystore
+
 [source]
 ----
 keytool -importkeystore -srckeystore server.p12 -srcstoretype pkcs12 -srcalias 1 -destkeystore newserver.jks -deststoretype jks -destalias server
 ----
 
 ==== Start jekins with SSL (TODO: make a docker-compose.yml for this):
+
 [source]
 ----
 sudo docker run -d --name mirabaud_jenkins -v /jenkins:/var/jenkins_home -p 8080:8443 jenkins --httpPort=-1 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/certs/keystore.jks --httpsKeyStorePassword=Mirabaud2017
@@ -162,6 +165,7 @@ sudo docker run -d --name mirabaud_jenkins -v /jenkins:/var/jenkins_home -p 8080
 
 
 ==== Volumes
+
 ```
 volumes/jenkins_home:/var/jenkins_home
 ```
@@ -169,6 +173,7 @@ volumes/jenkins_home:/var/jenkins_home
 === SonarQube
 
 ==== Command
+
 [source]
 ----
 # docker run -d -p 9000:9000 -p 9092:9092 --name=mirabaud_sonarqube \
@@ -180,6 +185,7 @@ volumes/jenkins_home:/var/jenkins_home
 ----
 
 ==== Volumes
+
 ```
 volumes/conf:/opt/sonarqube/conf
 volumes/data:/opt/sonarqube/data
@@ -190,6 +196,7 @@ volumes/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 === Nexus
 
 ==== Command
+
 [source]
 ----
 # docker run -d -p 8081:8081 --name=mirabaud_nexus\
@@ -198,6 +205,7 @@ volumes/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 ----
 
 ==== Volumes
+
 ```
 volumes/nexus-data/:/sonatype-work                         
 ```
@@ -205,6 +213,7 @@ volumes/nexus-data/:/sonatype-work
 === Atlassian Crucible
 
 ==== Command
+
 [source]
 ----
 # docker run -d -p 8084:8080 --name=mirabaud_crucible \
@@ -213,6 +222,7 @@ volumes/nexus-data/:/sonatype-work
 ----
 
 ==== Volumes
+
 ```
 volumes/data:/atlassian/data/crucible                                                   
 ```
@@ -225,6 +235,7 @@ Both Services had been deploying by using the `# docker-compose up -d` command f
 === GitLab
 
 ==== `docker-compose.yml`
+
 [source,yaml]
 ----
 mirabaud:
@@ -239,6 +250,7 @@ mirabaud:
 ----
 
 ==== Command (docker)
+
 [source]
 ----
 docker run -d -p 8888:80 --name=mirabaud_gitlab \
@@ -249,6 +261,7 @@ docker run -d -p 8888:80 --name=mirabaud_gitlab \
 ----
 
 ==== Volumes
+
 ```
 volumes/etc/gitlab:/etc/gitlab
 volumes/var/opt:/var/log/gitlab
@@ -258,6 +271,7 @@ volumes/var/log:/var/log/gitlab
 === Mattermost
 
 ==== `docker-compose.yml`:
+
 [source,yaml]
 ----
 db:
