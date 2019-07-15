@@ -1,4 +1,5 @@
 = devonfw shop floor ${project.version}
+
 The devonfw community
 ${project.version}, ${buildtime}: Subtitle {doctitle}
 :description: comprehensive documentation for the devonfw shop floor.
@@ -22,15 +23,21 @@ include::home.asciidoc[leveloffset=0]
 include::dsf-how-to-use.asciidoc[leveloffset=1]
 
 == Provisioning environments
+
 include::dsf-provisioning-production-line.asciidoc[leveloffset=2]
+
 include::dsf-provisioning-dsf4docker.asciidoc[leveloffset=2]
 
 == Configuration and services integration
+
 include::dsf-configure-nexus.asciidoc[leveloffset=2]
+
 include::dsf-configure-sonarqube.asciidoc[leveloffset=2]
 
 == Create project
+
 === Create and integrate git repository
+
 include::dsf-configure-gitlab.asciidoc[leveloffset=2].
 
 === start new devonfw project
@@ -44,6 +51,7 @@ include::dsf-create-new-devonfw-project[leveloffset=2].
 ==== Manual configuration
 
 ===== Jenkinsfile
+
 include::dsf-configure-jenkinsfile.asciidoc[leveloffset=2].
 
 ===== Dockerfiles
@@ -57,9 +65,13 @@ include::dsf-configure-dockerfile.asciidoc[leveloffset=2].
 If you are using production line for provisioning you could use cicdgen to configure automatically almost everything explained in the manual configuration. To do it see the https://github.com/devonfw/cicdgen/wiki[cicdgen] documentation.
 
 == Deployment environments
+
 === OpenShift
+
 include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=5].
+
 include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=5].
+
 include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=5].
 
 == Annexes
@@ -67,18 +79,33 @@ include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffs
 === Custom Services
 
 ==== BitBucket
+
 include::dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[leveloffset=3]
+
 include::dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[leveloffset=3]
+
 include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=2]
+
 include::dsf-mirabaud-jenkins-gitLab-integration.asciidoc[leveloffset=3]
+
 include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
+
 include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
+
 include::dsf-okd.asciidoc[leveloffset=2]
+
 include::dsf-okd-how-to-install.asciidoc[leveloffset=3]
+
 include::dsf-okd-initial-setup.asciidoc[leveloffset=3]
+
 include::dsf-okd-s2i.asciidoc[leveloffset=3]
+
 include::dsf-okd-templates.asciidoc[leveloffset=3]
+
 include::dsf-okd-customize.asciidoc[leveloffset=3]
+
 include::dsf-okd-customize-icons.asciidoc[leveloffset=5]
+
 include::dsf-okd-customize-catalog.asciidoc[leveloffset=5]
+
 include::dsf-okd-customize-v3-7.asciidoc[leveloffset=5]

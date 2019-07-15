@@ -35,6 +35,7 @@ oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master
 ----
 
 When it finishes, remember to logout as an admin and enter with our normal user.
+
 [source,Shell]
 ----
 $ oc login
@@ -47,6 +48,7 @@ To use these templates with openshift, we can override any parameter values defi
 This file must be a list of <name>=<value> pairs. A parameter reference may appear in any text field inside the template items.
 
 *The parameters that we must override are the following*
+
 [source,Shell]
 ----
 $ cat paramfile
@@ -58,6 +60,7 @@ $ cat paramfile
 ----
 		
 *The following parameters are optional*
+
 [source,Shell]
 ----
 $ cat paramfile
@@ -68,6 +71,7 @@ $ cat paramfile
 ----
 
 *For example, to deploy My Thai Star Java*
+
 [source,Shell]
 ----
 $ cat paramfile

@@ -17,12 +17,14 @@ Before using the builder images, add them to the OpenShift cluster.
 === Deploy the Source-2-Image builder images
 
 First, create a dedicated `devonfw` project as admin.
+
 [source,Shell]
 ----
 $ oc new-project devonfw --display-name='devonfw' --description='devonfw Application Standard Platform'
 ----
 
 Now add the builder image configuration and start their build.
+
 [source,Shell]
 ----
 oc create -f https://raw.githubusercontent.com/devonfw/devonfw-shop-floor/master/dsf4openshift/openshift-devonfw-deployment/s2i/java/s2i-devonfw-java-imagestream.json --namespace=devonfw
@@ -32,6 +34,7 @@ oc start-build s2i-devonfw-angular --namespace=devonfw
 ----
     
 Make sure other projects can access the builder images:
+
 [source,Shell]
 ----
 oc policy add-role-to-group system:image-puller system:authenticated --namespace=devonfw
