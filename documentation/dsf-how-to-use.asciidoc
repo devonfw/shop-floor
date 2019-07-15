@@ -69,8 +69,14 @@ The third is configure our deployment environment. Here is the list for the diff
   * link:dsf-deployment-dsf4openshift.asciidoc[dsf4openshift].
 // TODO:  * link:dsf-deployment-dsf4docker.asciidoc[dsf4docker].
 
+== Step 4 - Monitoring
+
+Here you can find information about tools for monitoring:
+
+ * link:dsf-configure-jenkins-build-monitor-view.asciidoc[build monitor view] for Jenkins. With this tool you will be able to see in real time what is the state of your Jenkins pipelines.
+
 ////
-== Step 4 - Verification
+== Step 5 - Verification
 
   * TODO: Manual Guide
 ////

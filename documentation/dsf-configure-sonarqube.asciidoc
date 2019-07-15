@@ -45,3 +45,16 @@ For example, in Production Line the server is the next:
 image::./images/configuration/sonarqube-jenkins-server.png[]
 
 NOTE: Remember, the token was created at the beginning  of this SonarQube configuration.
+
+== SonarQube configuration
+
+Now is time to configure your sonar in order to check correctly the quality of the project. To do it, please follow the official documentation about our plugins and Quality Gates and Profiles https://github.com/devonfw/sonar-devon-plugin[here].
+
+=== How to ignore files
+
+Normaly the developers needs to ignore some files from Sonar analysis. To do it, they must add the next line as a parameter of the sonar execution to their Jenkinsfile in the SonarQube code analysis step.
+
+[Source, Groovy]
+----
+-Dsonar.exclusions='**/*.spec.ts, **/*.model.ts, **/*mock.ts'
+----
