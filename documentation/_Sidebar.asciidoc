@@ -1,6 +1,6 @@
 == devonfw Shop Floor Guide
 
-* link:home.asciidoc[Introduction]
+* link:Home.asciidoc[Introduction]
 * link:dsf-how-to-use.asciidoc[How to use it]
 
 === Provisioning environments
