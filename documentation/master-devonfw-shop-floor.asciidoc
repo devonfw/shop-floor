@@ -1,23 +1,12 @@
-= devonfw shop floor ${project.version}
-The devonfw community
-${project.version}, ${buildtime}: Subtitle {doctitle}
-:description: comprehensive documentation for the devonfw shop floor.
+= devonfw shop floor
 :sectnums:
 :toc:
 :toc-title: Table of Contents
-:toclevels: 3
-ifdef::backend-pdf[]
-:title-logo-image: image:./images/devonfw.png[pdfwidth=5in,align=center]
-endif::[]
-:imagesdir: ./
-:footnote: test footnote
-:productname: test productname
+:toclevels: 2
 
 
-[preface]
-include::home.asciidoc[leveloffset=0]
 
-:toc:
+include::Home.asciidoc[leveloffset=1]
 
 include::dsf-how-to-use.asciidoc[leveloffset=1]
 
@@ -37,25 +26,21 @@ include::dsf-configure-sonarqube.asciidoc[leveloffset=2]
 
 === Create and integrate git repository
 
-include::dsf-configure-gitlab.asciidoc[leveloffset=2].
+include::dsf-configure-gitlab.asciidoc[leveloffset=3]
 
 === start new devonfw project
 
 It is time to create your devonfw project:
 
-include::dsf-create-new-devonfw-project[leveloffset=2].
+include::dsf-create-new-devonfw-project[leveloffset=3]
 
 === cicd configuration
 
 ==== Manual configuration
 
-===== Jenkinsfile
+include::dsf-configure-jenkinsfile.asciidoc[leveloffset=4]
 
-include::dsf-configure-jenkinsfile.asciidoc[leveloffset=1].
-
-===== Dockerfiles
-
-include::dsf-configure-dockerfile.asciidoc[leveloffset=2].
+include::dsf-configure-dockerfile.asciidoc[leveloffset=4]
 
 ==== Automatic configuration
 
@@ -67,25 +52,25 @@ If you are using production line for provisioning you could use cicdgen to confi
 
 === OpenShift
 
-include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=5].
+include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=3]
 
-include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=5].
+include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=3].
 
-include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=5].
+include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=3].
 
 == Monitoring
 
-include::dsf-configure-jenkins-build-monitor-view.asciidoc[leveloffset=5].
+include::dsf-configure-jenkins-build-monitor-view.asciidoc[leveloffset=2]
 
 == Annexes
 
-=== Custom Services
-
-==== BitBucket
+=== BitBucket
 
 include::dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[leveloffset=3]
 
 include::dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[leveloffset=3]
+
+include::dsf-openshift-services-selenium-basic-grid.asciidoc[leveloffset=2]
 
 include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=2]
 
@@ -107,8 +92,8 @@ include::dsf-okd-templates.asciidoc[leveloffset=3]
 
 include::dsf-okd-customize.asciidoc[leveloffset=3]
 
-include::dsf-okd-customize-icons.asciidoc[leveloffset=5]
+include::dsf-okd-customize-icons.asciidoc[leveloffset=4]
 
-include::dsf-okd-customize-catalog.asciidoc[leveloffset=5]
+include::dsf-okd-customize-catalog.asciidoc[leveloffset=4]
 
 include::dsf-okd-customize-v3-7.asciidoc[leveloffset=5]
