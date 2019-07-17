@@ -54,9 +54,9 @@ If you are using production line for provisioning you could use cicdgen to confi
 
 include::dsf-deployment-dsf4openshift.asciidoc[leveloffset=3]
 
-include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=3].
+include::dsf-deployment-dsf4openshift-manual-configuration.asciidoc[leveloffset=3]
 
-include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=3].
+include::dsf-deployment-dsf4openshift-automatic-configuration.asciidoc[leveloffset=3]
 
 == Monitoring
 
