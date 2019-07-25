@@ -11,7 +11,7 @@ pipeline{
     parameters {
         // Docker registry credentials for OpenShift
         booleanParam(name: 'CREATE_SECRET', defaultValue: false, description: 'OPTIONAL: This secrets is used to connect OpenShift with your docker-registry. If true, the secret will be add to your OpenShift. If more than one app use the same registry and openshift alredy have the secret added mark it as false.')
-        string(name: 'REGISTRY_SECRET_NAME_SUFFIX', defaultValue: '-test', description: 'OPTIONAL: suffix to add to your secret for the docker registry in OpenShift. The name is going to be docker-registry, if you use more than one docker-registry in the same namespace you need to add a suffix. For example you cuold add the name of your project, then to have the name as docker-registry-myprojectname you should use -myprojectname value')
+        string(name: 'REGISTRY_SECRET_NAME_SUFFIX', defaultValue: '-dsf', description: 'OPTIONAL: suffix to add to your secret for the docker registry in OpenShift. The name is going to be docker-registry, if you use more than one docker-registry in the same namespace you need to add a suffix. For example you cuold add the name of your project, then to have the name as docker-registry-myprojectname you should use -myprojectname value')
 
         // Build your docker image using OpenShift and store it in your docker registry
         booleanParam(name: 'CREATE_DOCKER_BUILDER', defaultValue: true, description: 'OPTIONAL: If true, BuildConfig is going to be added in OpenShift to build the docker image for your application.')
