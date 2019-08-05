@@ -15,7 +15,7 @@ pipeline{
 
         // Build your docker image using OpenShift and store it in your docker registry
         booleanParam(name: 'CREATE_DOCKER_BUILDER', defaultValue: true, description: 'OPTIONAL: If true, BuildConfig is going to be added in OpenShift to build the docker image for your application.')
-        string(name: 'GIT_REPOSITORY', defaultValue: 'http://gitlab-core:80/gitlab/boat/boat-frontend.git', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the url of your git repository') 
+        string(name: 'GIT_REPOSITORY', defaultValue: 'http://gitlab-core:80/gitlab/jodacalc/devon4ng-oc-example.git', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the url of your git repository') 
         string(name: 'GIT_BRANCH', defaultValue: 'develop', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the branch of your git repository') 
         credentials(credentialType: 'com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl', defaultValue: 'gitlab-user', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the credentials for your git repository', name: 'GIT_CREDENTIALS', required: false)
         string(name: 'BUILD_SCRIPT', defaultValue: 'build', description: 'If CREATE_DOCKER_BUILDER is true, you need to specify which is the bild script found in the package.json to be executed for generate the artifacts used to create the docker image.')
