@@ -131,7 +131,7 @@ pipeline{
                             sh "oc login -u ${user} -p ${pass} ${params.OPENSHIFT_URL} --insecure-skip-tls-verify"
                             sh "oc project ${params.OPENSHIFT_NAMESPACE}"
                             sh """
-                                oc new-build --strategy docker --binary --docker-image openjdk:${params.JDK_VERSION} --name=${pom.artifactId}${params.APP_NAME_SUFFIX} --to=${params.DOCKER_REGISTRY}/${pom.artifactId}:${params.DOCKER_TAG} --to-docker=true
+                                oc new-build --strategy docker --binary --docker-image openjdk:${params.JAVA_VERSION} --name=${pom.artifactId}${params.APP_NAME_SUFFIX} --to=${params.DOCKER_REGISTRY}/${pom.artifactId}:${params.DOCKER_TAG} --to-docker=true
                                 oc patch bc/${pom.artifactId}${params.APP_NAME_SUFFIX} --patch '{"spec":{"resources":{"limits":{"memory": "400Mi"},"requests":{"memory": "400Mi"}}}}'
                                 oc set build-secret --push bc/${pom.artifactId}${params.APP_NAME_SUFFIX} ${nameForSecret}${params.REGISTRY_SECRET_NAME_SUFFIX}
                             """
