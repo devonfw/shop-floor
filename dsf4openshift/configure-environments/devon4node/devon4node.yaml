@@ -6,7 +6,7 @@ metadata:
     openshift.io/generated-by: devonfw-shop-floor
     description: devon4node application builder for docker image. Use this template to create your docker image of a devon4node project and deploy it.
     iconClass: icon-nodejs
-    tags: devonfw,devon4node,devonfw-shop-floor,node,docker
+    tags: devonfw,devon4node,devonfw-shop-floor,nodejs,docker
 objects:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
