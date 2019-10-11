@@ -1,1 +1,4 @@
+:toc:
+toc::[]
+
 = TODO
