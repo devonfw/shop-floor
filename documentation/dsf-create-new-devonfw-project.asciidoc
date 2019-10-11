@@ -1,3 +1,6 @@
+:toc:
+toc::[]
+
 = How to create new devonfw project
 
 Here you can find the official guides to start new devonfw projects:
