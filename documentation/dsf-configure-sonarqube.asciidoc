@@ -48,7 +48,7 @@ NOTE: Remember, the token was created at the beginning  of this SonarQube config
 
 == SonarQube configuration
 
-Now is time to configure your sonar in order to check correctly the quality of the project. To do it, please follow the official documentation about our plugins and Quality Gates and Profiles https://github.com/devonfw/sonar-devon-plugin[here].
+Now is time to configure your sonar in order to check correctly the quality of the project. To do it, please follow the official documentation about our plugins and Quality Gates and Profiles https://github.com/devonfw/sonar-devon4j-plugin[here].
 
 === How to ignore files
 
