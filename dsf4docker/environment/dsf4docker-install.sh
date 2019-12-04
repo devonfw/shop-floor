@@ -59,5 +59,5 @@ mkdir -p ./volumes/lam/data
 chown 33:33 ./volumes/lam/data
 
 sed -i 's/IP_ADDRESS/'$IP'/g' docker-compose.yml
-chmod +x images/jenkins-slave/setup-sshd
+#chmod +x images/jenkins-slave/setup-sshd
 docker-compose up -d --build
