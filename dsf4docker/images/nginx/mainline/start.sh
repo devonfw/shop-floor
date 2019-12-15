@@ -1,5 +1,7 @@
+#!/bin/bash
+
 ####################################################################################
-#   Copyright 2015-2018 Capgemini SE.
+#   Copyright 2015-2019 Capgemini SE.
 #   
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -13,19 +15,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ####################################################################################
-
-FROM nginx:latest
-
-LABEL sumary="Reverse proxy for devonfw applications." \
-    description="" \
-    name="reverse-proxy" \
-    version="1.0.0" \
-    maintainer="Dario Rodriguez Gonzalez <dario.rodriguez-gonzalez@capgemini.com>" \
-    help="For more information visit https://github.com/devonfw/devonfw-shop-floor" \
-    usage="docker run -e FRONTEND_ENV=http://frontend:80 -e BACKEND_ENV=http://backend:8080 -p 80:80 -p 443:443 -d reverse-proxy"
-
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY start.sh /etc/nginx/start.sh
-RUN chmod +x /etc/nginx/start.sh
-
-ENTRYPOINT [ "bash", "/etc/nginx/start.sh" ]
+export CONFIG_PATH=${CONFIG_PATH:-'/config'}
+for file in /etc/nginx/sites-available/*
+do
+    envsubst < $file > "/etc/nginx/sites-enabled/$(basename $file)"
+done
+eval "$@"

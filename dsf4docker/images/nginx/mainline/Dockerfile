@@ -1,0 +1,40 @@
+####################################################################################
+#   Copyright 2015-2018 Capgemini SE.
+#   
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#   
+#        http://www.apache.org/licenses/LICENSE-2.0
+#   
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+####################################################################################
+
+FROM nginx:latest
+
+LABEL sumary="Reverse proxy for devonfw applications." \
+    description="" \
+    name="nginx" \
+    version="1.0.0" \
+    maintainer="Dario Rodriguez Gonzalez <dario.rodriguez-gonzalez@capgemini.com>" \
+    help="For more information visit https://github.com/devonfw/devonfw-shop-floor" \
+    usage="docker run -e CONFIG_PATH=/config -e CONFIG={\"property1\":\"value1\"} nginx"
+
+COPY ./ /etc/nginx/
+
+RUN mkdir -p /etc/nginx/sites-enabled \
+    && chmod 777 /etc/nginx/sites-enabled \
+    && chmod 755 /etc/nginx/sites-available/* \
+    && mv /etc/nginx/start.sh /tmp/start.sh \
+    && chmod +x /tmp/start.sh
+
+EXPOSE 8080
+
+USER nginx
+
+ENTRYPOINT [ "/bin/bash", "/tmp/start.sh"]
+CMD ["nginx", "-g", "\"daemon off;\""]
