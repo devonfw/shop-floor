@@ -18,6 +18,6 @@
 export CONFIG_PATH=${CONFIG_PATH:-'/config'}
 for file in /etc/nginx/sites-available/*
 do
-    envsubst < $file > "/etc/nginx/sites-enabled/$(basename $file)"
+    envsubst '${CONFIG} ${CONFIG_PATH}' < $file > "/etc/nginx/sites-enabled/$(basename $file)"
 done
 eval "$@"
