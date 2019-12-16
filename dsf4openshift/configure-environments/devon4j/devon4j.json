@@ -48,15 +48,14 @@
         },
         "runPolicy": "Serial",
         "source": {
-          "binary": {
-          },
+          "binary": {},
           "type": "Binary"
         },
         "strategy": {
           "dockerStrategy": {
             "from": {
-              "kind": "ImageStreamTag",
-              "name": "openjdk:${OPENJDK_TAG}"
+              "kind": "DockerImage",
+              "name": "adoptopenjdk/openjdk11:${OPENJDK_TAG}"
             }
           },
           "type": "Docker"
@@ -90,8 +89,7 @@
               "kind": "DockerImage",
               "name": "${DOCKER_IMAGE}:${DOCKER_TAG}"
             },
-            "importPolicy": {
-            },
+            "importPolicy": {},
             "name": "${DOCKER_TAG}",
             "referencePolicy": {
               "type": "Source"
@@ -133,8 +131,7 @@
         "type": "ClusterIP"
       },
       "status": {
-        "loadBalancer": {
-        }
+        "loadBalancer": {}
       }
     },
     {
@@ -159,8 +156,7 @@
         },
         "strategy": {
           "activeDeadlineSeconds": 21600,
-          "resources": {
-          },
+          "resources": {},
           "rollingParams": {
             "intervalSeconds": 1,
             "maxSurge": "25%",
@@ -215,8 +211,7 @@
             ],
             "restartPolicy": "Always",
             "schedulerName": "default-scheduler",
-            "securityContext": {
-            },
+            "securityContext": {},
             "terminationGracePeriodSeconds": 30
           }
         },
@@ -293,7 +288,7 @@
       "name": "OPENJDK_TAG",
       "displayName": "Openjdk version",
       "description": "The docker image used is openjdk, you need to specify the tag for the correct version. More information here: https://hub.docker.com/_/openjdk",
-      "value": "8",
+      "value": "jre-11.0.4_11-alpine",
       "required": true
     },
     {

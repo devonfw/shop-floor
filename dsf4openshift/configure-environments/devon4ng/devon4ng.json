@@ -48,15 +48,14 @@
         },
         "runPolicy": "Serial",
         "source": {
-          "binary": {
-          },
+          "binary": {},
           "type": "Binary"
         },
         "strategy": {
           "dockerStrategy": {
             "from": {
-              "kind": "ImageStreamTag",
-              "name": "nginx:${NGINX_TAG}"
+              "kind": "DockerImage",
+              "name": "devonfwforge/nginx4ng:latest"
             }
           },
           "type": "Docker"
@@ -90,8 +89,7 @@
               "kind": "DockerImage",
               "name": "${DOCKER_IMAGE}:${DOCKER_TAG}"
             },
-            "importPolicy": {
-            },
+            "importPolicy": {},
             "name": "${DOCKER_TAG}",
             "referencePolicy": {
               "type": "Source"
@@ -133,8 +131,7 @@
         "type": "ClusterIP"
       },
       "status": {
-        "loadBalancer": {
-        }
+        "loadBalancer": {}
       }
     },
     {
@@ -159,8 +156,7 @@
         },
         "strategy": {
           "activeDeadlineSeconds": 21600,
-          "resources": {
-          },
+          "resources": {},
           "rollingParams": {
             "intervalSeconds": 1,
             "maxSurge": "25%",
@@ -215,8 +211,7 @@
             ],
             "restartPolicy": "Always",
             "schedulerName": "default-scheduler",
-            "securityContext": {
-            },
+            "securityContext": {},
             "terminationGracePeriodSeconds": 30
           }
         },
@@ -288,13 +283,6 @@
       "displayName": "Application name suffix",
       "description": "OPTIONAL: suffix to add to your application and group name. Is needed if you are going to deploy more than one environment in the same place. For example for develop environment you could use -dev value",
       "required": false
-    },
-    {
-      "name": "NGINX_TAG",
-      "displayName": "Nginx version",
-      "description": "The docker image used is nginx, you need to specify the tag for the correct version. More information here: https://hub.docker.com/_/nginx",
-      "value": "alpine-perl",
-      "required": true
     },
     {
       "name": "DOCKER_IMAGE",

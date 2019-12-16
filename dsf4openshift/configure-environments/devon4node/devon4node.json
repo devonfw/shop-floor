@@ -48,14 +48,13 @@
         },
         "runPolicy": "Serial",
         "source": {
-          "binary": {
-          },
+          "binary": {},
           "type": "Binary"
         },
         "strategy": {
           "dockerStrategy": {
             "from": {
-              "kind": "ImageStreamTag",
+              "kind": "DockerImage",
               "name": "node:${NODE_TAG}"
             }
           },
@@ -90,8 +89,7 @@
               "kind": "DockerImage",
               "name": "${DOCKER_IMAGE}:${DOCKER_TAG}"
             },
-            "importPolicy": {
-            },
+            "importPolicy": {},
             "name": "${DOCKER_TAG}",
             "referencePolicy": {
               "type": "Source"
@@ -133,8 +131,7 @@
         "type": "ClusterIP"
       },
       "status": {
-        "loadBalancer": {
-        }
+        "loadBalancer": {}
       }
     },
     {
@@ -159,8 +156,7 @@
         },
         "strategy": {
           "activeDeadlineSeconds": 21600,
-          "resources": {
-          },
+          "resources": {},
           "rollingParams": {
             "intervalSeconds": 1,
             "maxSurge": "25%",
@@ -215,8 +211,7 @@
             ],
             "restartPolicy": "Always",
             "schedulerName": "default-scheduler",
-            "securityContext": {
-            },
+            "securityContext": {},
             "terminationGracePeriodSeconds": 30
           }
         },
@@ -293,7 +288,7 @@
       "name": "NODE_TAG",
       "displayName": "Node version",
       "description": "The docker image used is node, you need to specify the tag for the correct version. More information here: https://hub.docker.com/_/node",
-      "value": "10",
+      "value": "lts-slim",
       "required": true
     },
     {
