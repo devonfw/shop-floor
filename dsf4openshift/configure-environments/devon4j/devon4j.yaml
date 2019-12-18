@@ -224,5 +224,5 @@ parameters:
   - name: PORT
     displayName: "Application port"
     description: "The port used for your application."
-    value: "8080"
+    value: "8081"
     required: true
