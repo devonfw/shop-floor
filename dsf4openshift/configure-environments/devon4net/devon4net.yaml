@@ -1,12 +1,12 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: devon4node
+  name: devon4net
   annotations:
     openshift.io/generated-by: devonfw-shop-floor
-    description: devon4node application builder for docker image. Use this template to create your docker image of a devon4node project and deploy it.
-    iconClass: icon-nodejs
-    tags: devonfw,devon4node,devonfw-shop-floor,nodejs,docker
+    description: devon4net application builder for docker image. Use this template to create your docker image of a devon4net project and deploy it.
+    iconClass: icon-angularjs
+    tags: devonfw,devon4net,devonfw-shop-floor,nginx,docker
 objects:
   - apiVersion: build.openshift.io/v1
     kind: BuildConfig
@@ -41,7 +41,7 @@ objects:
         dockerStrategy:
           from:
             kind: DockerImage
-            name: "node:${NODE_TAG}"
+            name: "mcr.microsoft.com/dotnet/core/runtime:3.1"
         type: Docker
       successfulBuildsHistoryLimit: 5
   - apiVersion: image.openshift.io/v1
@@ -125,10 +125,7 @@ objects:
             deploymentconfig: "${APPLICATION_NAME}${APPLICATION_NAME_SUFFIX}"
         spec:
           containers:
-            - env:
-                - name: NODE_ENV
-                  value: dev
-              image: "${DOCKER_IMAGE}:${DOCKER_TAG}"
+            - image: "${DOCKER_IMAGE}:${DOCKER_TAG}"
               imagePullPolicy: Always
               name: "${APPLICATION_NAME}${APPLICATION_NAME_SUFFIX}"
               ports:
@@ -183,7 +180,7 @@ objects:
 parameters:
   - name: APPLICATION_NAME
     displayName: "Application name"
-    description: "The name for the application. It can't contain whitespaces. It should be the app name including type or technology. Example: mythaistar-frontend or mythaistar-angular"
+    description: "The name for the application. It can't contain whitespaces. It should be the app name including type or technology. Example: mythaistar-backend or mythaistar-net"
     required: true
   - name: APPLICATION_GROUP_NAME
     displayName: "Application group name"
@@ -193,15 +190,6 @@ parameters:
     displayName: "Application name suffix"
     description: "OPTIONAL: suffix to add to your application and group name. Is needed if you are going to deploy more than one environment in the same place. For example for develop environment you could use -dev value"
     required: false
-  - name: NODE_ENV
-    displayName: "Node environment"
-    description: "NODE_ENV environment variable. It is used for select the application configuration file"
-    required: false
-  - name: NODE_TAG
-    displayName: "Node version"
-    description: "The docker image used is node, you need to specify the tag for the correct version. More information here: https://hub.docker.com/_/node"
-    value: "lts"
-    required: true
   - name: DOCKER_IMAGE
     displayName: "Docker image"
     description: "The url where your docker image is going to be push and pull."
@@ -222,7 +210,7 @@ parameters:
   - name: MEMORY
     displayName: "Memory"
     description: "The requested and limited memory used for your project."
-    value: "250Mi"
+    value: "100Mi"
     required: true
   - name: APPLICATION_HOSTNAME
     displayName: "Application hostname"
@@ -231,5 +219,5 @@ parameters:
   - name: PORT
     displayName: "Application port"
     description: "The port used for your application."
-    value: "3000"
+    value: "8080"
     required: true
