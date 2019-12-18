@@ -1,10 +1,12 @@
 = SonarQube Configuration
 
-To use SonarQube you need to use a token to connect, and to know the results of the analysis you need a webhook. Also, you need to install and configure SonarQube in Jenkins.
+To use SonarQube you need to use a *token* to connect, and to know the results of the analysis you need a *webhook*. Also, you need to install and configure SonarQube in Jenkins.
 
 == Generate user token
 
 To generate the user token, go to your account clicking in the left icon on the top menu bar.
+
+====== Note: If you don't have any account, you can use the admin/admin user/pass
 
 image::./images/configuration/sonarqube-administration.png[]
 
@@ -48,11 +50,11 @@ NOTE: Remember, the token was created at the beginning  of this SonarQube config
 
 == SonarQube configuration
 
-Now is time to configure your sonar in order to check correctly the quality of the project. To do it, please follow the official documentation about our plugins and Quality Gates and Profiles https://github.com/devonfw/sonar-devon4j-plugin[here].
+Now is time to configure your sonar in order to measure the quality of your code. To do it, please follow the official documentation about our plugins and Quality Gates and Profiles https://github.com/devonfw/sonar-devon4j-plugin[here].
 
 === How to ignore files
 
-Normaly the developers needs to ignore some files from Sonar analysis. To do it, they must add the next line as a parameter of the sonar execution to their Jenkinsfile in the SonarQube code analysis step.
+Usually the developers need to ignore some files from Sonar analysis. To do that, they must add the next line as a parameter of the sonar execution to their Jenkinsfile in the SonarQube code analysis step.
 
 [Source, Groovy]
 ----
