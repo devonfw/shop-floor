@@ -40,8 +40,8 @@ objects:
     strategy:
       dockerStrategy:
         from:
-          kind: ImageStreamTag
-          name: "nginx:${NGINX_TAG}"
+          kind: DockerImage
+          name: "devonfwforge/nginx4ng:latest"
       type: Docker
     successfulBuildsHistoryLimit: 5
 - apiVersion: image.openshift.io/v1
@@ -190,11 +190,6 @@ parameters:
     displayName: "Application name suffix"
     description: "OPTIONAL: suffix to add to your application and group name. Is needed if you are going to deploy more than one environment in the same place. For example for develop environment you could use -dev value"
     required: false
-  - name: NGINX_TAG
-    displayName: "Nginx version"
-    description: "The docker image used is nginx, you need to specify the tag for the correct version. More information here: https://hub.docker.com/_/nginx"
-    value: alpine-perl
-    required: true
   - name: DOCKER_IMAGE
     displayName: "Docker image"
     description: "The url where your docker image is going to be push and pull."
