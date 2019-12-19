@@ -17,7 +17,7 @@
 export IP=$(hostname -i|cut -f2 -d ' ')
 echo $IP
 docker-compose down
-sed -i 's/'$IP'/IP_ADDRESS/g' docker-compose.yml
+sed -i "s/$IP/IP_ADDRESS/g" docker-compose.yml
 rm -rf volumes
 sync; echo 3 > /proc/sys/vm/drop_caches
 free -h
