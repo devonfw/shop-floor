@@ -6,7 +6,7 @@ To use SonarQube you need to use a *token* to connect, and to know the results o
 
 To generate the user token, go to your account clicking in the left icon on the top menu bar.
 
-====== Note: If you don't have any account, you can use the admin/admin user/pass
+NOTE: If you don't have any account, you can use the admin/admin user/pass
 
 image::./images/configuration/sonarqube-administration.png[]
 
