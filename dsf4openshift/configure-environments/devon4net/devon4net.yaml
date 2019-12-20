@@ -173,7 +173,7 @@ objects:
       port:
         targetPort: ${PORT}-tcp
       tls:
-        termination: edge
+        termination: passthrough
       to:
         kind: Service
         name: "${APPLICATION_NAME}${APPLICATION_NAME_SUFFIX}"
