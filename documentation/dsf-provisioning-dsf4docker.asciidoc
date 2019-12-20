@@ -20,8 +20,8 @@ There is an installation script to do so, so the complete installation should be
 
 [source,bash]
 ----
-# chmod +x dsf4docker-install.sh
-# sudo ./dsf4docker-install.sh
+ chmod +x dsf4docker-install.sh
+ sudo ./dsf4docker-install.sh
 ----
 
 
@@ -33,10 +33,24 @@ As well as for the installation, if we want to remove everything concerning **de
 
 [source,bash]
 ----
-# chmod +x dsf4docker-uninstall.sh
-# sudo ./dsf4docker-uninstall.sh
+ chmod +x dsf4docker-uninstall.sh
+ sudo ./dsf4docker-uninstall.sh
 ----
 
+== Troubleshooting
+
+When trying to execute the install or uninstall .sh there may be some problems related to the windows/linux format file, so if you see this error log while executing the script:
+----
+./dsf4docker-install.sh: line 16: $'\r': command not found
+----
+You need to do a file conversion with this command:
+----
+dos2unix dsf4docker-install.sh 
+----
+or 
+----
+dos2unix dsf4docker-uninstall.sh
+----
 == A little history
 
 The *Docker* part of the shop floor is created based on the experience of the environment setup of the project *Mirabaud Advisory*, and intended to be updated to latest versions. Mirabaud Advisory is a web service developed with devonfw (Java) that, alongside its own implementation, it needed an environment both for the team to follow CICD rules through their 1-week-long sprints and for the client (Mirabaud) to check the already done work.
