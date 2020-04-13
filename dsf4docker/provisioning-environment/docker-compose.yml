@@ -46,7 +46,7 @@ services:
       - "$PWD/volumes/gitlab/var/log:/var/log/gitlab"
       - "$PWD/volumes/gitlab/var/opt:/var/opt/gitlab"
     labels:
-      - "traefik.http.routers.gitlab.rule=Host:gitlab.IP_ADDRESS.nip.io"
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.IP_ADDRESS.nip.io`)"
       - traefik.http.services.gitlab.loadbalancer.server.port=80
 
   jenkins:
@@ -58,7 +58,7 @@ services:
       - "$PWD/volumes/jenkins/jenkins_home:/var/jenkins_home"
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
-      - "traefik.http.routers.jenkins.rule=Host:jenkins.IP_ADDRESS.nip.io"
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.IP_ADDRESS.nip.io`)"
       - traefik.http.services.jenkins.loadbalancer.server.port=8080
   #jenkins-slave1:
   #  #build: images/jenkins_slave
@@ -87,7 +87,7 @@ services:
       - "$PWD/volumes/sonarqube/extensions:/opt/sonarqube/extensions"
       - "$PWD/volumes/sonarqube/lib/bundled-plugins:/opt/sonarqube/lib/bundled-plugins"
     labels:
-      - "traefik.http.routers.sonarqube.rule=Host:sonarqube.IP_ADDRESS.nip.io"
+      - "traefik.http.routers.sonarqube.rule=Host(`sonarqube.IP_ADDRESS.nip.io`)"
       - traefik.http.services.sonarqube.loadbalancer.server.port=9000
     ulimits:
       nofile:
@@ -146,7 +146,7 @@ services:
     volumes:
       - "$PWD/volumes/nexus/nexus-data:/nexus-data"
     labels:
-      - "traefik.http.routers.nexus.rule=Host:nexus.IP_ADDRESS.nip.io"
+      - "traefik.http.routers.nexus.rule=Host(`nexus.IP_ADDRESS.nip.io`)"
       - traefik.http.services.nexus.loadbalancer.server.port=8081
   portainer:
     image: "portainer/portainer"
@@ -157,7 +157,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - "$PWD/volumes/portainer/data:/data"
     labels:
-      - "traefik.http.routers.portainer.rule=Host:portainer.IP_ADDRESS.nip.io"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.IP_ADDRESS.nip.io`)"
       - traefik.http.services.portainer.loadbalancer.server.port=9000
   #ldap:
   #  image: osixia/openldap:stable
@@ -184,7 +184,7 @@ services:
   #    - "$PWD/volumes/lam/config:/etc/ldap-account-manager"
   #    - "$PWD/volumes/lam/data:/var/lib/ldap-account-manager"
   #  labels:
-  #    - "traefik.http.routers.lam.rule=Host:lam.IP_ADDRESS.nip.io
+  #    - "traefik.http.routers.lam.rule=Host(`lam.IP_ADDRESS.nip.i`)o
   #    - traefik.http.services.lam.loadbalancer.server.port=80
 
 networks:
