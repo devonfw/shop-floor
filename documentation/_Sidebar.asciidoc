@@ -58,3 +58,4 @@
 *** link:dsf-okd-customize[Customize Openshift]
 **** link:dsf-okd-customize-icons[Customize icons]
 **** link:dsf-okd-customize-catalog[Customize catalog]
+* link:dsf-istio-guide.asciidoc[ISTIO Service Mesh Implementation Guide]
