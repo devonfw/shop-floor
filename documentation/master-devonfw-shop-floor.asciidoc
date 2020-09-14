@@ -97,3 +97,5 @@ include::dsf-okd-customize-icons.asciidoc[leveloffset=4]
 include::dsf-okd-customize-catalog.asciidoc[leveloffset=4]
 
 include::dsf-okd-customize-v3-7.asciidoc[leveloffset=5]
+
+include::dsf-istio-guide.asciidoc[leveloffset=2]
