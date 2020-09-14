@@ -70,9 +70,13 @@ include::dsf-openshift-services-bitbucket-basic-server-setup.asciidoc[leveloffse
 
 include::dsf-openshift-services-bitbucket-extra-server-configuration.asciidoc[leveloffset=3]
 
-include::dsf-openshift-services-selenium-basic-grid.asciidoc[leveloffset=2]
+=== Selenium Basic Grid
 
-include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=2]
+include::dsf-openshift-services-selenium-basic-grid.asciidoc[leveloffset=3]
+
+=== Mirabaud Experience
+
+include::dsf-mirabaud-cicd-environment-setup.asciidoc[leveloffset=3]
 
 include::dsf-mirabaud-jenkins-gitLab-integration.asciidoc[leveloffset=3]
 
@@ -80,7 +84,9 @@ include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
 
 include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
 
-include::dsf-okd.asciidoc[leveloffset=2]
+=== OKD (OpenShift Origin)
+
+include::dsf-okd.asciidoc[leveloffset=3]
 
 include::dsf-okd-how-to-install.asciidoc[leveloffset=3]
 
@@ -97,3 +103,7 @@ include::dsf-okd-customize-icons.asciidoc[leveloffset=4]
 include::dsf-okd-customize-catalog.asciidoc[leveloffset=4]
 
 include::dsf-okd-customize-v3-7.asciidoc[leveloffset=5]
+
+=== ISTIO Guide
+
+include::dsf-istio-guide.asciidoc[leveloffset=3]
