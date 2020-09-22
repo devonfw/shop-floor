@@ -3,8 +3,8 @@ env:
   global:
     - ORG="devonfw"
     - EMAIL="icsddevonfwsupport.apps2@capgemini.com"
-    - REPO_SOURCE="devonfw-shop-floor"
-    - REPO_DEST="devonfw-shop-floor.wiki"
+    - REPO_SOURCE="shop-floor"
+    - REPO_DEST="shop-floor.wiki"
     - REPO_CONSOLIDATE="devonfw-guide"
     - GH_REPO_SOURCE="github.com/${ORG}/${REPO_SOURCE}.git"
     - GH_REPO_DEST="github.com/${ORG}/${REPO_DEST}.git"
