@@ -80,6 +80,8 @@ include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
 
 include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
 
+include::dsf-azure-sonarqube-integration.asciidoc[leveloffset=2]
+
 include::dsf-okd.asciidoc[leveloffset=2]
 
 include::dsf-okd-how-to-install.asciidoc[leveloffset=3]
