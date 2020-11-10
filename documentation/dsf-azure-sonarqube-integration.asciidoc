@@ -14,7 +14,7 @@ Go to your SonarQube server and log in as admin,
 once inside, go to administration -> Security -> Users -> Administrator -> Tokens-> And *generate* the token.
 Copy the generated token(once created it will never appear again so don't lose it) and paste it and click on *save* .
 
-image::/images/others/azure-sonarqube/ServiceConnection.png[]
+image::./images/others/azure-sonarqube/ServiceConnection.png[]
 
 The service connection has been created.
 Once this step is done your service creation will appear now in the _service connections_ side bar.
@@ -36,7 +36,7 @@ Fill the required fields and click on *add*
 
 The *prepare* task will be now shown in the pipeline code:
 
-image::/images/others/azure-sonarqube/sonarprepare.png[]
+image::./images/others/azure-sonarqube/sonarprepare.png[]
 
 
 Follow the https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-azure-devops/[official documentation] if you have doubts while filling the fields:
@@ -47,14 +47,14 @@ Once the *prepare* is done, continue with the code analysis.
 
 Select this from the task assistant and just like happened with the first task, the code will appear in your pipeline.
 
-image::/images/others/azure-sonarqube/runAnalysis.png[]
+image::./images/others/azure-sonarqube/runAnalysis.png[]
 Now, let's publish the result of the analysis.
 
 **Publish quality gate result**
 
 Same as we did before, select in the display the publish extension and add it
 
-image::/images/others/azure-sonarqube/publish.png[]
+image::./images/others/azure-sonarqube/publish.png[]
 
 ==== Step 3: Run the pipeline
 
