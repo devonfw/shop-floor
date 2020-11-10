@@ -1,26 +1,27 @@
-## Integrate the SonarQube plugin in an Azure DevOps pipeline 
+== Integrate the SonarQube plugin in an Azure DevOps pipeline 
 The purpose of this readme is that you can configure your Azure Devops pipeline in order to be able to run a code analysis, analyse the code coverage and publish the results through the Sonar plugin.
-## How to do it
-##### Step 1: Create a service connection
+
+== How to do it
+==== Step 1: Create a service connection
 The first thing to do is to declare your SonarQube server as a service endpoint in your Azure DevOps project settings.
 
-Go to project settings -> pipelines -> service connections and **create** and choose 'SonarQube'.
+Go to project settings -> pipelines -> service connections and *create* and choose 'SonarQube'.
 
 **Create service connection**
 
 Specify the server url and the connection name of your SonarQube server and the token Auth
 Go to your SonarQube server and log in as admin,
-once inside, go to administration -> Security -> Users -> Administrator -> Tokens-> And **generate** the token.
-Copy the generated token(once created it will never appear again so don't lose it) and paste it and click on **save** .
+once inside, go to administration -> Security -> Users -> Administrator -> Tokens-> And *generate* the token.
+Copy the generated token(once created it will never appear again so don't lose it) and paste it and click on *save* .
 
-![Service connection creation](/images/others/azure-sonarqube/ServiceConnection.png)
+image::/images/others/azure-sonarqube/ServiceConnection.png[]
 
 The service connection has been created.
 Once this step is done your service creation will appear now in the _service connections_ side bar.
 
-For more info regarding the Authentication part please read the [official documentation](https://docs.sonarqube.org/latest/user-guide/user-token/).
+For more info regarding the Authentication part please read the https://docs.sonarqube.org/latest/user-guide/user-token/[official documentation]
 
-##### Step 2: Add the required tasks in the azure pipeline
+==== Step 2: Add the required tasks in the azure pipeline
 In order to integrate the SonarQube in the pipeline, 3 steps or *tasks* are required(Depending on the different solutions like .NET, Java, C..etc some of this tasks can be optional), this tasks are:
 
 Prepare Analysis configuration
@@ -31,13 +32,14 @@ We can use the wizard to create this in an easy way, search "SonarQube" and let'
 
 **Prepare Analysis configuration:**
 
-Fill the required fields and click on **add**
+Fill the required fields and click on *add*
 
 The *prepare* task will be now shown in the pipeline code:
-![Prepare Analysis](/images/others/azure-sonarqube/sonarprepare.png)
+
+image::/images/others/azure-sonarqube/sonarprepare.png[]
 
 
-*Follow the [SonarScanner for Azure Devops documentation](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-azure-devops/) if you have doubts while filling the fields:*
+Follow the https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-azure-devops/[official documentation] if you have doubts while filling the fields:
 
 Once the *prepare* is done, continue with the code analysis.
 
@@ -45,15 +47,16 @@ Once the *prepare* is done, continue with the code analysis.
 
 Select this from the task assistant and just like happened with the first task, the code will appear in your pipeline.
 
-![run analysis](/images/others/azure-sonarqube/runAnalysis.png)
+image::/images/others/azure-sonarqube/runAnalysis.png[]
 Now, let's publish the result of the analysis.
 
 **Publish quality gate result**
 
 Same as we did before, select in the display the publish extension and add it
 
-![publish quality gate result](/images/others/azure-sonarqube/publish.png)
-##### Step 3: Run the pipeline
+image::/images/others/azure-sonarqube/publish.png[]
+
+==== Step 3: Run the pipeline
 
 With this, all the required steps to integrate SonarQube in your Azure DevOps pipeline are done, the last thing you need to do is **run** your pipeline and your code will be analyzed and the results published.
 
