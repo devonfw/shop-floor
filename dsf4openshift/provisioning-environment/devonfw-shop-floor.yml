@@ -1,0 +1,805 @@
+apiVersion: v1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
+items:
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      labels:
+        app: jenkins
+      annotations:
+        haproxy.router.openshift.io/timeout: 4m
+      name: jenkins
+    spec:
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: jenkins
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: jenkins
+      annotations:
+      name: jenkins
+    spec:
+      replicas: 1
+      selector:
+        name: jenkins
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            name: jenkins
+        spec:
+          containers:
+            - capabilities: {}
+              env:
+                - name: OPENSHIFT_ENABLE_OAUTH
+                  value: "true"
+                - name: OPENSHIFT_ENABLE_REDIRECT_PROMPT
+                  value: "true"
+                - name: DISABLE_ADMINISTRATIVE_MONITORS
+                  value: "false"
+                - name: KUBERNETES_MASTER
+                  value: https://kubernetes.default:443
+                - name: KUBERNETES_TRUST_CERTIFICATES
+                  value: "true"
+                - name: JENKINS_SERVICE_NAME
+                  value: jenkins
+                - name: JNLP_SERVICE_NAME
+                  value: jenkins-jnlp
+              image: " "
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                failureThreshold: 2
+                httpGet:
+                  path: /login
+                  port: 8080
+                initialDelaySeconds: 420
+                periodSeconds: 360
+                timeoutSeconds: 240
+              name: jenkins
+              readinessProbe:
+                httpGet:
+                  path: /login
+                  port: 8080
+                initialDelaySeconds: 3
+                timeoutSeconds: 240
+              resources:
+                limits:
+                  memory: 512Mi
+              securityContext:
+                capabilities: {}
+                privileged: false
+              terminationMessagePath: /dev/termination-log
+              volumeMounts:
+                - mountPath: /var/lib/jenkins
+                  name: jenkins-data
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          serviceAccountName: jenkins
+          volumes:
+            - persistentVolumeClaim:
+                claimName: jenkins-data
+              name: jenkins-data
+      triggers:
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - jenkins
+            from:
+              kind: ImageStreamTag
+              name: jenkins:2
+              namespace: openshift
+            lastTriggeredImage: ""
+          type: ImageChange
+        - type: ConfigChange
+  - apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      labels:
+        app: jenkins
+      annotations:
+        serviceaccounts.openshift.io/oauth-redirectreference.jenkins: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"jenkins"}}'
+      name: jenkins
+  - apiVersion: v1
+    groupNames: null
+    kind: RoleBinding
+    metadata:
+      labels:
+        app: jenkins
+      name: jenkins_edit
+    roleRef:
+      name: edit
+    subjects:
+      - kind: ServiceAccount
+        name: jenkins
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: jenkins
+      name: jenkins-jnlp
+    spec:
+      ports:
+        - name: agent
+          nodePort: 0
+          port: 50000
+          protocol: TCP
+          targetPort: 50000
+      selector:
+        name: jenkins
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: jenkins
+      annotations:
+        service.alpha.openshift.io/dependencies: '[{"name": "jenkins-jnlp",
+          "namespace": "", "kind": "Service"}]'
+        service.openshift.io/infrastructure: "true"
+      name: jenkins
+    spec:
+      ports:
+        - name: web
+          nodePort: 0
+          port: 80
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        name: jenkins
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: jenkins
+      name: jenkins-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        description: Exposes the database server
+      labels:
+        app: sonarqube
+      name: sonarqube
+    spec:
+      ports:
+        - name: 9000-tcp
+          port: 9000
+          protocol: TCP
+          targetPort: 9000
+      selector:
+        name: sonarqube
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: sonarqube
+      name: sonarqube-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: sonarqube
+      name: sonarqube-conf
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: sonarqube
+      name: sonarqube-extensions
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      annotations:
+        description: Defines how to deploy the application server
+      labels:
+        app: sonarqube
+        name: sonarqube
+      name: sonarqube
+    spec:
+      replicas: 1
+      selector:
+        name: sonarqube
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: sonarqube
+            deploymentconfig: sonarqube
+            name: sonarqube
+          name: sonarqube
+        spec:
+          containers:
+            - env:
+                - name: sonar.jdbc.username
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-user
+                      name: sonarqube-db
+                - name: sonar.jdbc.password
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-password
+                      name: sonarqube-db
+                - name: sonar.jdbc.url
+                  value: jdbc:postgresql://sonarqube-db:5432/sonar
+              image: sonarqube:latest
+              imagePullPolicy: Always
+              name: sonarqube-container
+              ports:
+                - containerPort: 9000
+                  protocol: TCP
+              resources: {} # TODO MODIFICAR ESTO
+              volumeMounts:
+                - mountPath: /opt/sonarqube/conf
+                  name: sonarqube-conf
+                - mountPath: /opt/sonarqube/data
+                  name: sonarqube-data
+                - mountPath: /opt/sonarqube/extensions
+                  name: sonarqube-extensions
+          restartPolicy: Always
+          triggers:
+            - imageChangeParams:
+                automatic: true
+                containerNames:
+                  - sonarqube
+                from:
+                  kind: ImageStreamTag
+                  name: sonarqube:latest
+              type: ImageChange
+            - type: ConfigChange
+          volumes:
+            - name: sonarqube-data
+              persistentVolumeClaim:
+                claimName: sonarqube-data
+            - name: sonarqube-conf
+              persistentVolumeClaim:
+                claimName: sonarqube-conf
+            - name: sonarqube-extensions
+              persistentVolumeClaim:
+                claimName: sonarqube-extensions
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - sonarqube-container
+            from:
+              kind: ImageStreamTag
+              name: sonarqube:latest
+          type: ImageChange
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      annotations:
+        description: Sonarqube Image Stream
+      labels:
+        app: sonarqube
+      name: sonarqube
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations:
+            openshift.io/imported-from: sonarqube:latest
+          from:
+            kind: DockerImage
+            name: sonarqube:latest
+          importPolicy: {}
+          name: latest
+          referencePolicy:
+            type: Source
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      labels:
+        app: sonarqube
+      name: sonarqube
+    spec:
+      port:
+        targetPort: 9000-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: sonarqube
+        weight: 100
+      wildcardPolicy: None
+  # Postgres
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      labels:
+        app: sonarqube
+      annotations:
+        template.openshift.io/expose-database_name: "{.data['database-name']}"
+        template.openshift.io/expose-password: "{.data['database-password']}"
+        template.openshift.io/expose-username: "{.data['database-user']}"
+      name: sonarqube-db
+    stringData:
+      database-name: sonar
+      database-password: sonar123
+      database-user: sonar
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: sonarqube
+      annotations:
+        template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+      name: sonarqube-db
+    spec:
+      ports:
+        - name: postgresql
+          nodePort: 0
+          port: 5432
+          protocol: TCP
+          targetPort: 5432
+      selector:
+        name: sonarqube-db
+      sessionAffinity: None
+      type: ClusterIP
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: sonarqube
+      name: sonarqube-db
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: sonarqube
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"
+      name: sonarqube-db
+    spec:
+      replicas: 1
+      selector:
+        name: sonarqube-db
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            name: sonarqube-db
+        spec:
+          containers:
+            - capabilities: {}
+              env:
+                - name: POSTGRESQL_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-user
+                      name: sonarqube-db
+                - name: POSTGRESQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-password
+                      name: sonarqube-db
+                - name: POSTGRESQL_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-name
+                      name: sonarqube-db
+              image: " "
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                exec:
+                  command:
+                    - /usr/libexec/check-container
+                    - --live
+                initialDelaySeconds: 120
+                timeoutSeconds: 10
+              name: postgresql
+              ports:
+                - containerPort: 5432
+                  protocol: TCP
+              readinessProbe:
+                exec:
+                  command:
+                    - /usr/libexec/check-container
+                initialDelaySeconds: 5
+                timeoutSeconds: 1
+              resources:
+                limits:
+                  memory: 512Mi
+              securityContext:
+                capabilities: {}
+                privileged: false
+              terminationMessagePath: /dev/termination-log
+              volumeMounts:
+                - mountPath: /var/lib/pgsql/data
+                  name: sonarqube-db-data
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          volumes:
+            - name: sonarqube-db-data
+              persistentVolumeClaim:
+                claimName: sonarqube-db
+      triggers:
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - postgresql
+            from:
+              kind: ImageStreamTag
+              name: postgresql:9.6
+              namespace: openshift
+            lastTriggeredImage: ""
+          type: ImageChange
+        - type: ConfigChange
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        description: Exposes the database server
+      labels:
+        app: nexus3
+      name: nexus3
+    spec:
+      ports:
+        - name: 8081-tcp
+          port: 8081
+          protocol: TCP
+          targetPort: 8081
+        - name: 5000-tcp
+          port: 5000
+          protocol: TCP
+          targetPort: 5000
+      selector:
+        name: nexus3
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: nexus3
+      name: nexus3-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      annotations:
+        description: Defines how to deploy the application server
+      labels:
+        app: nexus3
+        name: nexus3
+      name: nexus3
+    spec:
+      replicas: 1
+      selector:
+        name: nexus3
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: nexus3
+            deploymentconfig: nexus3
+            name: nexus3
+          name: nexus3
+        spec:
+          containers:
+            - image: sonatype/nexus3:latest
+              imagePullPolicy: Always
+              name: nexus3-container
+              ports:
+                - containerPort: 8081
+                  protocol: TCP
+                - containerPort: 5000
+                  protocol: TCP
+              resources: {} # TODO MODIFICAR ESTO
+              volumeMounts:
+                - mountPath: /nexus-data
+                  name: nexus3-data
+          restartPolicy: Always
+          triggers:
+            - imageChangeParams:
+                automatic: true
+                containerNames:
+                  - nexus3
+                from:
+                  kind: ImageStreamTag
+                  name: nexus3:latest
+              type: ImageChange
+            - type: ConfigChange
+          volumes:
+            - name: nexus3-data
+              persistentVolumeClaim:
+                claimName: nexus3-data
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - nexus3-container
+            from:
+              kind: ImageStreamTag
+              name: nexus3:latest
+          type: ImageChange
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      annotations:
+        description: Nexus3 CE Image Stream
+      labels:
+        app: nexus3
+      name: nexus3
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations:
+            openshift.io/imported-from: sonatype/nexus3
+          from:
+            kind: DockerImage
+            name: sonatype/nexus3
+          importPolicy: {}
+          name: latest
+          referencePolicy:
+            type: Source
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      labels:
+        app: nexus3
+      name: nexus3
+    spec:
+      port:
+        targetPort: 8081-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: nexus3
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        description: Exposes the database server
+      labels:
+        app: gitlab-ce
+      name: gitlab-ce
+    spec:
+      ports:
+        - name: 22-tcp
+          port: 22
+          protocol: TCP
+          targetPort: 22
+        - name: 80-tcp
+          port: 80
+          protocol: TCP
+          targetPort: 80
+        - name: 443-tcp
+          port: 443
+          protocol: TCP
+          targetPort: 443
+      selector:
+        name: gitlab-ce
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: gitlab-ce
+      name: gitlab-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: gitlab-ce
+      name: gitlab-logs
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app: gitlab-ce
+      name: gitlab-config
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500M
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      annotations:
+        description: Defines how to deploy the application server
+      labels:
+        app: gitlab-ce
+        name: gitlab-ce
+      name: gitlab-ce
+    spec:
+      replicas: 1
+      selector:
+        name: gitlab-ce
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: gitlab-ce
+            deploymentconfig: gitlab-ce
+            name: gitlab-ce
+          name: gitlab-ce
+        spec:
+          containers:
+            - image: gitlab/gitlab-ce:latest
+              imagePullPolicy: Always
+              name: gitlab-ce-container
+              ports:
+                - containerPort: 22
+                  protocol: TCP
+                - containerPort: 80
+                  protocol: TCP
+                - containerPort: 443
+                  protocol: TCP
+              resources: {} # TODO MODIFICAR ESTO
+              volumeMounts:
+                - mountPath: /var/opt/gitlab
+                  name: gitlab-ce-data
+                - mountPath: /var/log/gitlab
+                  name: gitlab-ce-logs
+                - mountPath: /etc/gitlab
+                  name: gitlab-ce-config
+          restartPolicy: Always
+          triggers:
+            - imageChangeParams:
+                automatic: true
+                containerNames:
+                  - gitlab-ce
+                from:
+                  kind: ImageStreamTag
+                  name: gitlab-ce:latest
+              type: ImageChange
+            - type: ConfigChange
+          volumes:
+            - name: gitlab-ce-data
+              persistentVolumeClaim:
+                claimName: gitlab-data
+            - name: gitlab-ce-logs
+              persistentVolumeClaim:
+                claimName: gitlab-logs
+            - name: gitlab-ce-config
+              persistentVolumeClaim:
+                claimName: gitlab-config
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - gitlab-ce-container
+            from:
+              kind: ImageStreamTag
+              name: gitlab-ce:latest
+          type: ImageChange
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      annotations:
+        description: GitLab CE Image Stream
+      labels:
+        app: gitlab-ce
+      name: gitlab-ce
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - annotations:
+            openshift.io/imported-from: gitlab/gitlab-ce
+          from:
+            kind: DockerImage
+            name: gitlab/gitlab-ce
+          importPolicy: {}
+          name: latest
+          referencePolicy:
+            type: Source
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      labels:
+        app: gitlab-ce
+      name: gitlab
+    spec:
+      port:
+        targetPort: 80-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: gitlab-ce
+        weight: 100
+      wildcardPolicy: None

@@ -1,0 +1,66 @@
+# devon4ng OpenShift template
+
+## This folder contains:
+
+* *Jenkinsfile*: Jenkins pipeline for configure an deploy a devon4ng application in OpenShift. Parameters:
+** *CREATE_SECRET* (boolean): OPTIONAL: This secrets is used to connect OpenShift with your docker-registry. If true, the secret will be add to your OpenShift. If more than one app use the same registry and openshift alredy have the secret added mark it as false.
+** *REGISTRY_SECRET_NAME_SUFFIX* (string): OPTIONAL: suffix to add to your secret for the docker registry in OpenShift. The name is going to be docker-registry, if you use more than one docker-registry in the same namespace you need to add a suffix. For example you cuold add the name of your project, then to have the name as docker-registry-myprojectname you should use -myprojectname value
+** *CREATE_DOCKER_BUILDER* (boolean): OPTIONAL: If true, BuildConfig is going to be added in OpenShift to build the docker image for your application.
+** *GIT_REPOSITORY* (string): If CREATE_DOCKER_BUILDER is true, you need to specify which is the url of your git repository
+** *GIT_BRANCH* (string): If CREATE_DOCKER_BUILDER is true, you need to specify which is the branch of your git repository
+** *GIT_CREDENTIALS* (credential): If CREATE_DOCKER_BUILDER is true, you need to specify which is the credentials for your git repository
+** *BUILD_SCRIPT* (string):If CREATE_DOCKER_BUILDER is true, you need to specify which is the bild script found in the package.json to be executed for generate the artifacts used to create the docker image.
+** *DOCKER_REGISTRY* (string): NEEDS TO BE SET!. The url of your docker registry repository.
+** *DOCKER_REGISTRY_CREDENTIALS* (credential): NEEDS TO BE SET!. Credentials to deploy and download of your docker registry repository.
+** *DOCKER_TAG* (string): NEEDS TO BE SET!. The tag for the image created by docker.
+** *OPENSHIFT_URL* (string): NEEDS TO BE SET!. The url of your OpenShift cluster.
+** *OPENSHIFT_CREDENTIALS* (credential): NEEDS TO BE SET!. Admin credentials of your OpenShift cluster.
+** *OPENSHIFT_NAMESPACE* (string): NEEDS TO BE SET!. Namespace is the name of the project of OpenShift where the environment is going to be created.
+** *APP_NAME_SUFFIX* (string): OPTIONAL: suffix to add to your appname in OpenShift. The name is going to be read of your package.json, for example for develop environment you could use -dev value
+** *HOSTNAME* (string): OPTIONAL: Specify which will be the hostname of your application in openshift.
+** *SECURED_PROTOCOL* (boolean): OPTIONAL: If false, the protocol will be http instead https.
+** *OPENSHIFT_TOOL* (string): NEEDS TO BE SET!. Tool name of openshift client in Jenkins.
+** *NODEJS_TOOL* (string): NEEDS TO BE SET!. Tool name of NodeJS in Jenkins.ID.
+
+WARNING: This pipeline is deprecated, please use the devon4ng.yml or Production Line templates instead.
+
+* *devon4ng.yml*: This file contains a OpenShift template. With this template you will be able to create all OpenShift resources required for a devon4ng application. Parameters:
+** *Application name*: The name for the application. It can't contain whitespaces. It should be the app name including type or technology. Example: mythaistar-frontend or mythaistar-angular
+** *Application group name*: The name for the group list of applications. It can't contain whitespaces. It should be the app name excluding technology, example: My-Thai-Star
+** *Application name suffix*: OPTIONAL: suffix to add to your application and group name. Is needed if you are going to deploy more than one environment in the same place. For example for develop environment you could use -dev value
+** *Docker image*: The url where your docker image is going to be push and pull.
+** *Docker tag*: The tag for the docker image.
+** *Secret for docker registry*: The secret used to push the docker image to the registry.
+** *CPU*: The requested and limited CPU used for your project.
+** *Memory*: The requested and limited memory used for your project.
+** *Application hostname*: Custom hostname for service routes. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>
+** *Application port*: The port used for your application.
+
+### How to use
+
+* *Jenkinsfile*: You can use this Jenkinsfile in the same way as Production Line templates. Visit the link:https://github.com/devonfw/production-line/wiki/how-to-add-a-template[production line templates documentation] to see how to add this to Jenkins.
+* *devon4ng.yml*: As it is an OpenShift template, the only thing that you to do is create it in OpenShift
++
+[source,bash]
+----
+oc create -f devon4ng.yml
+----
++
+Now, you can go to OpenShift catalog and select the devon4ng application. If you want to this template for all OpenShift projects in your cluster, you can execute this command:
++
+[source,bash]
+----
+oc create -f devon4ng.yml -n openshift
+----
++
+Note that this command require cluster admin privileges.
+
+### OpenShift resources
+
+After executing the template, it will generate the following resources in OpenShift:
+
+* *BuildConfig*
+* *ImageStream*
+* *Service*
+* *DeploymentConfig*
+* *Route*
