@@ -84,7 +84,16 @@ include::dsf-mirabaud-jenkins-nexus-integration.asciidoc[leveloffset=3]
 
 include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
 
+=== Azure DevOps
+
+include::dsf-azure-pipelines.asciidoc[leveloffset=2]
+
+include::dsf-azure-sonarqube-integration.asciidoc[leveloffset=2]
+
+include::dsf-custom-plugin-for-sonar-AzureDevops.asciidoc[leveloffset=2]
 === OKD (OpenShift Origin)
+
+include::dsf-okd.asciidoc[leveloffset=2]
 
 include::dsf-okd.asciidoc[leveloffset=3]
 
