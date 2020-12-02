@@ -36,9 +36,12 @@ The pipeline is created with the minimum required steps to run it which are the 
 
 Triggers that will activate the pipeline execution
 
-p.e: `trigger:
+[source,yaml]
+----
+trigger:
 - master
-- develop`
+- develop
+----
 
 === VARIABLES
 
@@ -57,7 +60,10 @@ For .NET:
 
 *-NuGet Tool Installer task*:
 
-`- task: NuGetToolInstaller@1`
+[source,yaml]
+----
+- task: NuGetToolInstaller@1
+----
 
 Use this task to find, download, and cache a specified version of NuGet and add it to the PATH.
 
