@@ -44,10 +44,13 @@ p.e: `trigger:
 
 Variables that will be used in the next steps
 
-`variables:
+[source,yaml]
+----
+variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'`
+  buildConfiguration: 'Release'
+----
 
 === TOOLS AND LIBRARIES 
 For .NET:
@@ -60,7 +63,12 @@ Use this task to find, download, and cache a specified version of NuGet and add 
 
 *-The NuGet command to run*:
 
-`- task: NuGetCommand@2`
+[source,yaml]
+----
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+----
 
 The NuGet command to run.
 
@@ -69,7 +77,15 @@ For more info use the official https://docs.microsoft.com/en-us/azure/devops/pip
 === BUILD
 *-Visual Studio Build task*:
 
-`- task: VSBuild@1`
+[source,yaml]
+----
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+----
 
 Use this task to build with MSBuild and set the Visual Studio version property.
 
@@ -77,8 +93,18 @@ For more info use the official https://docs.microsoft.com/en-us/azure/devops/pip
 
 === TEST
 *-Visual Studio Test task*:
+[source,yaml]
+----
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Agent.TempDirectory)/'
+    projects: '$(solution)'
+    publishTestResults: true
+  continueOnError: false
+  displayName: 'Dot Net Core CLI Test'
+----
 
-`- task: DotNetCoreCLI@2`
 
 Use this task to run unit and functional tests (Selenium, Appium, Coded UI test, and more) using the Visual Studio Test Runner.
 
@@ -98,12 +124,13 @@ While deploying with App Services, 2 steps are required:
 
 Use this task in a pipeline to publish artifacts for the Azure Pipeline
 
-``
+[source,yaml]
+----
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'Bad_Weather_Backend'
     targetPath: '$(Build.ArtifactStagingDirectory)'
-``
+----
 
 To know more about the use of predefined variables in azure take a look at the https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml[documentation]
 
@@ -111,7 +138,8 @@ To know more about the use of predefined variables in azure take a look at the h
 
 Use this task to deploy to a range of App Services on Azure
 
-`` 
+[source,yaml]
+----
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
@@ -119,7 +147,7 @@ Use this task to deploy to a range of App Services on Azure
     appType: 'webApp'
     WebAppName: 'bwbackendbe'
     packageForLinux: '$(build.artifactStagingDirectory)\WebApp.zip'
-``
+----
 
 This task has 2 prerequisites:
 
