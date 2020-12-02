@@ -1,0 +1,39 @@
+Install and use custom sonar plugin in Azure Devops
+---------------------------------------------------
+
+By default, the sonar plugin is not capable to be used in every branch you want to, to do this you need to purchase a license or customize the current plugin in order to satisfy our needs.
+
+How to costumize the plugin is not the purpose of this documentation, this documentation is for the intallment and use of it.
+
+If you want to install a custom plugin, sign into your Azure Devops organization and once you are in, click on the marketplace icon:
+
+image::./images/others/azure-sonarqube/custom-plugin/marketplace.png[]
+
+Select *browse marketplace>publish extension
+
+Choose the extension you want to install and clik on the options 
+
+image::./images/others/azure-sonarqube/custom-plugin/extension.png[]    
+
+*Important*:
+
+You need to choose the organization for which you are going to use the extension and *share it*, if not, you won't be able to install it.
+
+image::./images/others/azure-sonarqube/custom-plugin/share-unshare.png[]
+
+Once you've done this click on View extension and 'Get it free', the extension will be downloaded and you will be able to use it in the next screen
+
+image::./images/others/azure-sonarqube/custom-plugin/install.png[]
+
+If there are no organizations you can seee the possible causes https://docs.microsoft.com/en-us/azure/devops/marketplace/faq-extensions?view=azure-devops#no-organizations[here].
+
+Another cause might be that you forgot to share the extension.
+
+Note: If the install button does not appear, it's possible that you don't have permissions to install it so you will need to talk with the owner of the org.
+Another posibility is that you can _request_ an installation.
+
+Once installed, in the pipeline wizard it will appear and you will be able to select it.
+
+image::./images/others/azure-sonarqube/custom-plugin/wizard.png[]
+
+We can see in the image the default plugin and the customized one.

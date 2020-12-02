@@ -1,0 +1,107 @@
+Create an Azure pipeline from scratch
+-------------------------------------
+The following steps will allow you to create a basic pipeline in Azure Devops from scratch
+
+In order to deploy in Azure, we've created an automatic pipeline in Azure Devops that will be executed automaticaly when  developers make a push to the Azure repositories, the pipeline will compile the code, build the application and ensure with automatic tests that the build is not going to break the application, to ensure a good quality code the code will be analyzed by sonar as well as your code coverage and last but not least, your application will be deployed using Azure App Services.
+
+== Steps 
+
+
+1- Sign in to your Azure DevOps organization and navigate to your project.
+
+2- Go to Pipelines, and then select New Pipeline.
+
+3- Choose the location of your source code(Github, Bitbucket,Azure repos..etc), in this case we have our code in Azure Repos Git.
+
+A list of your repositories will be shown here:
+
+4- When the list of repositories appears, select your repository.
+
+Depending on your project type(Java, .NET, Python or JavaScript) the following configuration will change, in this case our project is a .NET, for more type of projects please follow the https://docs.microsoft.com/es-es/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=net%2Ctfs-2018-2%2Cbrowser[official documentation].
+
+5- When the Configure tab appears, select ASP.NET Core(or the one according to your project)
+
+image::./images/others/azure-pipelines/configuration.png[]
+
+6- A .yaml file in your ./ location will be generated with all the required steps to run your pipeline.
+The name of this .yaml file is 'azure-pipelines.yaml' wich is the default name that will be used in your pipeline settings.
+
+_Note:If you change the name or the location, you will need to specify in the pipeline settings the new name or location:_
+
+image::./images/others/azure-pipelines/pipeline-settings.png[]
+
+The pipeline is created with the minimum required steps to run it which are the following:
+
+== BUILD 
+For .NET:
+
+*-NuGet Tool Installer task*:
+
+Use this task to find, download, and cache a specified version of NuGet and add it to the PATH.
+
+*-The NuGet command to run*:
+
+The NuGet command to run.
+
+For more info use the official https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/nuget?view=azure-devops[documentation].
+
+== TEST
+*-Visual Studio Build task*:
+
+Use this task to build with MSBuild and set the Visual Studio version property.
+
+For more info use the official https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/visual-studio-build?view=azure-devops[documentation]
+
+*-Visual Studio Test task*:
+
+Use this task to run unit and functional tests (Selenium, Appium, Coded UI test, and more) using the Visual Studio Test Runner.
+
+For more info use the official https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/test/vstest?view=azure-devops[documentation]
+
+This steps are the ones generated when your pipeline is created, we can create the ones we need using the Azure Devops wizard in an easy way.
+
+In our case, apart from build and test, we also need to deploy
+
+== DEPLOY
+
+In the deploy, 2 steps are required:
+
+==== Step 1: Publish
+
+Use this task in a pipeline to publish artifacts for the Azure Pipeline
+
+``
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'Bad_Weather_Backend'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+``
+
+To know more about the use of predefined variables in azure take a look at the https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml[documentation]
+
+==== Step 2: Deployment
+
+Use this task to deploy to a range of App Services on Azure
+
+`` 
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'bad-weather-poc-rs-bw-dev'
+    appType: 'webApp'
+    WebAppName: 'bwbackendbe'
+    packageForLinux: '$(build.artifactStagingDirectory)\WebApp.zip'
+``
+
+This task has 2 prerequisites:
+
+1-App Service instance: 
+
+The task is used to deploy a Web App project or Azure Function project to an existing Azure App Service instance, which must exist before the task runs.
+
+2-Azure Subscription: 
+
+In order to deploy to Azure, an Azure subscription must be https://docs.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azure-devops[linked to the pipeline]. 
+
+
+To know more about the input arguments for this task, make use of the offcial https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment?view=azure-devops[documentation]
