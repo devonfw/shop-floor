@@ -32,27 +32,53 @@ image::./images/others/azure-pipelines/pipeline-settings.png[]
 
 The pipeline is created with the minimum required steps to run it which are the following:
 
-== BUILD 
+=== TRIGGERS
+
+Triggers that will activate the pipeline execution
+
+p.e: `trigger:
+- master
+- develop`
+
+=== VARIABLES
+
+Variables that will be used in the next steps
+
+`variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'`
+
+=== TOOLS AND LIBRARIES 
 For .NET:
 
 *-NuGet Tool Installer task*:
+
+`- task: NuGetToolInstaller@1`
 
 Use this task to find, download, and cache a specified version of NuGet and add it to the PATH.
 
 *-The NuGet command to run*:
 
+`- task: NuGetCommand@2`
+
 The NuGet command to run.
 
 For more info use the official https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/nuget?view=azure-devops[documentation].
 
-== TEST
+=== BUILD
 *-Visual Studio Build task*:
+
+`- task: VSBuild@1`
 
 Use this task to build with MSBuild and set the Visual Studio version property.
 
 For more info use the official https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/visual-studio-build?view=azure-devops[documentation]
 
+=== TEST
 *-Visual Studio Test task*:
+
+`- task: DotNetCoreCLI@2`
 
 Use this task to run unit and functional tests (Selenium, Appium, Coded UI test, and more) using the Visual Studio Test Runner.
 
@@ -62,9 +88,11 @@ This steps are the ones generated when your pipeline is created, we can create t
 
 In our case, apart from build and test, we also need to deploy
 
-== DEPLOY
+=== DEPLOY
 
-In the deploy, 2 steps are required:
+=== App Services
+
+While deploying with App Services, 2 steps are required:
 
 ==== Step 1: Publish
 
