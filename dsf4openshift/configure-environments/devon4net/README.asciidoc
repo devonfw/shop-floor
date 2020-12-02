@@ -1,0 +1,43 @@
+# devon4net OpenShift template
+
+## This folder contains:
+
+* *devon4net.yml*: This file contains a OpenShift template. With this template you will be able to create all OpenShift resources required for a devon4net application. Parameters:
+** *Application name*: The name for the application. It can't contain whitespaces. It should be the app name including type or technology. Example: mythaistar-frontend or mythaistar-angular
+** *Application group name*: The name for the group list of applications. It can't contain whitespaces. It should be the app name excluding technology, example: My-Thai-Star
+** *Application name suffix*: OPTIONAL: suffix to add to your application and group name. Is needed if you are going to deploy more than one environment in the same place. For example for develop environment you could use -dev value
+** *Docker image*: The url where your docker image is going to be push and pull.
+** *Docker tag*: The tag for the docker image.
+** *Secret for docker registry*: The secret used to push the docker image to the registry.
+** *CPU*: The requested and limited CPU used for your project.
+** *Memory*: The requested and limited memory used for your project.
+** *Application hostname*: Custom hostname for service routes. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>
+** *Application port*: The port used for your application.
+
+### How to use
+
+* *devon4net.yml*: As it is an OpenShift template, the only thing that you to do is create it in OpenShift
++
+[source,bash]
+----
+oc create -f devon4net.yml
+----
++
+Now, you can go to OpenShift catalog and select the devon4net application. If you want to this template for all OpenShift projects in your cluster, you can execute this command:
++
+[source,bash]
+----
+oc create -f devon4net.yml -n openshift
+----
++
+Note that this command require cluster admin privileges.
+
+### OpenShift resources
+
+After executing the template, it will generate the following resources in OpenShift:
+
+* *BuildConfig*
+* *ImageStream*
+* *Service*
+* *DeploymentConfig*
+* *Route*

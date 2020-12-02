@@ -40,8 +40,8 @@ objects:
     strategy:
       dockerStrategy:
         from:
-          kind: ImageStreamTag
-          name: "openjdk:${OPENJDK_TAG}"
+          kind: DockerImage
+          name: "adoptopenjdk/openjdk11:${OPENJDK_TAG}"
       type: Docker
     successfulBuildsHistoryLimit: 5
 - apiVersion: image.openshift.io/v1
@@ -193,7 +193,7 @@ parameters:
   - name: OPENJDK_TAG
     displayName: "Openjdk version"
     description: "The docker image used is openjdk, you need to specify the tag for the correct version. More information here: https://hub.docker.com/_/openjdk"
-    value: "8"
+    value: "jre-11.0.4_11-alpine"
     required: true
   - name: DOCKER_IMAGE
     displayName: "Docker image"
@@ -224,5 +224,5 @@ parameters:
   - name: PORT
     displayName: "Application port"
     description: "The port used for your application."
-    value: "8080"
+    value: "8081"
     required: true

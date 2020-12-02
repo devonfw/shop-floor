@@ -21,7 +21,7 @@ LABEL sumary="Reverse proxy for devonfw applications." \
     name="reverse-proxy" \
     version="1.0.0" \
     maintainer="Dario Rodriguez Gonzalez <dario.rodriguez-gonzalez@capgemini.com>" \
-    help="For more information visit https://github.com/sclorg/s2i-nodejs-container" \
+    help="For more information visit https://github.com/devonfw/devonfw-shop-floor" \
     usage="docker run -e FRONTEND_ENV=http://frontend:80 -e BACKEND_ENV=http://backend:8080 -p 80:80 -p 443:443 -d reverse-proxy"
 
 COPY nginx.conf /etc/nginx/nginx.conf
