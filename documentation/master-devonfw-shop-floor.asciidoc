@@ -86,6 +86,8 @@ include::dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[leveloffset=3]
 
 === Azure DevOps
 
+include::dsf-azure-install-sonar-with-docker-in-a-virtual-machine.asciidoc[leveloffset=2]
+
 include::dsf-azure-pipelines.asciidoc[leveloffset=2]
 
 include::dsf-azure-sonarqube-integration.asciidoc[leveloffset=2]
