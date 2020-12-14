@@ -80,8 +80,8 @@ services:
     networks:
       - sonar
     environment:
-      - sonar.jdbc.username=sonar
-      - sonar.jdbc.password=sonarAmp123
+      - sonar.jdbc.username=user
+      - sonar.jdbc.password=pass
       - sonar.jdbc.url=jdbc:postgresql://sonarqube-db:5432/sonar
     ports:
       - "80:9000"
@@ -103,8 +103,8 @@ services:
     volumes:
       - "$PWD/volumes/sonarqube-db/data:/var/lib/postgresql/data"
     environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonarAmp123
+      - POSTGRES_USER=youruser
+      - POSTGRES_PASSWORD=yourpass
       - POSTGRES_DB=sonar
       - PGDATA=/var/lib/postgresql/data
 
