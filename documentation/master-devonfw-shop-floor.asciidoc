@@ -91,6 +91,7 @@ include::dsf-azure-pipelines.asciidoc[leveloffset=2]
 include::dsf-azure-sonarqube-integration.asciidoc[leveloffset=2]
 
 include::dsf-custom-plugin-for-sonar-AzureDevops.asciidoc[leveloffset=2]
+
 === OKD (OpenShift Origin)
 
 include::dsf-okd.asciidoc[leveloffset=2]
