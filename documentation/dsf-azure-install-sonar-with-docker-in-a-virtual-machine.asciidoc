@@ -1,0 +1,130 @@
+== Connect to a Virtual Machine(VM) in Azure
+
+==== Pre-requisites
+
+Have a VM created and a private key in order to connect to it
+
+==== Establish a connection
+
+1- Open the client of your choice(putty,cmder,bash)
+
+2- Ensure you have read-only access to the private key.
+
+[sorce,yaml]
+----
+chmod 400 azureuser.pem
+----
+
+3- Run this command to connect to your VM
+
+[sorce,yaml]
+----
+ssh -i <private key path> azureuser@51.103.78.61
+----
+
+_note: To get the IP go to your azure portal, click on your VM, click on *Networking* and you will find the IP needed to establish the connection_
+
+You are connected:
+
+image::./images/others/azure-sonarqube/vm-connection.png[]
+
+== Install Sonar using Docker and Docker-compose 
+
+As an example we will use the practical case of Bad Weather, a project where we were asked to install Sonar inside a VM in Azure portal
+
+image::./images/others/azure-sonarqube/install-sonar.png[]
+
+We had 2 possible scenarios, we went for the *case A* since no other service will be installed in this VM
+
+==== Steps
+
+1- Install docker and docker compose in the VM
+
+[sorce,yaml]
+----
+sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf list docker-ce
+sudo dnf install docker-ce --nobest -y
+sudo systemctl start docker
+sudo systemctl enable docker
+docker --version
+sudo dnf install curl -y
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose --version
+----
+
+2- Deploy SonarQube and Postgress
+
+2.1- Set necesary parameters for sonarqube
+[sorce,yaml]
+----
+sudo sysctl -w vm.max_map_count=262144
+sudo sysctl -w fs.file-max=65536
+sudo ulimit -n 65536
+sudo ulimit -u 4096
+----
+
+2.2- Use docker-compose with the next definition to deploy it:
+
+vim /home/sonar/docker-compose.yaml
+
+[sorce,yaml]
+----
+version: "3"
+
+services:
+  sonarqube:
+    image: "sonarqube:7.9-community"
+    networks:
+      - sonar
+    environment:
+      - sonar.jdbc.username=user
+      - sonar.jdbc.password=pass
+      - sonar.jdbc.url=jdbc:postgresql://sonarqube-db:5432/sonar
+    ports:
+      - "80:9000"
+	depends_on:
+      - "sonarqube-db"
+    volumes:
+      - "$PWD/volumes/sonarqube/conf:/opt/sonarqube/conf"
+      - "$PWD/volumes/sonarqube/data:/opt/sonarqube/data"
+      - "$PWD/volumes/sonarqube/extensions:/opt/sonarqube/extensions"
+      - "$PWD/volumes/sonarqube/logs:/opt/sonarqube/logs"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+  sonarqube-db:
+    image: "postgres:12-alpine"
+    networks:
+      - sonar
+    volumes:
+      - "$PWD/volumes/sonarqube-db/data:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=youruser
+      - POSTGRES_PASSWORD=yourpass
+      - POSTGRES_DB=sonar
+      - PGDATA=/var/lib/postgresql/data
+
+networks:
+  sonar:
+    driver: bridge
+----
+
+3- Update the start configuration to set automatically the correct values and run the docker-compose
+
+[sorce,yaml]
+----
+vim /usr/local/sbin/start.sh
+
+sysctl -w vm.max_map_count=262144
+sysctl -w fs.file-max=65536
+ulimit -n 65536
+ulimit -u 4096
+
+cd /home/sonar && docker-compose up -d
+----
+
+Your Sonar is Up and running in your VM

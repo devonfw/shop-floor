@@ -51,6 +51,7 @@
 ** link:dsf-mirabaud-jenkins-nexus-integration.asciidoc[jenkins-nexus integration]
 ** link:dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[jenkins-sonarqube integration]
 * Azure DevOps
+** link:dsf-azure-install-sonar-with-docker-in-a-virtual-machine.asciidoc[Connect to a VM in Azure and deploy a docker image inside]
 ** link:dsf-azure-sonarqube-integration.asciidoc[SonarQube-Azure DevOps integration]
 ** link:dsf-custom-plugin-for-sonar-AzureDevops.asciidoc[Custom plugin for Sonar]
 ** link:dsf-azure-pipelines.asciidoc[Azure DevOps pipelines]
