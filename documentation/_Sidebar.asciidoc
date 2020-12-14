@@ -50,7 +50,10 @@
 ** link:dsf-mirabaud-jenkins-gitLab-integration.asciidoc[jenkins-gitlab integration]
 ** link:dsf-mirabaud-jenkins-nexus-integration.asciidoc[jenkins-nexus integration]
 ** link:dsf-mirabaud-jenkins-sonarqube-integration.asciidoc[jenkins-sonarqube integration]
-* link:dsf-azure-sonarqube-integration.md[SonarQube-Azure DevOps integration]
+* Azure DevOps
+** link:dsf-azure-sonarqube-integration.asciidoc[SonarQube-Azure DevOps integration]
+** link:dsf-custom-plugin-for-sonar-AzureDevops.asciidoc[Custom plugin for Sonar]
+** link:dsf-azure-pipelines.asciidoc[Azure DevOps pipelines]
 * link:dsf-okd.asciidoc[OKD _(OpenShift Origin)_]
 ** link:dsf-okd-how-to-install.asciidoc[How to install]
 ** link:dsf-okd-initial-setup[Initial setup]
