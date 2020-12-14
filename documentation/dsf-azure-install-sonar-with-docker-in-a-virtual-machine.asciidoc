@@ -127,4 +127,18 @@ ulimit -u 4096
 cd /home/sonar && docker-compose up -d
 ----
 
+4- Add this to execute the docker-compose file every time the machine turns on
+
+[sorce,yaml]
+----
+
+crontab -e
+@reboot /usr/local/sbin/start.sh
+
+vim /etc/sysctl.conf
+vm.max_map_count=262144
+fs.file-max=65536
+----
+
+
 Your Sonar is Up and running in your VM
