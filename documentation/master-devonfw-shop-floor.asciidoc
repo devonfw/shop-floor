@@ -90,6 +90,8 @@ include::dsf-azure-install-sonar-with-docker-in-a-virtual-machine.asciidoc[level
 
 include::dsf-azure-pipelines.asciidoc[leveloffset=2]
 
+include::dsf-azure-connection-strings.asciidoc[leveloffset=2]
+
 include::dsf-azure-sonarqube-integration.asciidoc[leveloffset=2]
 
 include::dsf-custom-plugin-for-sonar-AzureDevops.asciidoc[leveloffset=2]

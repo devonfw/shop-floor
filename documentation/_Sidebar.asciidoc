@@ -1,3 +1,4 @@
+
 == devonfw Shop Floor Guide
 
 * link:Home.asciidoc[Introduction]
@@ -53,6 +54,7 @@
 * Azure DevOps
 ** link:dsf-azure-install-sonar-with-docker-in-a-virtual-machine.asciidoc[Connect to a VM in Azure and deploy a docker image inside]
 ** link:dsf-azure-sonarqube-integration.asciidoc[SonarQube-Azure DevOps integration]
+** link:dsf-azure-connection-strings.asciidoc[Connect your backend with your DB]
 ** link:dsf-custom-plugin-for-sonar-AzureDevops.asciidoc[Custom plugin for Sonar]
 ** link:dsf-azure-pipelines.asciidoc[Azure DevOps pipelines]
 * link:dsf-okd.asciidoc[OKD _(OpenShift Origin)_]
