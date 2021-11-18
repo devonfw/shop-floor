@@ -50,7 +50,7 @@
                     "displayName": "REST Endpoint URL"
                 },
                 {
-                    "description": "Git source URI for application, example: https://github.com/oasp/my-thai-star.git",
+                    "description": "Git source URI for application, example: https://github.com/devonfw/my-thai-star.git",
                     "name": "GIT_URI",
                     "displayName": "Git repository URI",
                     "required": true
