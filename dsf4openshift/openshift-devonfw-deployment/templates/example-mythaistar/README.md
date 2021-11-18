@@ -16,7 +16,7 @@ We need to deploy devonfw templates to use this s2i and add it to the browse cat
 
 #### Deploy My Thai Star Application
 
-To deploy the [My Thai Star](https://github.com/oasp/my-thai-star) reference application, create a new project:
+To deploy the [My Thai Star](https://github.com/devonfw/my-thai-star) reference application, create a new project:
 
     $ oc new-project mythaistar --display-name='My Thai Star' --description='My Thai Star reference application'
 
