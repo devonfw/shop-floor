@@ -62,7 +62,7 @@ This file must be a list of <name>=<value> pairs. A parameter reference may appe
     $ cat paramfile
 	  APPLICATION_NAME="mythaistar-java"
 	  APPLICATION_GROUP_NAME="My-Thai-Star"
-	  GIT_URI="https://github.com/oasp/my-thai-star.git"
+	  GIT_URI="https://github.com/devonfw/my-thai-star.git"
 	  GIT_REF="develop"
 	  CONTEXT_DIR="/java/mtsj"
     
