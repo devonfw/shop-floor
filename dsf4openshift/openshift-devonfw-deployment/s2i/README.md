@@ -16,7 +16,7 @@ Currently there are builder images for
 * OASP4J (Java)
 * OASP4JS (JavaScript)
 
-In order to get started, additional templates to deploy the [OASP 'My Thai Star'](https://github.com/oasp/my-thai-star) reference application are provided.
+In order to get started, additional templates to deploy the [devonfw 'My Thai Star'](https://github.com/devonfw/my-thai-star) reference application are provided.
 -->
 ## Previous setup
 
