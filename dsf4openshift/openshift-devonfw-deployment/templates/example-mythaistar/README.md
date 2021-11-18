@@ -2,7 +2,7 @@
 
 Here we can found an example to deploy My Thai Star application using DevonFW templates.
 
-Files named mythaistar-angular and mythaistar-java are paramfiles to deploy My Thai Star Angular and Java Projects that are located in [Oasp](https://github.com/oasp/my-thai-star) using DevonFW templates for Openshift Origin.
+Files named mythaistar-angular and mythaistar-java are paramfiles to deploy My Thai Star Angular and Java Projects that are located in [devonfw](https://github.com/devonfw/my-thai-star) using DevonFW templates for Openshift Origin.
 
 ## Usage
 
